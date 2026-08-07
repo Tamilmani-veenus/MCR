@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "432780670608",
+    "project_id": "mcr-construction",
+    "storage_bucket": "mcr-construction.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:432780670608:android:9658afcb90d19704a94a15",
+        "android_client_info": {
+          "package_name": "com.veenus.mcr"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQvwnyCrVm3U59WaC1jmtpYHNI1KnyQjs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:432780670608:android:907c0a04bb1a82c4a94a15",
+        "android_client_info": {
+          "package_name": "com.veenus.mcrconstruction"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQvwnyCrVm3U59WaC1jmtpYHNI1KnyQjs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
