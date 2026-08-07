@@ -6,6 +6,7 @@ class DatabaseConnection {
   Future<Database> setDatabase() async {
     var dierctory = await getApplicationDocumentsDirectory();
     var path = join(dierctory.path, 'cms_erp_db');
+    await deleteDatabase(path);
     var db = await openDatabase(path, version: 1, onCreate: _createDatabase);
     return db;
   }
@@ -41,6 +42,12 @@ class DatabaseConnection {
 
     String directBillGenItemlistTable = "CREATE TABLE directBillGenItemlistTable (id INTEGER PRIMARY KEY UNIQUE,Name TEXT,unit TEXT,qty REAL,rate REAL,amount REAL)";
     await database.execute(directBillGenItemlistTable);
+
+    String workOrdDirectItemlistTable = "CREATE TABLE workOrdDirectItemlistTable (id INTEGER PRIMARY KEY UNIQUE,Name TEXT,unit TEXT,qty REAL,rate REAL,amount REAL,reqDetId INTEGER)";
+    await database.execute(workOrdDirectItemlistTable);
+
+    String workOrderGSTItemlistTable = "CREATE TABLE workOrderGSTItemlistTable (id INTEGER PRIMARY KEY UNIQUE,reqDetId INTEGER,addLessId INTEGER,percentValue REAL,amount REAL,addLessName TEXT,addLessType TEXT)";
+    await database.execute(workOrderGSTItemlistTable);
 
     String inwardPendingItemlistTable = "CREATE TABLE inwardPendingItemlistTable (id INTEGER PRIMARY KEY UNIQUE,poDetId INTEGER,materialId INTEGER,materialName TEXT,unit TEXT,poQty REAL,balQty REAL,rate REAL,inwQty REAL,amdCheck INTEGER,addQty REAL,lessQty REAL)";
     await database.execute(inwardPendingItemlistTable);

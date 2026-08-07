@@ -78,7 +78,13 @@ class ApiConstant{
   static const String GET_DPR_LABOUR_EDIT_API = BASE_URL + "api/SubContDPRNewLabour/GetDprById";
   static const String GET_DIRECTBILL_ADVANCE_BALANCE = BASE_URL + "api/SubContDirectBill/GetSubContAdvBalance";
   static const String GET_DIRECTBILL_ENTRY_LIST = BASE_URL + "api/SubContDirectBill/GetDirectBillEntryList";
+  static const String GET_WORKORD_DIRECT_ENTRY_LIST = BASE_URL + "api/SubcontractWorkOrderDirect/GetWorkOrderDirectList";
+  static const String GET_DIRECTBILL_CALCULATION_LIST = BASE_URL + "api/CommonFile/GetAddlessList";
+
+
   static const String EDIT_DIRECTBILL_API = BASE_URL + "api/SubContDirectBill/GetDirectBillById";
+  static const String EDIT_WORKORD_DIRECT_API = BASE_URL + "api/SubcontractWorkOrderDirect/GetDirectWorkOrder";
+
   static const String EDIT_INWARDPENDING_API = BASE_URL + "api/MaterialInward/GetInwardById";
   static const String EDIT_TRANSFERBET_API = BASE_URL + "api/MaterialTransferProject/GetTransferById";
   static const String EDIT_TRANSFERBET_SITE_API = BASE_URL + "api/MaterialTransferS2S/GetTransferById";
@@ -164,6 +170,8 @@ class ApiConstant{
   static const String PUT_DPR_LABOUR_APROVE_API = BASE_URL + "api/SubContDPRNewLabour/PUTDprApprove";
   static const String PUT_DPR_LABOUR_UPDATE_API = BASE_URL + "api/SubContDPRNewLabour/PUTDprUpdate";
   static const String PUT_DIRECTBILL_UPDATE_API = BASE_URL + "api/SubContDirectBill/PUTDirectBillUpdate";
+  static const String PUT_WORKORDER_UPDATE_API = BASE_URL + "api/SubcontractWorkOrderDirect/PUTWorkorderDirect";
+
   static const String PUT_SUBCONTNMRBILL_APPROVAL_API = BASE_URL + "api/SubcontNMR/PUTNMRApprove";
   static const String PUT_BILLGEN_APPROVAL_API = BASE_URL + "api/SubContDirectBill/PUTDirectBillApprove";
   static const String PUT_POAPPROVAL_API = BASE_URL + "api/CommonFile/PutPendingListApproval";
@@ -201,6 +209,8 @@ class ApiConstant{
   static const String DPR_NEW_SAVE_API = BASE_URL + "api/SubContDPRNew/POSTDprSave";
   static const String DPR_LABOUR_SAVE_API = BASE_URL + "api/SubContDPRNewLabour/POSTDprSave";
   static const String DIRECTBILL_SAVE_API = BASE_URL + "api/SubContDirectBill/POSTDirectBillSave";
+  static const String WORKORD_DIRECT_SAVE_API = BASE_URL + "api/SubcontractWorkOrderDirect/POSTWorkorderDirect";
+
   static const String INWARDPENDING_SAVE_API = BASE_URL + "api/MaterialInward/POSTInwardSave";
   static const String TRANSFERBET_SAVE_API = BASE_URL + "api/MaterialTransferProject/POSTTransferSave";
   static const String TRANSFERBET_SITE_SAVE_API = BASE_URL + "api/MaterialTransferS2S/POSTTransferSave";
@@ -233,6 +243,8 @@ class ApiConstant{
   static const String DELETE_DPR_ENTRYLIST_API = BASE_URL + "api/SubContDPR/DeleteDPR";
   static const String DELETE_DPRLABOUR_ENTRYLIST_API = BASE_URL + "api/SubContDPRNewLabour/DeleteDPR";
   static const String DELETE_DIRECTBILL_API = BASE_URL + "api/SubContDirectBill/DeleteDirectBill";
+  static const String DELETE_WORKORDER_DIRECT_API = BASE_URL + "api/SubcontractWorkOrderDirect/DeleteWorkorder";
+
   static const String DELETE_INWARDPENDINGLIST_API = BASE_URL + "api/MaterialInward/DeleteInward";
   static const String DELETE_TRANSFERBET_API = BASE_URL + "api/MaterialTransferProject/DeleteTransfer";
   static const String DELETE_TRANSFERBET_SITE_API = BASE_URL + "api/MaterialTransferS2S/DeleteTransfer";

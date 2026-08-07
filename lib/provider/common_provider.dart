@@ -391,6 +391,22 @@ class CommonProvider{
     return datasave;
   }
 
+  static  workOrderdirect_getAutoYearWise() async {
+    var datasave;
+    await ApiManager.getAPICall(ApiConstant.GETAUTONO_YEAR_WISE+"?FieldName=WorkOrderNo&TableName=WorkOrder_mas&FormName=WorkOrder_Direct").then((value) {
+      var decodedJson = json.decode(value);
+      datasave=decodedJson;
+      if (datasave!=null) {
+        return datasave;
+      }
+    },onError: (error) {
+      print(error);
+      print("Error == $error");
+      BaseUtitiles.showToast('Something went wrong.. $error');
+    });
+    return datasave;
+  }
+
   static inwardPending_getAutoYearWise() async {
     var datasave;
     await ApiManager.getAPICall(ApiConstant.GETAUTONO_YEAR_WISE+"?FieldName=inward_no&TableName=Material_Inward_mas&FormName=Inward").then((value) {
