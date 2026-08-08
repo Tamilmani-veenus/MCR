@@ -20,6 +20,7 @@ class AutoYearWiseNoController extends GetxController {
   RxString Conum_autoYrsWise = "".obs;
   RxString BOQRevised_autoYrsWise = "".obs;
   RxString RequisitionSlip_autoYrsWise = "".obs;
+  RxString WorkOrdDirect_autoYrWise = "".obs;
 
   Future AutoYearWise() async {
     await CommonProvider.subcontAttendance_getAutoYearWise().then((value){
@@ -77,6 +78,15 @@ class AutoYearWiseNoController extends GetxController {
       if (value != null) {
         DirectBillautoYrsWise.value = value;
         return DirectBillautoYrsWise.value;
+      }
+    });
+  }
+
+  Future workOrderdirect_AutoYearWise() async {
+    await CommonProvider.workOrderdirect_getAutoYearWise().then((value){
+      if (value != null) {
+        WorkOrdDirect_autoYrWise.value = value;
+        return WorkOrdDirect_autoYrWise.value;
       }
     });
   }

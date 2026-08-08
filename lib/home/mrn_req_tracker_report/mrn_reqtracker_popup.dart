@@ -42,11 +42,11 @@ class mrnReqTrackerPopup extends StatelessWidget {
         "date": list.purchaseOrdDate,
         "by": list.poCreatedByName,
       },
-      {
-        "title": "PO Verified",
-        "date": list.poVerifyDate,
-        "by": list.poVerifyByName,
-      },
+      // {
+      //   "title": "PO Verified",
+      //   "date": list.poVerifyDate,
+      //   "by": list.poVerifyByName,
+      // },
       {
         "title": "PO Approved",
         "date": list.poApprovedDate,

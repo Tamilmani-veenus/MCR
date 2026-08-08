@@ -40,6 +40,7 @@ class   OnclickPendingListResponse {
     this.billno,
     this.purchaseType,
     this.approvedby,
+    this.PreparedByName
   });
 
   int? id;
@@ -76,6 +77,7 @@ class   OnclickPendingListResponse {
   String? billno;
   String? purchaseType;
   String? approvedby;
+  String? PreparedByName;
 
 
 
@@ -115,6 +117,7 @@ class   OnclickPendingListResponse {
     billno: json["Billno"],
     purchaseType: json["PurchaseType"],
     approvedby: json["approvedby"],
+      PreparedByName: json["PreparedByName"]
   );
 
   Map<String, dynamic> toJson() => {
@@ -150,5 +153,6 @@ class   OnclickPendingListResponse {
     "ToDate": toDate,
     "Billno": billno,
     "approvedby": approvedby,
+    "PreparedByName": PreparedByName
   };
 }

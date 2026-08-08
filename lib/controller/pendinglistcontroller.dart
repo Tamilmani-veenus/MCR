@@ -725,7 +725,13 @@ class PendingListController extends GetxController {
                                                                                                     ? Navigator.push(
                                                                                                         context,
                                                                                                         MaterialPageRoute(builder: (context) => AdvanceReqAproval(onclickPendingListData: onclickPendingListData, heading: name)),
-                                                                                                      )
+                                                                                                      ): name == "WORK ORDER APPROVAL PENDING"
+                                                                                                            ? Navigator.push(
+                                                                                                            context,
+                                                                                                            MaterialPageRoute(
+                                                                                                                builder: (context) => WorkOrder(
+                                                                                                                    onclickPendingListData: onclickPendingListData,
+                                                                                                                    heading: name)))
                                                                                                     : Navigator.push(context, MaterialPageRoute(builder: (context) => OfficeVoucherApproval(onclickPendingListData: onclickPendingListData, heading: name)));
       }
     });

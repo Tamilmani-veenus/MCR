@@ -1,5 +1,6 @@
 import 'package:mcr/controller/site_location_controller.dart';
 import 'package:mcr/home/dashboard/site_locations_view.dart';
+import 'package:mcr/home/menu/main_menu/workOrder_Direct/workOrder_Direct_Entrylist.dart';
 import 'package:mcr/home/punch_in_out/punch_in.dart';
 import 'package:mcr/utilities/baseutitiles.dart';
 import 'package:mcr/utilities/print_logger.dart';
@@ -263,10 +264,13 @@ class Menu_Controller extends GetxController {
   }
 
   MainmenuScreen(String value, BuildContext context) {
-    boq_revised_controller.editCheck = 0;
-    boq_revised_controller.itemCheck = 0;
     if (value == "BOQ - Revised") {
+      boq_revised_controller.editCheck = 0;
+      boq_revised_controller.itemCheck = 0;
       Navigator.push(context, MaterialPageRoute(builder: (context) => const Boq_Revised_EntryList()));
+    }
+    else if(value == "Work Order - Direct"){
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const WorkOrderDirectEntrylist()));
     }
   }
 }

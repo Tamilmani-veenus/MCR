@@ -491,6 +491,45 @@ class _MainManusListState extends State<MainManusList> {
                                                       ],
                                                     ),
                                                   )
+                                                : menuController.subMainmenuList[
+                                            index] ==
+                                                "Work Order - Direct"
+                                                ? Container(
+                                              width: 40,
+                                              height: 40,
+                                              decoration: BoxDecoration(
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                borderRadius:
+                                                const BorderRadius.all(
+                                                  Radius.circular(10),
+                                                ),
+                                                gradient: LinearGradient(
+                                                  begin:
+                                                  Alignment.topLeft,
+                                                  end: Alignment
+                                                      .bottomRight,
+                                                  colors: [
+                                                    purple,
+                                                    blue,
+                                                  ],
+                                                ),
+                                              ),
+                                              child: const Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .center,
+                                                children: [
+                                                  Icon(
+                                                    Icons.assignment,
+                                                    color: Colors.white,
+                                                    size: 25,
+                                                  )
+                                                  // Image.asset('assets/images/ic_wallet.png',
+                                                  //     width: 22),
+                                                ],
+                                              ),
+                                            )
                                                 : Container(
                                                     width: 40,
                                                     height: 40,
@@ -542,7 +581,10 @@ class _MainManusListState extends State<MainManusList> {
                                                     // : menuController.subMainmenuList[index] == "Material Transfer" ? "Material Transfer"
                                                     // : menuController.subMainmenuList[index] == "Material Usage" ? "Material Usage"
                                                     // : menuController.subMainmenuList[index] == "Stock Report" ? "Stock"
-                                                    : "",
+                                                    : menuController.subMainmenuList[
+                                                index] ==
+                                                    "Work Order - Direct"
+                                                    ? "Work Order - Direct" : "",
                                                 textAlign: TextAlign.center,
                                                 style: const TextStyle(
                                                     color: Colors.black,

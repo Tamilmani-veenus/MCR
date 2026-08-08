@@ -912,6 +912,39 @@ class BaseUtitiles {
     }
   }
 
+  static filterSearchResults_workOrderDirect(
+      String value,
+      List list,
+      ) {
+    dummyListData.clear();
+
+    if (value.isNotEmpty) {
+      for (var item in list) {
+        if (item.entryDate.toString().toLowerCase().contains(value) ||
+            item.entryDate.toString().toUpperCase().contains(value) ||
+            item.workOrderNo.toString().toLowerCase().contains(value) ||
+            item.workOrderNo.toString().toUpperCase().contains(value) ||
+            item.subconName.toString().toLowerCase().contains(value) ||
+            item.subconName.toString().toUpperCase().contains(value) ||
+            item.project.toString().toLowerCase().contains(value) ||
+            item.project.toString().toUpperCase().contains(value) ||
+            item.netAmt.toString().toLowerCase().contains(value) ||
+            item.netAmt.toString().toUpperCase().contains(value) ||
+            item.siteName.toString().toLowerCase().contains(value) ||
+            item.status.toString().toUpperCase().contains(value) ||
+            item.status.toString().toLowerCase().contains(value) ||
+            item.siteName.toString().toUpperCase().contains(value) ||
+            item.preparedByName.toString().toLowerCase().contains(value) ||
+            item.preparedByName.toString().toUpperCase().contains(value) ) {
+          dummyListData.add(item);
+        }
+      }
+      return dummyListData;
+    } else {
+      return list;
+    }
+  }
+
   // static companyPopupAlert(String value,list)  {
   //   dummyListData.value.clear();
   //   if (value.isNotEmpty) {
