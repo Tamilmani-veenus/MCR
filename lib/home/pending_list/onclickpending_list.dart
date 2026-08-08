@@ -10508,10 +10508,10 @@ class _WorkOrderState extends State<WorkOrder> {
                                           children: <Widget>[
                                             Container(
                                               margin:
-                                              EdgeInsets.only(right: 15),
+                                              EdgeInsets.only(right: 1),
                                               child: Text(
                                                 pendingListController
-                                                    .mainlist[index].id
+                                                    .mainlist[index].no
                                                     .toString(),
                                                 style: TextStyle(
                                                     fontWeight:
