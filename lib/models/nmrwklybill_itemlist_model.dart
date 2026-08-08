@@ -12,7 +12,7 @@ class NmrItemlist {
   NmrItemlist({
     this.project,
     this.projectid,
-    this.sitename,
+    this.siteName,
     this.siteId,
     this.categoryId,
     this.categoryName,
@@ -20,11 +20,16 @@ class NmrItemlist {
     this.totnos,
     this.totalOtamt,
     this.netAmt,
+    this.Rate,
+    this.Totamt,
+    this.total_othrs,
+    this.wages,
+    this.amt,
   });
 
   String? project;
   int? projectid;
-  String? sitename;
+  String? siteName;
   int? siteId;
   int? categoryId;
   String? categoryName;
@@ -32,11 +37,17 @@ class NmrItemlist {
   double? totnos;
   double? totalOtamt;
   double? netAmt;
+  double? Rate;
+  double? Totamt;
+  double? total_othrs;
+  double? wages;
+  double? amt;
+
 
   factory NmrItemlist.fromJson(Map<String, dynamic> json) => NmrItemlist(
     project: json["project"],
     projectid: json["projectid"],
-    sitename: json["sitename"],
+    siteName: json["sitename"],
     siteId: json["siteid"],
     categoryId: json["CategoryId"],
     categoryName: json["CategoryName"],
@@ -44,12 +55,17 @@ class NmrItemlist {
     totnos: json["totnos"],
     totalOtamt: json["total_otamt"],
     netAmt: json["NetAmt"],
+    Rate: json["Rate"],
+    Totamt: json["Totamt"],
+    total_othrs: json["total_othrs"],
+    wages: json["wages"],
+    amt: json["Amt"],
   );
 
   Map<String, dynamic> toJson() => {
     "project": project,
     "projectid": projectid,
-    "sitename": sitename,
+    "sitename": siteName,
     "siteid": siteId,
     "CategoryId": categoryId,
     "CategoryName": categoryName,
@@ -57,5 +73,10 @@ class NmrItemlist {
     "totnos": totnos,
     "total_otamt": totalOtamt,
     "NetAmt": netAmt,
+    "Rate": Rate,
+    "Totamt": Totamt,
+    "total_othrs": total_othrs,
+    "wages": wages,
+    "Amt": amt,
   };
 }

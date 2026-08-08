@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/widgets.dart';
-
 import '../models/nmrwklybill_deduction_save_model.dart';
 import '../models/nmrwklybill_edit_entrylist.dart';
 import '../models/nmrwklybill_itemlist_model.dart';
@@ -86,44 +84,35 @@ class NMRWklyprovider{
     return datasave;
   }
 
-  static Future<String?> SaveSubContScreenEntryAPI(String body, int workId,context) async {
 
-    String? ratingRes;
-
-    try {
-      if (workId != 0) {
-        // UPDATE
-        final value = await ApiManager.putUpdateAPIButton(
-          ApiConstant.PUT_NMR_UPDATE_API,
-          body,
-        );
-
-        final response = saveDeduction_SaveResponseFromJson(value);
-        if (response.RetString != null) {
-          ratingRes = response.RetString;
-        }
-      } else {
-        // SAVE
-        final value = await ApiManager.postAPICall(
-          ApiConstant.NMR_SAVE_DEDUCTION,
-          body,
-        );
-
-        final response = saveDeduction_SaveResponseFromJson(value);
-        if (response.RetString != null) {
-          ratingRes = response.RetString;
-        }
-      }
-    } catch (error, stackTrace) {
-      debugPrint("SaveSubContScreenEntryAPI Error: $error");
-      debugPrint("StackTrace: $stackTrace");
-      Navigator.pop(context);
-      Navigator.pop(context);
-      Navigator.pop(context);
-      Navigator.pop(context);
-      BaseUtitiles.showToast(RequestConstant.NETWORKERROR);
+  static SaveSubContScreenEntryAPI(String body, int workId) async {
+    var ratingRes = null;
+    if(workId!=0){
+      await ApiManager.putUpdateAPIButton(ApiConstant.PUT_NMR_UPDATE_API, body).then(
+              (value) {
+            var response = saveDeduction_SaveResponseFromJson(value);
+            if (response.RetString != null) {
+              ratingRes = response.RetString;
+              return ratingRes;
+            }
+          }, onError: (error) {
+        print(error);
+        BaseUtitiles.showToast(RequestConstant.SOMETHINGWENT_WRONG);
+      });
     }
-
+    else{
+      await ApiManager.postAPICall(
+          ApiConstant.NMR_SAVE_DEDUCTION, body).then((value) {
+        var response = saveDeduction_SaveResponseFromJson(value);
+        if (response.RetString != null) {
+          ratingRes = response.RetString;
+          return ratingRes;
+        }
+      }, onError: (error) {
+        print(error);
+        BaseUtitiles.showToast(RequestConstant.SOMETHINGWENT_WRONG);
+      });
+    }
     return ratingRes;
   }
 
@@ -150,6 +139,11 @@ class NMRWklyprovider{
       final res = json.decode(value);
       if (res != null) {
         data = res;
+        if(data=="Deleted"){
+          BaseUtitiles.showToast("Deleted Successfully");
+        }else{
+          BaseUtitiles.showToast("$data");
+        }
         return data;
       }
     }, onError: (error) {

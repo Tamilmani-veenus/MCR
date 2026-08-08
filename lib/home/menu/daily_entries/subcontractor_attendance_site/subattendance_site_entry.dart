@@ -54,6 +54,7 @@ class _SubAttendanceSiteEntryState extends State<SubattendanceSiteEntry> {
       await subcontractorController.getSubcontList(
           context,
           projectController.selectedProjectId.value,
+          siteController.selectedsiteId.value,
           subcontractorController.checkScreen);
       dailyEntriesController.autoYearWiseNoController.text =
           autoYearWiseNoController.SubcontAttendance_autoYrsWise.value;

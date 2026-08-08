@@ -406,7 +406,7 @@ class _Subcont_Nmr_EntryScreenState_Site
                               child: ConstIcons.subcontractorName),
                         ),
                         onTap: () async {
-                          await subcontractorController.getSubcontList(context, projectController.selectedProjectId.value, 1);
+                          await subcontractorController.getSubcontList(context, projectController.selectedProjectId.value,siteController.selectedsiteId.value,"billdirect");
                           bottomsheetControllers.SubcontractorName(context,
                               subcontractorController.getdropDownvalue.value);
                         },

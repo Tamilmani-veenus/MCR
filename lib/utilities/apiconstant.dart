@@ -24,10 +24,12 @@ class ApiConstant{
   static const String GETVERSIONAPI = BASE_URL + "api/CommonFile/GetVersion";
   static const String GETPROJECTDROPDOWNLISTALL = BASE_URL + "api/CommonFile/GetProjectAll";
   static const String GETPROJECTDROPDOWNLIST = BASE_URL + "api/CommonFile/GetProject";
+  static const String GETNMRBILLNO = BASE_URL + "api/SubcontNMR/GetProjectCumContractorNo";
   static const String PROJECT_NAME = BASE_URL + "api/CommonFile/Get_MRNProjectsToTransfer";
   static const String GETPROJECTCOMPANYWISE_DROPDOWNLIST = BASE_URL + "api/CommonFile/GetProjectCompwise";
   static const String GET_HEAD_DROPDOWNLIST = BASE_URL + "api/SubContDPRNew/GetHeadname";
   static const String GETSUBCONTRACTDROPDOWNLIST = BASE_URL + "api/CommonFile/GetSubContractorAll";
+  static const String GETSUBCONTRACTBILLDIRLIST = BASE_URL + "api/SubContDirectBill/GetSubcontList";
   static const String GETSUBCONTRACTLIST = BASE_URL + "api/CommonFile/GetSubContractor";
   static const String GETNMRREPORT = BASE_URL + "api/Report/GetNmrReportMas";
   static const String GETLABOURLIST = BASE_URL + "api/CommonFile/GetLabour";

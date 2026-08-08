@@ -19,6 +19,7 @@ class NmrEditResponse {
     this.fromDate,
     this.toDate,
     this.rndOff,
+    this.billNo,
     this.billAmt,
     this.actAdvAmt,
     this.advAmt,
@@ -48,6 +49,7 @@ class NmrEditResponse {
   String? fromDate;
   String? toDate;
   double? rndOff;
+  String? billNo;
   double? billAmt;
   double? actAdvAmt;
   double? advAmt;
@@ -77,6 +79,7 @@ class NmrEditResponse {
     fromDate: json["FromDate"],
     toDate: json["ToDate"],
     rndOff: json["RndOff"],
+    billNo: json["BillNo"],
     billAmt: json["BillAmt"].toDouble(),
     actAdvAmt: json["ActAdvAmt"],
     advAmt: json["AdvAmt"],
@@ -107,6 +110,7 @@ class NmrEditResponse {
     "FromDate": fromDate,
     "ToDate": toDate,
     "RndOff": rndOff,
+    "BillNo": billNo,
     "BillAmt": billAmt,
     "ActAdvAmt": actAdvAmt,
     "AdvAmt": advAmt,
@@ -127,6 +131,7 @@ class NmrEditResponse {
 class NmrBillDet {
   NmrBillDet({
     this.sno,
+    // this.projectId,
     this.siteName,
     this.categoryName,
     this.totnos,
@@ -134,36 +139,53 @@ class NmrBillDet {
     this.categoryId,
     this.siteId,
     this.nmrAmt,
+    this.amt,
+    this.totalOthrs,
+    this.wages,
+
   });
 
   int? sno;
+  // String? projectId;
   String? siteName;
   String? categoryName;
   double? totnos;
   double? totalOtamt;
   int? categoryId;
   int? siteId;
+  double? wages;
+  double? amt;
+  double?totalOthrs;
   double? nmrAmt;
 
   factory NmrBillDet.fromJson(Map<String, dynamic> json) => NmrBillDet(
     sno: json["Sno"],
+    // projectId: json["ProjectId"],
     siteName: json["SiteName"],
     categoryName: json["CategoryName"],
     totnos: json["totnos"],
     totalOtamt: json["total_otamt"],
-    categoryId: json["CategoryId"],
+    totalOthrs: json["total_othrs"],
+    categoryId: json["CategoryID"],
     siteId: json["SiteId"],
+    wages: json["wages"],
+    amt: json["amt"],
     nmrAmt: json["NMRAMT"],
   );
 
   Map<String, dynamic> toJson() => {
     "Sno": sno,
+    // "ProjectId": projectId,
     "SiteName": siteName,
     "CategoryName": categoryName,
     "totnos": totnos,
     "total_otamt": totalOtamt,
-    "CategoryId": categoryId,
+    "CategoryID": categoryId,
     "SiteId": siteId,
     "NMRAMT": nmrAmt,
+    "amt": amt,
+    "total_othrs": totalOthrs,
+    "wages": wages,
+
   };
 }

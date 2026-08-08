@@ -16,6 +16,7 @@ class NmrSaveRequest {
     this.toDate,
     this.remarks,
     this.rndOff,
+    this.billNo,
     this.billAmt,
     this.actAdvAmt,
     this.advAmt,
@@ -41,6 +42,7 @@ class NmrSaveRequest {
   String? toDate;
   String? remarks;
   String? rndOff;
+  String? billNo;
   String? billAmt;
   String? actAdvAmt;
   String? advAmt;
@@ -66,6 +68,7 @@ class NmrSaveRequest {
     toDate: json["ToDate"],
     remarks: json["remarks"],
     rndOff: json["RndOff"],
+    billNo: json["Billno"],
     billAmt: json["BillAmt"],
     actAdvAmt: json["ActAdvAmt"],
     advAmt: json["AdvAmt"],
@@ -92,6 +95,7 @@ class NmrSaveRequest {
     "ToDate": toDate,
     "remarks": remarks,
     "RndOff": rndOff,
+    "Billno": billNo,
     "BillAmt": billAmt,
     "ActAdvAmt": actAdvAmt,
     "AdvAmt": advAmt,
@@ -110,33 +114,49 @@ class NmrSaveRequest {
 
 class NmrBillDet {
   NmrBillDet({
+    this.projectId,
     this.siteId,
-    this.nmrAmt,
     this.categoryId,
     this.totnos,
     this.totalOtamt,
+    this.nmrAmt,
+    // this.wages,
+    // this.amt,
+    // this.totalOthrs,
   });
 
+  String? projectId;
   String? siteId;
-  String? nmrAmt;
   String? categoryId;
   String? totnos;
   String? totalOtamt;
+  String? nmrAmt;
+  // String? wages;
+  // String? amt;
+  // String? totalOthrs;
 
   factory NmrBillDet.fromJson(Map<String, dynamic> json) => NmrBillDet(
+    projectId: json["ProjectId"],
     siteId: json["SiteId"],
-    nmrAmt: json["NMRAmt"],
     categoryId: json["CategoryId"],
     totnos: json["Totnos"],
     totalOtamt: json["total_otamt"],
+    nmrAmt: json["NMRAmt"],
+    // wages: json["wages"],
+    // amt: json["amt"],
+    // totalOthrs: json["total_othrs"],
   );
 
   Map<String, dynamic> toJson() => {
+    "ProjectId": projectId,
     "SiteId": siteId,
-    "NMRAmt": nmrAmt,
     "CategoryId": categoryId,
     "Totnos": totnos,
     "total_otamt": totalOtamt,
+    "NMRAmt": nmrAmt,
+    // "wages": wages,
+    // "amt": amt,
+    // "total_othrs": totalOthrs,
   };
 }
 
