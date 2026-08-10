@@ -1165,6 +1165,7 @@ class BottomsheetControllers {
                           await dailyEntriesController
                               .deleteSubcontDetTableDatas();
                           dailyEntriesController.readListdata.clear();
+                          await nmrWklyController.DirectBill_CalculationList(type: "Subcont");
 
                           // await subcontractorController.getSubcontList(context, projectcontroller.selectedProjectId.value);
 

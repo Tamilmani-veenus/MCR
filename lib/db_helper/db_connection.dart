@@ -49,6 +49,9 @@ class DatabaseConnection {
     String workOrderGSTItemlistTable = "CREATE TABLE workOrderGSTItemlistTable (id INTEGER PRIMARY KEY UNIQUE,reqDetId INTEGER,addLessId INTEGER,percentValue REAL,amount REAL,addLessName TEXT,addLessType TEXT)";
     await database.execute(workOrderGSTItemlistTable);
 
+    String directBillGenGSTItemlistTable = "CREATE TABLE directBillGenGSTItemlistTable (id INTEGER PRIMARY KEY UNIQUE,reqDetId INTEGER,addLessId INTEGER,percentValue REAL,amount REAL,addLessName TEXT,addLessType TEXT)";
+    await database.execute(directBillGenGSTItemlistTable);
+
     String inwardPendingItemlistTable = "CREATE TABLE inwardPendingItemlistTable (id INTEGER PRIMARY KEY UNIQUE,poDetId INTEGER,materialId INTEGER,materialName TEXT,unit TEXT,poQty REAL,balQty REAL,rate REAL,inwQty REAL,amdCheck INTEGER,addQty REAL,lessQty REAL)";
     await database.execute(inwardPendingItemlistTable);
 

@@ -57,6 +57,7 @@ class ApiConstant{
   static const String GETMATERIALWISEDROPDOWNLIST = BASE_URL + "api/CommonFile/GetMaterialSubAll";
   static const String GETMATERIALWISE_SHOW_LIST = BASE_URL + "api/Report/GetStockAbstract";
   static const String GETSUBCONT_ENTRY_SHOW_CLICK = BASE_URL + "api/CommonFile/GetSubContCategory";
+  static const String GETINVOICENOLIST = BASE_URL + "api/SubContDirectBill/GetinvoiceNo";
   static const String GETAUTONO_YEAR_WISE = BASE_URL + "api/CommonFile/GetAutoNoYearWise";
   static const String GETSUBCONT_ATTEN_ENTRY_LIST = BASE_URL + "api/SubContLabAttendance/GetAttendanceEntryList";
   static const String GETMENU_LIST_API = BASE_URL + "api/CommonFile/GetMenusList";
@@ -78,7 +79,7 @@ class ApiConstant{
   static const String GET_DPRNEW_EDIT_API = BASE_URL + "api/SubContDPRNew/GetDprById";
   static const String GET_DPR_LABOUR_ENTRY_LIST = BASE_URL + "api/SubContDPRNewLabour/GetDPREntryList";
   static const String GET_DPR_LABOUR_EDIT_API = BASE_URL + "api/SubContDPRNewLabour/GetDprById";
-  static const String GET_DIRECTBILL_ADVANCE_BALANCE = BASE_URL + "api/SubContDirectBill/GetSubContAdvBalance";
+  static const String GET_DIRECTBILL_ADVANCE_BALANCE = BASE_URL + "api/Commonfile/GetSubContAdvBalance";
   static const String GET_DIRECTBILL_ENTRY_LIST = BASE_URL + "api/SubContDirectBill/GetDirectBillEntryList";
   static const String GET_WORKORD_DIRECT_ENTRY_LIST = BASE_URL + "api/SubcontractWorkOrderDirect/GetWorkOrderDirectList";
   static const String GET_DIRECTBILL_CALCULATION_LIST = BASE_URL + "api/CommonFile/GetAddlessList";

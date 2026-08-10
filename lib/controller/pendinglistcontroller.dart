@@ -18,9 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../utilities/requestconstant.dart';
 
-
 class PendingListController extends GetxController {
-
   List<OnclickPendingListResponse> onclickPendingListData = [];
   RxList mainlist = [].obs;
   RxList mrnfinalapprovallist = [].obs;
@@ -36,9 +34,6 @@ class PendingListController extends GetxController {
 
   List<TransferAckMatList> transAckMaterialList = [];
   RxList Search_transAckMaterialList = [].obs;
-
-
-
 
   int checkColor = 0;
 
@@ -69,13 +64,14 @@ class PendingListController extends GetxController {
   Future getPendingList() async {
     pendingList_datas.value.clear();
     await PendingListProvider.getPendingListProvider(
-            loginController.UserId(), loginController.UserType()).then((value) async {
+            loginController.UserId(), loginController.UserType())
+        .then((value) async {
       if (value != null && value.length > 0) {
         pendingList_datas.value = value;
         return pendingList_datas.value;
       }
       // else {
-        // BaseUtitiles.showToast(RequestConstant.NORECORD_FOUND);
+      // BaseUtitiles.showToast(RequestConstant.NORECORD_FOUND);
       // }
     });
   }
@@ -119,7 +115,8 @@ class PendingListController extends GetxController {
   }
 
   Future poAproval_buttonApi(BuildContext context, String Urlname) async {
-    String body = pendingPoapprovalApiResmodelToJson(PendingPoapprovalApiResmodel(
+    String body =
+        pendingPoapprovalApiResmodelToJson(PendingPoapprovalApiResmodel(
       urlName: Urlname.toString(),
       userId: loginController.EmpId(),
       deviceName: BaseUtitiles.deviceName,
@@ -260,7 +257,8 @@ class PendingListController extends GetxController {
   Future GetDetDetails(String Url, int RID, String Reqno, String Projectname,
       BuildContext context) async {
     onclickPendingListDet.clear();
-    await PendingListProvider.getOnclickDetProvider(Url, RID).then((value) async {
+    await PendingListProvider.getOnclickDetProvider(Url, RID)
+        .then((value) async {
       if (value != null && value.length > 0) {
         onclickPendingListDet = value;
         print(onclickPendingListDet.toString());
@@ -285,12 +283,15 @@ class PendingListController extends GetxController {
   Future GetDetDetails_PreApproval(String Url, int RID, String Reqno,
       String Projectname, BuildContext context) async {
     onclickPendingListDet.clear();
-    await PendingListProvider.getOnclickDetProvider(Url, RID).then((value) async {
+    await PendingListProvider.getOnclickDetProvider(Url, RID)
+        .then((value) async {
       if (value != null && value.length > 0) {
         onclickPendingListDet = value;
         print(onclickPendingListDet.toString());
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => PendingListDet_PreApproval(
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => PendingListDet_PreApproval(
                       list: onclickPendingListDet,
                       ReqNo: Reqno,
                       ProjectName: Projectname,
@@ -365,10 +366,10 @@ class PendingListController extends GetxController {
             context,
             MaterialPageRoute(
                 builder: (context) => PendingPo_Approvel_Popup(
-                  heading: Url,
-                  list: onclickPendingListDet,
-                  ReqNo: Reqno,
-                )));
+                      heading: Url,
+                      list: onclickPendingListDet,
+                      ReqNo: Reqno,
+                    )));
       }
     });
   }
@@ -387,24 +388,26 @@ class PendingListController extends GetxController {
             context,
             MaterialPageRoute(
                 builder: (context) => PendingPo_Approvel_Popup(
-                  heading: Url,
-                  list: onclickPendingListDet,
-                  ReqNo: Reqno,
-                )));
+                      heading: Url,
+                      list: onclickPendingListDet,
+                      ReqNo: Reqno,
+                    )));
       }
     });
   }
 
-
 //--------------PO APPROVAL-------------------
-  Future PendingPoApprovalDetDetails(String Url, int RID, String Reqno, BuildContext context) async {
+  Future PendingPoApprovalDetDetails(
+      String Url, int RID, String Reqno, BuildContext context) async {
     onclickPendingListDet.clear();
-    await PendingListProvider.getOnclickDetProvider(Url, RID).then((value) async {
+    await PendingListProvider.getOnclickDetProvider(Url, RID)
+        .then((value) async {
       if (value != null && value.length > 0) {
         onclickPendingListDet = value;
         print(onclickPendingListDet.toString());
         Navigator.push(
-            context, MaterialPageRoute(
+            context,
+            MaterialPageRoute(
                 builder: (context) => PendingPo_Approvel_Popup(
                       heading: Url,
                       list: onclickPendingListDet,
@@ -414,10 +417,12 @@ class PendingListController extends GetxController {
     });
   }
 
-  Future poapprovalSupplierlist(BuildContext context, matId, String materialname, String scale) async {
+  Future poapprovalSupplierlist(
+      BuildContext context, matId, String materialname, String scale) async {
     poapprovalSupplierList.clear();
     Searchpoapproval_supplierList.clear();
-    await PendingListProvider.getPoapproval_SupplierbuildList_Provider(matId).then((value) async {
+    await PendingListProvider.getPoapproval_SupplierbuildList_Provider(matId)
+        .then((value) async {
       if (value != null && value.length > 0) {
         poapprovalSupplierList = value;
         Searchpoapproval_supplierList.value = poapprovalSupplierList;
@@ -426,19 +431,13 @@ class PendingListController extends GetxController {
             context: context,
             builder: (BuildContext context) {
               return PoApproval_supplierList_Alert(
-                  MaterialId: matId,
-                  MaterialName: materialname,
-                  Scale: scale
-              );
+                  MaterialId: matId, MaterialName: materialname, Scale: scale);
             });
-      }
-      else{
+      } else {
         BaseUtitiles.showToast(RequestConstant.NORECORD_FOUND);
       }
     });
   }
-
-
 
   Future PendingInwardDetDetails(
       String Url, int RID, String Reqno, BuildContext context) async {
@@ -465,7 +464,8 @@ class PendingListController extends GetxController {
     });
   }
 
-  Future PendingTransferPendingDetDetails(String Url, int RID, String Reqno, BuildContext context) async {
+  Future PendingTransferPendingDetDetails(
+      String Url, int RID, String Reqno, BuildContext context) async {
     onclickPendingListDet.clear();
     await PendingListProvider.getOnclickDetProvider(Url, RID)
         .then((value) async {
@@ -473,9 +473,12 @@ class PendingListController extends GetxController {
         onclickPendingListDet = value;
         print(onclickPendingListDet.toString());
         Navigator.push(
-            context, MaterialPageRoute(
+            context,
+            MaterialPageRoute(
                 builder: (context) => PendingList_TransferPending_Popup(
-                      list: onclickPendingListDet, ReqNo: Reqno,)));
+                      list: onclickPendingListDet,
+                      ReqNo: Reqno,
+                    )));
         // return showDialog(
         //     context: context,
         //     builder: (BuildContext context) {
@@ -486,9 +489,6 @@ class PendingListController extends GetxController {
     });
   }
 
-
-
-
   Future PendingTransferACKDetails(
       String Url, int RID, String Reqno, BuildContext context) async {
     onclickPendingListDet.clear();
@@ -498,16 +498,18 @@ class PendingListController extends GetxController {
         onclickPendingListDet = value;
         print(onclickPendingListDet.toString());
         Navigator.push(
-            context, MaterialPageRoute(
-            builder: (context) => TransferAckMaterialList(
-              list: onclickPendingListDet, ReqNo: Reqno,)));
+            context,
+            MaterialPageRoute(
+                builder: (context) => TransferAckMaterialList(
+                      list: onclickPendingListDet,
+                      ReqNo: Reqno,
+                    )));
         // return showDialog(
         //     context: context,
         //     builder: (BuildContext context) {
         //       return TransferAckPopup(
         //           list: onclickPendingListDet, ReqNo: Reqno);
         //     });
-
       }
     });
   }
@@ -516,19 +518,13 @@ class PendingListController extends GetxController {
       String userId, String userType, String name, BuildContext context) async {
     onclickPendingListData.clear();
     mainlist.value.clear();
-    await PendingListProvider.getOnclickPendingListProvider(userId, userType, name).then((value) {
+    await PendingListProvider.getOnclickPendingListProvider(
+            userId, userType, name)
+        .then((value) {
       if (value != null && value.length > 0) {
         onclickPendingListData = value;
         mainlist.value = onclickPendingListData;
         return name == "MRN VERIFICATION"
-            ? Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => MrnVerfication(
-                  onclickPendingListData: onclickPendingListData,
-                  heading: name)),
-        )
-        : name == "MRN VERIFICATION - CIVIL"
             ? Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -536,203 +532,208 @@ class PendingListController extends GetxController {
                         onclickPendingListData: onclickPendingListData,
                         heading: name)),
               )
-            : name == "MRN VERIFICATION - HSE"
+            : name == "MRN VERIFICATION - CIVIL"
                 ? Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => MrnVerification_HSE(
+                        builder: (context) => MrnVerfication(
                             onclickPendingListData: onclickPendingListData,
                             heading: name)),
                   )
-                : name == "MRN VERIFICATION - INTERIOR"
+                : name == "MRN VERIFICATION - HSE"
                     ? Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => MrnVerification_Interior(
+                            builder: (context) => MrnVerification_HSE(
                                 onclickPendingListData: onclickPendingListData,
                                 heading: name)),
                       )
-                    : name == "MRN VERIFICATION - MEB"
+                    : name == "MRN VERIFICATION - INTERIOR"
                         ? Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => MrnVerification_MEB(
+                                builder: (context) => MrnVerification_Interior(
                                     onclickPendingListData:
                                         onclickPendingListData,
                                     heading: name)),
                           )
-                        : name == "MRN VERIFICATION - PEB"
+                        : name == "MRN VERIFICATION - MEB"
                             ? Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => MrnVerification_PEB(
+                                    builder: (context) => MrnVerification_MEB(
                                         onclickPendingListData:
                                             onclickPendingListData,
                                         heading: name)),
                               )
-                            : name == "MRN APPROVAL"
+                            : name == "MRN VERIFICATION - PEB"
                                 ? Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => MrnApproval(
-                                            onclickPendingListData:
-                                                onclickPendingListData,
-                                            heading: name)),
+                                        builder: (context) =>
+                                            MrnVerification_PEB(
+                                                onclickPendingListData:
+                                                    onclickPendingListData,
+                                                heading: name)),
                                   )
-                                : name == "MRN PRE APPROVAL" || name == "MRN GM APPROVAL"
+                                : name == "MRN APPROVAL"
                                     ? Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                                MrnPreApproval(
-                                                    onclickPendingListData:
-                                                        onclickPendingListData,
-                                                    heading: name)),
+                                            builder: (context) => MrnApproval(
+                                                onclickPendingListData:
+                                                    onclickPendingListData,
+                                                heading: name)),
                                       )
-                                    : name == "PENDING PO"
+                                    : name == "MRN PRE APPROVAL" ||
+                                            name == "MRN GM APPROVAL"
                                         ? Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) => PendingPO(
-                                                    onclickPendingListData:
-                                                        onclickPendingListData,
-                                                    heading: name)),
+                                                builder: (context) =>
+                                                    MrnPreApproval(
+                                                        onclickPendingListData:
+                                                            onclickPendingListData,
+                                                        heading: name)),
                                           )
-                                        : name == "MRN DECISION PENDING"
+                                        : name == "PENDING PO"
                                             ? Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        OnclickPendingList(
-                                                            onclickPendingListData:
-                                                                onclickPendingListData,
-                                                            heading: name)),
+                                                    builder: (context) => PendingPO(
+                                                        onclickPendingListData:
+                                                            onclickPendingListData,
+                                                        heading: name)),
                                               )
-                                            : name ==
-                                                    "WORK PRE APPROVAL PENDING"
+                                            : name == "MRN DECISION PENDING"
                                                 ? Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>
-                                                            WorkPreApproval(
+                                                            OnclickPendingList(
                                                                 onclickPendingListData:
                                                                     onclickPendingListData,
                                                                 heading: name)),
                                                   )
-                                                : name == "MRN FINAL APPROVAL"
+                                                : name ==
+                                                        "WORK PRE APPROVAL PENDING"
                                                     ? Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
                                                             builder: (context) =>
-                                                                MrnFinalApproval(
+                                                                WorkPreApproval(
                                                                     onclickPendingListData:
                                                                         onclickPendingListData,
                                                                     heading:
                                                                         name)),
                                                       )
-                                                    : name == "PO VERIFICATION"
+                                                    : name ==
+                                                            "MRN FINAL APPROVAL"
                                                         ? Navigator.push(
                                                             context,
                                                             MaterialPageRoute(
                                                                 builder: (context) =>
-                                                                    PoVerification(
+                                                                    MrnFinalApproval(
                                                                         onclickPendingListData:
                                                                             onclickPendingListData,
                                                                         heading:
                                                                             name)),
                                                           )
-                                                        : name == "PO PREAPPROVAL PENDING"
+                                                        : name ==
+                                                                "PO VERIFICATION"
                                                             ? Navigator.push(
                                                                 context,
                                                                 MaterialPageRoute(
-                                                                    builder: (context) => PoPreApproval(
-                                                                        onclickPendingListData: onclickPendingListData,
-                                                                        heading: name)))
-                                                            : name == "PO APPROVAL"
-                                                            ? Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder: (context) => PoApprovalDesign(
+                                                                    builder: (context) => PoVerification(
                                                                         onclickPendingListData:
                                                                             onclickPendingListData,
                                                                         heading:
                                                                             name)),
                                                               )
                                                             : name ==
-                                                                    "INWARD PENDING"
-                                                                ? Navigator
-                                                                    .push(
+                                                                    "PO PREAPPROVAL PENDING"
+                                                                ? Navigator.push(
                                                                     context,
                                                                     MaterialPageRoute(
-                                                                        builder: (context) => InwardPending(
+                                                                        builder: (context) => PoPreApproval(
                                                                             onclickPendingListData:
                                                                                 onclickPendingListData,
                                                                             heading:
-                                                                                name)),
-                                                                  )
+                                                                                name)))
                                                                 : name ==
-                                                                        "TRANSFER PENDING"
+                                                                        "PO APPROVAL"
                                                                     ? Navigator
                                                                         .push(
                                                                         context,
                                                                         MaterialPageRoute(
                                                                             builder: (context) =>
-                                                                                TransferPending(onclickPendingListData: onclickPendingListData, heading: name)),
+                                                                                PoApprovalDesign(onclickPendingListData: onclickPendingListData, heading: name)),
                                                                       )
                                                                     : name ==
-                                                                            "TRANSFER ACKNOWLEDGMENT PENDING"
+                                                                            "INWARD PENDING"
                                                                         ? Navigator
                                                                             .push(
                                                                             context,
-                                                                            MaterialPageRoute(builder: (context) => TransferACKPending(onclickPendingListData: onclickPendingListData, heading: name)),
+                                                                            MaterialPageRoute(builder: (context) => InwardPending(onclickPendingListData: onclickPendingListData, heading: name)),
                                                                           )
                                                                         : name ==
-                                                                                "SUBCONTRACTOR ATTENDANCE APPROVAL"
+                                                                                "TRANSFER PENDING"
                                                                             ? Navigator.push(
                                                                                 context,
-                                                                                MaterialPageRoute(builder: (context) => SubContractorAttandance(onclickPendingListData: onclickPendingListData, heading: name)),
+                                                                                MaterialPageRoute(builder: (context) => TransferPending(onclickPendingListData: onclickPendingListData, heading: name)),
                                                                               )
-                                                                            : name == "COMPANY LABOUR ATTENDANCE APPROVAL"
+                                                                            : name == "TRANSFER ACKNOWLEDGMENT PENDING"
                                                                                 ? Navigator.push(
                                                                                     context,
-                                                                                    MaterialPageRoute(builder: (context) => CompanyLbrAtendance(onclickPendingListData: onclickPendingListData, heading: name)),
+                                                                                    MaterialPageRoute(builder: (context) => TransferACKPending(onclickPendingListData: onclickPendingListData, heading: name)),
                                                                                   )
-                                                                                : name == "SUBCONTRACTOR DPR APPROVAL"
+                                                                                : name == "SUBCONTRACTOR ATTENDANCE APPROVAL"
                                                                                     ? Navigator.push(
                                                                                         context,
-                                                                                        MaterialPageRoute(
-                                                                                            builder: (context) => SubContDPRApproval(
-                                                                                                  onclickPendingListData: onclickPendingListData,
-                                                                                                  heading: name,
-                                                                                                )),
+                                                                                        MaterialPageRoute(builder: (context) => SubContractorAttandance(onclickPendingListData: onclickPendingListData, heading: name)),
                                                                                       )
-                                                                                    : name == "SUBCONTRACTOR NMR Bill APPROVAL"
+                                                                                    : name == "COMPANY LABOUR ATTENDANCE APPROVAL"
                                                                                         ? Navigator.push(
                                                                                             context,
-                                                                                            MaterialPageRoute(builder: (context) => SubContNMRBillApproval(onclickPendingListData: onclickPendingListData, heading: name)),
+                                                                                            MaterialPageRoute(builder: (context) => CompanyLbrAtendance(onclickPendingListData: onclickPendingListData, heading: name)),
                                                                                           )
-                                                                                        : name == "BILL GENERATION-BOQ APPROVAL"
+                                                                                        : name == "SUBCONTRACTOR DPR APPROVAL"
                                                                                             ? Navigator.push(
                                                                                                 context,
-                                                                                                MaterialPageRoute(builder: (context) => BillGenBOQAproval(onclickPendingListData: onclickPendingListData, heading: name)),
+                                                                                                MaterialPageRoute(
+                                                                                                    builder: (context) => SubContDPRApproval(
+                                                                                                          onclickPendingListData: onclickPendingListData,
+                                                                                                          heading: name,
+                                                                                                        )),
                                                                                               )
-                                                                                            : name == "BILL GENERATION-DIRECT APPROVAL"
+                                                                                            : name == "SUBCONTRACTOR NMR Bill APPROVAL"
                                                                                                 ? Navigator.push(
                                                                                                     context,
-                                                                                                    MaterialPageRoute(builder: (context) => BillGenDirectAproval(onclickPendingListData: onclickPendingListData, heading: name)),
+                                                                                                    MaterialPageRoute(builder: (context) => SubContNMRBillApproval(onclickPendingListData: onclickPendingListData, heading: name)),
                                                                                                   )
-                                                                                                : name == "ADVANCE REQUISTION APPROVAL"
+                                                                                                : name == "BILL GENERATION-BOQ APPROVAL"
                                                                                                     ? Navigator.push(
                                                                                                         context,
-                                                                                                        MaterialPageRoute(builder: (context) => AdvanceReqAproval(onclickPendingListData: onclickPendingListData, heading: name)),
-                                                                                                      ): name == "WORK ORDER APPROVAL PENDING"
-                                                                                                            ? Navigator.push(
+                                                                                                        MaterialPageRoute(builder: (context) => BillGenBOQAproval(onclickPendingListData: onclickPendingListData, heading: name)),
+                                                                                                      )
+                                                                                                    : name == "BILL GENERATION-DIRECT APPROVAL"
+                                                                                                        ? Navigator.push(
                                                                                                             context,
-                                                                                                            MaterialPageRoute(
-                                                                                                                builder: (context) => WorkOrder(
-                                                                                                                    onclickPendingListData: onclickPendingListData,
-                                                                                                                    heading: name)))
-                                                                                                    : Navigator.push(context, MaterialPageRoute(builder: (context) => OfficeVoucherApproval(onclickPendingListData: onclickPendingListData, heading: name)));
+                                                                                                            MaterialPageRoute(builder: (context) => BillGenDirectAproval(onclickPendingListData: onclickPendingListData, heading: name)),
+                                                                                                          )
+                                                                                                        : name == "ADVANCE REQUISTION APPROVAL"
+                                                                                                            ? Navigator.push(
+                                                                                                                context,
+                                                                                                                MaterialPageRoute(builder: (context) => AdvanceReqAproval(onclickPendingListData: onclickPendingListData, heading: name)),
+                                                                                                              )
+                                                                                                            : name == "SUBCONTRACTOR BILL VERIFICATION - NMR"
+                                                                                                                ? Navigator.push(
+                                                                                                                    context,
+                                                                                                                    MaterialPageRoute(builder: (context) => NMRBillVerification(onclickPendingListData: onclickPendingListData, heading: name)),
+                                                                                                                  )
+                                                                                                                : name == "WORK ORDER APPROVAL PENDING"
+                                                                                                                    ? Navigator.push(context, MaterialPageRoute(builder: (context) => WorkOrder(onclickPendingListData: onclickPendingListData, heading: name)))
+                                                                                                                    : Navigator.push(context, MaterialPageRoute(builder: (context) => OfficeVoucherApproval(onclickPendingListData: onclickPendingListData, heading: name)));
       }
     });
   }

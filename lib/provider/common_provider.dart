@@ -4,6 +4,7 @@ import '../models/accountname_model.dart';
 import '../models/accounttype_model.dart';
 import '../models/companydropdownlist_model.dart';
 import '../models/companywiseprojectname_model.dart';
+import '../models/invoiceno_billdir_model.dart';
 import '../models/materiallist_model.dart';
 import '../models/materialsubitem_dropdown_model.dart';
 import '../models/materialwise_materialdropdown_model.dart';
@@ -33,6 +34,22 @@ class CommonProvider{
         return responseData;
       }
     },onError: (error) {
+      print(error);
+      print("Error == $error");
+      BaseUtitiles.showToast('Something went wrong.. $error');
+    });
+    return responseData;
+  }
+
+  static Future<List> getInvoiceNoList(int pId, int subId) async {
+    List responseData = [];
+    await ApiManager.getAPICall(ApiConstant.GETINVOICENOLIST + "?pid=$pId&subid=$subId")
+        .then((value) {
+      responseData = invoiceNoResponseFromJson(value);
+      if (responseData != null && responseData.length > 0) {
+        return responseData;
+      }
+    }, onError: (error) {
       print(error);
       print("Error == $error");
       BaseUtitiles.showToast('Something went wrong.. $error');

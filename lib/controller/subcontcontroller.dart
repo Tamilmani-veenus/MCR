@@ -16,6 +16,8 @@ class SubcontractorController extends GetxController {
   RxString labourName="".obs;
   RxList labourList=[].obs;
   RxList labourmainList=[].obs;
+  RxList getInvoiceNoValue = [].obs;
+  final InvoiceNo=new TextEditingController();
 
   List<File> imageFiles = [];
   int? count = 0;
@@ -83,6 +85,13 @@ class SubcontractorController extends GetxController {
       });
     }
     Subcontractorname.text=selectedSubconttName.value;
+  }
+
+  Future getInvoiceNoList(int pid,  int subid) async {
+    getInvoiceNoValue.value = await CommonProvider.getInvoiceNoList(pid,subid);
+    getInvoiceNoValue.value.forEach((element){
+      InvoiceNo.text=element.entryAutoNo.toString();
+    });
   }
 
 

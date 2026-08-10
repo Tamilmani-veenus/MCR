@@ -286,7 +286,7 @@ class CompanyNmrAttendanceController extends GetxController{
       approvedby: loginController.EmpId(),
       userId: loginController.UserId(),
       deviceName: BaseUtitiles.deviceName,
-      entryMode: saveButton.value == "Save" ? "ADD" : saveButton.value ==
+      entryMode: saveButton.value == "Submit" ? "ADD" : saveButton.value ==
           "Update" ? "UPDATE" : saveButton.value == "Approval"
           ? "APPROVE"
           : saveButton.value == "Approve" ? "APPROVE" : "",
