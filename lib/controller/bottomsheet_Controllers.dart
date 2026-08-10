@@ -188,10 +188,7 @@ class BottomsheetControllers {
                           // siteController.selectedsiteId.value=0;
                           dailyWrkDone_DPR_Controller
                               .TypeSubcontractorname.text = "--SELECT--";
-                          await subcontractorController.getSubcontList(
-                              context,
-                              projectcontroller.selectedProjectId.value,
-                              subcontractorController.checkScreen);
+                          await subcontractorController.getSubcontList(context, projectcontroller.selectedProjectId.value, siteController.selectedsiteId.value, subcontractorController.checkScreen);
                           dailyWrkDone_DPRNEW_Controller
                               .dprNew_DetTable_Delete();
                           dailyWrkDone_DPRNEW_Controller
@@ -327,10 +324,7 @@ class BottomsheetControllers {
                               list[index].projectId;
                           await fromsiteController.getsiteDropdowntList(
                               context, 0);
-                          await subcontractorController.getSubcontList(
-                              context,
-                              projectcontroller.selectedProjectId.value,
-                              subcontractorController.checkScreen);
+                          await subcontractorController.getSubcontList(context, projectcontroller.selectedProjectId.value,siteController.selectedsiteId.value, subcontractorController.checkScreen);
                           searchcontroller.text = "";
                           Navigator.pop(context);
                         },

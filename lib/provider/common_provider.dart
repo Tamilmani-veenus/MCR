@@ -8,6 +8,7 @@ import '../models/materiallist_model.dart';
 import '../models/materialsubitem_dropdown_model.dart';
 import '../models/materialwise_materialdropdown_model.dart';
 import '../models/materialwise_subhead_dropdown_model.dart';
+import '../models/nmr_billno_model.dart';
 import '../models/nmrwklybill_deduction_save_model.dart';
 import '../models/payfor_model.dart';
 import '../models/paymode_model.dart';
@@ -53,6 +54,22 @@ class CommonProvider{
     });
     return responseData;
   }
+  static Future<List> getNMRBillNoList(int pId, int subId) async {
+    List responseData = [];
+    await ApiManager.getAPICall(ApiConstant.GETNMRBILLNO + "?pid=$pId&subid=$subId")
+        .then((value) {
+      responseData = nmrBillNoResFromJson(value);
+      if (responseData != null && responseData.length > 0) {
+        return responseData;
+      }
+    }, onError: (error) {
+      print(error);
+      print("Error == $error");
+      BaseUtitiles.showToast('Something went wrong.. $error');
+    });
+    return responseData;
+  }
+
 
 
 //-----Project Name Companywise list-----------
@@ -88,7 +105,7 @@ class CommonProvider{
 
 
 
-  static Future<List> getSubcontrator(int pid, int checkScreen) async {
+  static Future<List> getSubcontrator(int pid, int sid, checkScreen) async {
     List responseData = [];
     if(checkScreen == 1){
       await ApiManager.getAPICall(ApiConstant.GETSUBCONTRACTLIST+"?pid=$pid").then((value) {
@@ -101,7 +118,20 @@ class CommonProvider{
         print("Error == $error");
         BaseUtitiles.showToast('Something went wrong.. $error');
       });
-    }else{
+    }
+    else if(checkScreen == "billdirect"){
+      await ApiManager.getAPICall(ApiConstant.GETSUBCONTRACTBILLDIRLIST+"?pid=$pid&sid=$sid").then((value) {
+        responseData = subcontractorDropdownListFromJson(value);
+        if (responseData!=null&& responseData.length>0) {
+          return responseData;
+        }
+      },onError: (error) {
+        print(error);
+        print("Error == $error");
+        BaseUtitiles.showToast('Something went wrong.. $error');
+      });
+    }
+    else{
       await ApiManager.getAPICall(ApiConstant.GETSUBCONTRACTDROPDOWNLIST).then((value) {
         responseData = subcontractorDropdownListFromJson(value);
         if (responseData!=null&& responseData.length>0) {

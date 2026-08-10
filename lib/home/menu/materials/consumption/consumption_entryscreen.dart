@@ -54,10 +54,7 @@ class _Consumption_EntryState extends State<Consumption_Entry> {
       consumption_controller.buttonControl = 0;
       await autoYearWiseNoController.Consumprion_AutoYearWise();
       await projectController.getProjectList(context, 0);
-      await subcontractorController.getSubcontList(
-          context,
-          projectController.selectedProjectId.value,
-          subcontractorController.checkScreen = 1);
+      await subcontractorController.getSubcontList(context,projectController.selectedProjectId.value,siteController.selectedsiteId.value, subcontractorController.checkScreen = 1);
       consumption_controller.autoYearWiseNoController.text =
           autoYearWiseNoController.Conum_autoYrsWise.value;
       if (consumption_controller.editCheck == 1) {

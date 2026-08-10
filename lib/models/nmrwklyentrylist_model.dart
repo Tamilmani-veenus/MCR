@@ -19,8 +19,10 @@ class NmrEntrylist {
     this.project,
     this.siteName,
     this.totalAmount,
+    this.status,
+    this.verifyStatus,
     this.appStatus,
-    this.nmrEntrylistAppStatus,
+    this.billNo,
   });
 
   int? nmrWorkId;
@@ -34,8 +36,10 @@ class NmrEntrylist {
   String? project;
   String? siteName;
   double? totalAmount;
+  String? status;
+  String? verifyStatus;
   String? appStatus;
-  String? nmrEntrylistAppStatus;
+  String? billNo;
 
   factory NmrEntrylist.fromJson(Map<String, dynamic> json) => NmrEntrylist(
     nmrWorkId: json["NMR_Work_id"],
@@ -49,8 +53,10 @@ class NmrEntrylist {
     project: json["project"],
     siteName:  json["SiteName"] ,
     totalAmount: json["TotalAmount"],
-    appStatus:  json["AppStatus"] ,
-    nmrEntrylistAppStatus:  json["app_status"] ,
+    status: json["Status"],
+    verifyStatus:  json["VerifyStatus"],
+    appStatus:  json["AppStatus"],
+    billNo:  json["BillNo"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -65,7 +71,9 @@ class NmrEntrylist {
     "project": project,
     "SiteName":  siteName,
     "TotalAmount": totalAmount,
+    "Status": status,
+    "VerifyStatus":  verifyStatus,
     "AppStatus":  appStatus,
-    "app_status":  nmrEntrylistAppStatus,
+    "BillNo":  billNo,
   };
 }

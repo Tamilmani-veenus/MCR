@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import '../../../../utilities/baseutitiles.dart';
 
@@ -21,18 +20,28 @@ class _ApprovedAlertPopupState extends State<ApprovedAlertPopup> {
       ),
       content: SingleChildScrollView(
         child: Container(
-          color: Colors.grey.shade800,
+          color: Colors.grey.shade300,
           child: Column(
             children: <Widget>[
+              Container(
+                  height: BaseUtitiles.getheightofPercentage(context, 3),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Theme.of(context).primaryColor,
+                  ),
 
+                  child: Text("NMR Details",style: TextStyle(color: Colors.white))
+              ),
+              SizedBox(height: 5,),
               Container(
                 width: BaseUtitiles.getWidthtofPercentage(context, 80),
-                height: BaseUtitiles.getheightofPercentage(context, 55),
+                height: BaseUtitiles.getheightofPercentage(context, 50),
                 child: ListView.builder(
                     itemCount: widget.list.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Card(
-                        color: Colors.blueGrey,
+                        color: Colors.white,
                         child: Container(
                           margin: EdgeInsets.only(top: 4,left: 3,right: 2,bottom: 2),
                           child: Column(
@@ -40,8 +49,8 @@ class _ApprovedAlertPopupState extends State<ApprovedAlertPopup> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Date              ",style: TextStyle(color: Colors.white)),
-                                  Text(widget.list[index].labrAttnDate.toString(), textAlign: TextAlign.center,style: TextStyle(fontSize: RequestConstant.ALERT_Font_SIZE,fontWeight: FontWeight.bold,color: Colors.yellow)),
+                                  Text("Date              ",style: TextStyle(color: Theme.of(context).primaryColor)),
+                                  Text(widget.list[index].labrAttnDate.toString(), textAlign: TextAlign.center,style: TextStyle(fontSize: RequestConstant.ALERT_Font_SIZE,fontWeight: FontWeight.bold,color: Colors.black)),
                                 ],
                               ),
                               Container(
@@ -49,8 +58,8 @@ class _ApprovedAlertPopupState extends State<ApprovedAlertPopup> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("Atten No",style: TextStyle(color: Colors.white)),
-                                    Text(widget.list[index].labrAttnNo.toString(), textAlign: TextAlign.center,style: TextStyle(fontSize: RequestConstant.ALERT_Font_SIZE,fontWeight: FontWeight.bold,color: Colors.yellow)),
+                                    Text("Atten No",style: TextStyle(color: Theme.of(context).primaryColor)),
+                                    Text(widget.list[index].labrAttnNo.toString(), textAlign: TextAlign.center,style: TextStyle(fontSize: RequestConstant.ALERT_Font_SIZE,fontWeight: FontWeight.bold,color: Colors.black)),
                                   ],
                                 ),
                               ),
@@ -60,8 +69,8 @@ class _ApprovedAlertPopupState extends State<ApprovedAlertPopup> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("Status",style: TextStyle(color: Colors.white)),
-                                    Text(widget.list[index].appStatus.toString(), textAlign: TextAlign.center,style: TextStyle(fontSize: RequestConstant.ALERT_Font_SIZE,fontWeight: FontWeight.bold,color: Colors.yellow)),
+                                    Text("Status",style: TextStyle(color: Theme.of(context).primaryColor)),
+                                    Text(widget.list[index].appStatus.toString(), textAlign: TextAlign.center,style: TextStyle(fontSize: RequestConstant.ALERT_Font_SIZE,fontWeight: FontWeight.bold,color: Colors.black)),
                                   ],
                                 ),
                               ),

@@ -362,7 +362,11 @@ class _WorkOrderDirectEntryScreenState extends State<WorkOrderDirectEntryScreen>
                             if(workOrderDirectController.saveButton.value == RequestConstant.RESUBMIT || workOrderDirectController.saveButton.value == RequestConstant.VERIFY || workOrderDirectController.saveButton.value == RequestConstant.APPROVAL)
                             {}
                             else{
-                              await subcontractorController.getSubcontList(context, projectController.selectedProjectId.value, 1);
+                              await subcontractorController.getSubcontList(
+                                  context,
+                                  projectController.selectedProjectId.value,
+                                  siteController.selectedsiteId.value,
+                                  1);
                               bottomsheetControllers.SubcontractorName(context,
                                   subcontractorController.getdropDownvalue.value);
                             } },
