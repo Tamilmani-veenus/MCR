@@ -17,16 +17,25 @@ class SubcontractorController extends GetxController {
   RxList labourList=[].obs;
   RxList labourmainList=[].obs;
   RxList getInvoiceNoValue = [].obs;
+  RxList getdpDnWrkOrderValue = [].obs;
   final InvoiceNo=new TextEditingController();
+  final WorkOrderNo=new TextEditingController();
 
   List<File> imageFiles = [];
   int? count = 0;
   int pickedImageCount = 0;
+  RxInt selectedWorkOrderId = 0.obs;
+  RxString selectedWorkOdrName = "".obs;
+
 
   final LabournameText=new TextEditingController();
 
   Future getLabourList(BuildContext context) async {
     labourList.value = await CommonProvider.getLabour();
+  }
+
+  Future getWorkOrderNoList(int pid, int sid, int subid) async {
+    getdpDnWrkOrderValue.value = await CommonProvider.getWorkOrderNoList(pid, sid,subid);
   }
 
   setSelectedLabourID(String value) {

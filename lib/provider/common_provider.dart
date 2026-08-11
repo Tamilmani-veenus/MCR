@@ -19,6 +19,7 @@ import '../models/staffresponse_model.dart';
 import '../models/subcont_entrylist_rights_model.dart';
 import '../models/subcontract_dropdown_model.dart';
 import '../models/supplierdropwon_model.dart';
+import '../models/workorderno_dropdown_model.dart';
 import '../utilities/apiconstant.dart';
 import '../utilities/baseutitiles.dart';
 import '../utilities/requestconstant.dart';
@@ -34,6 +35,22 @@ class CommonProvider{
         return responseData;
       }
     },onError: (error) {
+      print(error);
+      print("Error == $error");
+      BaseUtitiles.showToast('Something went wrong.. $error');
+    });
+    return responseData;
+  }
+
+  static Future<List> getWorkOrderNoList(int pId, int sId,int subId) async {
+    List responseData = [];
+    await ApiManager.getAPICall(ApiConstant.GETWRKORDERNOLIST + "?projectId=$pId&siteId=$sId&Subcontid=$subId&Type=D")
+        .then((value) {
+      responseData = workOrderNoResponseFromJson(value);
+      if (responseData != null && responseData.length > 0) {
+        return responseData;
+      }
+    }, onError: (error) {
       print(error);
       print("Error == $error");
       BaseUtitiles.showToast('Something went wrong.. $error');
@@ -137,7 +154,7 @@ class CommonProvider{
       });
     }
     else if(checkScreen == "billdirect"){
-      await ApiManager.getAPICall(ApiConstant.GETSUBCONTRACTBILLDIRLIST+"?pid=$pid&sid=$sid").then((value) {
+      await ApiManager.getAPICall(ApiConstant.GETSUBCONTRACTBILLDIRLIST+"?projectId=$pid&siteId=$sid&Type=D").then((value) {
         responseData = subcontractorDropdownListFromJson(value);
         if (responseData!=null&& responseData.length>0) {
           return responseData;

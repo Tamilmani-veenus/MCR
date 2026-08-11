@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:flutter/services.dart';
+
 import '../../../../constants/ui_constant/icons_const.dart';
 import '../../../../controller/billgenerationdirect_controller.dart';
 import '../../../../utilities/requestconstant.dart';
@@ -20,12 +24,6 @@ class _Bill_Generation_ItemlistState extends State<Bill_Generation_Itemlist> {
 
   @override
   void initState() {
-    if (billGenerationDirectController.entrycheck == 0) {
-      billGenerationDirectController.entrycheck = 0;
-    } else {
-      billGenerationDirectController.entrycheck = 1;
-    }
-
     super.initState();
   }
 
@@ -39,7 +37,8 @@ class _Bill_Generation_ItemlistState extends State<Bill_Generation_Itemlist> {
           FocusManager.instance.primaryFocus?.unfocus();
         }
       },
-      child: SafeArea(top: false,
+      child: SafeArea(
+        top: false,
         child: Scaffold(
           body: SingleChildScrollView(
             child: Column(
@@ -83,6 +82,8 @@ class _Bill_Generation_ItemlistState extends State<Bill_Generation_Itemlist> {
                       child: TextFormField(
                         controller: billGenerationDirectController.itemDescController,
                         cursorColor: Colors.black,
+                        // enabled: billGenerationDirectController
+                        //     .ItemGetTableListdata.value.isEmpty,
                         style: const TextStyle(color: Colors.black),
                         decoration: const InputDecoration(
                           contentPadding: EdgeInsets.zero,
@@ -127,9 +128,12 @@ class _Bill_Generation_ItemlistState extends State<Bill_Generation_Itemlist> {
                               padding: const EdgeInsets.only(
                                   top: 3, left: 10, bottom: 5),
                               child: TextFormField(
+                                textCapitalization: TextCapitalization.characters,
                                 controller: billGenerationDirectController
                                     .itemUnitController,
                                 cursorColor: Colors.black,
+                                // enabled: billGenerationDirectController
+                                //     .ItemGetTableListdata.value.isEmpty,
                                 style: const TextStyle(color: Colors.black),
                                 decoration: const InputDecoration(
                                   contentPadding: EdgeInsets.zero,
@@ -152,6 +156,15 @@ class _Bill_Generation_ItemlistState extends State<Bill_Generation_Itemlist> {
                                   }
                                   return null;
                                 },
+                                onChanged: (value) {
+                                  billGenerationDirectController.itemUnitController.value =
+                                      TextEditingValue(
+                                        text: value.toUpperCase(),
+                                        selection: TextSelection.collapsed(
+                                          offset: value.length,
+                                        ),
+                                      );
+                                },
                               ),
                             ),
                           ),
@@ -171,10 +184,20 @@ class _Bill_Generation_ItemlistState extends State<Bill_Generation_Itemlist> {
                               padding: const EdgeInsets.only(
                                   top: 3, left: 10, bottom: 5),
                               child: TextFormField(
-                                keyboardType: TextInputType.number,
+                                keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
+
+                                inputFormatters: [
+                                  TextInputFormatter.withFunction((oldValue, newValue) {
+                                    return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
+                                        ? newValue
+                                        : oldValue;
+                                  }),
+                                ],
                                 controller: billGenerationDirectController
                                     .itemQuantityController,
                                 cursorColor: Colors.black,
+                                // enabled: billGenerationDirectController
+                                //     .ItemGetTableListdata.value.isEmpty,
                                 style: const TextStyle(color: Colors.black),
                                 decoration: const InputDecoration(
                                   contentPadding: EdgeInsets.zero,
@@ -216,9 +239,19 @@ class _Bill_Generation_ItemlistState extends State<Bill_Generation_Itemlist> {
                               padding: const EdgeInsets.only(
                                   top: 3, left: 10, bottom: 5),
                               child: TextFormField(
-                                keyboardType: TextInputType.number,
+                                keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
+
+                                inputFormatters: [
+                                  TextInputFormatter.withFunction((oldValue, newValue) {
+                                    return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
+                                        ? newValue
+                                        : oldValue;
+                                  }),
+                                ],
                                 controller: billGenerationDirectController
                                     .itemRateController,
+                                // enabled: billGenerationDirectController
+                                //     .ItemGetTableListdata.value.isEmpty,
                                 cursorColor: Colors.black,
                                 style: const TextStyle(color: Colors.black),
                                 decoration: const InputDecoration(
@@ -260,10 +293,8 @@ class _Bill_Generation_ItemlistState extends State<Bill_Generation_Itemlist> {
                         height: BaseUtitiles.getheightofPercentage(context, 4),
                         width: BaseUtitiles.getWidthtofPercentage(context, 15),
                         decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                          color: billGenerationDirectController.checkColor == 0
-                              ? Theme.of(context).primaryColor
-                              : Colors.white,
+                            borderRadius: const BorderRadius.all(Radius.circular(10)),
+                            color:  Theme.of(context).primaryColor
                         ),
                         alignment: Alignment.center,
                         child: Text(
@@ -271,16 +302,12 @@ class _Bill_Generation_ItemlistState extends State<Bill_Generation_Itemlist> {
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: RequestConstant.Lable_Font_SIZE,
-                              color:
-                              billGenerationDirectController.checkColor == 0
-                                  ? Colors.white
-                                  : Theme.of(context).primaryColor),
+                              color: Colors.white
+                          ),
                         ),
                       ),
                       onTap: () {
                         setState(() {
-                          billGenerationDirectController.checkColor = 0;
-
                           if (billGenerationDirectController.itemDescController.text == "" ||
                               billGenerationDirectController.itemUnitController.text ==
                                   "" ||
@@ -340,32 +367,8 @@ class _Bill_Generation_ItemlistState extends State<Bill_Generation_Itemlist> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                // Expanded(
-                //   child: InkWell(
-                //     child: Container(
-                //       margin: EdgeInsets.only(left: 20,right: 20),
-                //       height: BaseUtitiles.getheightofPercentage(context, 4),
-                //       decoration: BoxDecoration(
-                //         borderRadius: BorderRadius.all(Radius.circular(10)),
-                //         color:  billGenerationDirectController.checkColor == 0 ? Colors.white : Theme.of(context).primaryColor ,
-                //       ),
-                //       alignment: Alignment.center,
-                //       child: Text("Reset",
-                //         style: TextStyle(
-                //             fontWeight: FontWeight.bold, fontSize: RequestConstant.Lable_Font_SIZE,
-                //             color:  billGenerationDirectController.checkColor == 0 ?  Theme.of(context).primaryColor : Colors.white ),
-                //       ),
-                //     ),
-                //     onTap: (){
-                //       setState(() {
-                //         billGenerationDirectController.checkColor = 1;
-                //       });
-                //     },
-                //   ),
-                // ),
 
-                // Expanded(
-                //   child:
+
 
                 InkWell(
                   child: Container(
@@ -373,10 +376,8 @@ class _Bill_Generation_ItemlistState extends State<Bill_Generation_Itemlist> {
                     width: BaseUtitiles.getWidthtofPercentage(context, 25),
                     height: BaseUtitiles.getheightofPercentage(context, 4),
                     decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      color: billGenerationDirectController.checkColor == 0
-                          ? Theme.of(context).primaryColor
-                          : Colors.white,
+                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        color:  Theme.of(context).primaryColor
                     ),
                     alignment: Alignment.center,
                     child: Text(
@@ -384,19 +385,16 @@ class _Bill_Generation_ItemlistState extends State<Bill_Generation_Itemlist> {
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: RequestConstant.Lable_Font_SIZE,
-                          color: billGenerationDirectController.checkColor == 0
-                              ? Colors.white
-                              : Theme.of(context).primaryColor),
+                          color:  Colors.white
+                      ),
                     ),
                   ),
                   onTap: () {
                     setState(() {
-                      billGenerationDirectController.checkColor = 0;
-                      // billGenerationDirectController.deductionPaymentCalculation();
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const Bill_Generation_direct_deduction()));
+                              builder: (context) =>  Bill_Generation_direct_deduction()));
                     });
                   },
                 ),
@@ -420,8 +418,7 @@ class _Bill_Generation_ItemlistState extends State<Bill_Generation_Itemlist> {
       ),
       height: BaseUtitiles.getheightofPercentage(context, 58),
       child: ListView.builder(
-        itemCount:
-        billGenerationDirectController.ItemGetTableListdata.value.length,
+        itemCount: billGenerationDirectController.ItemGetTableListdata.value.length,
         padding: EdgeInsets.zero,
         itemBuilder: (BuildContext context, int index) {
           billGenerationDirectController.ItemListTextInitiate();
@@ -577,17 +574,22 @@ class _Bill_Generation_ItemlistState extends State<Bill_Generation_Itemlist> {
                                   if(billGenerationDirectController.itemlist_ListQtyController[index].text != "" && billGenerationDirectController.itemlist_ListQtyController[index].text != "0" && billGenerationDirectController.itemlist_ListQtyController[index].text != "0.0"){
                                     return;
                                   } else {
-                                    setState(() {
-                                      billGenerationDirectController.itemlist_ListQtyController[index].text = "";
-                                      billGenerationDirectController.itemListclickChanged();
-                                    });
+                                    billGenerationDirectController.itemlist_ListQtyController[index].text = "";
                                   }
                                 },
                                 controller: billGenerationDirectController.itemlist_ListQtyController[index],
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(color: Colors.black),
                                 cursorColor: Colors.black,
-                                keyboardType: TextInputType.number,
+                                keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
+
+                                inputFormatters: [
+                                  TextInputFormatter.withFunction((oldValue, newValue) {
+                                    return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
+                                        ? newValue
+                                        : oldValue;
+                                  }),
+                                ],
                                 decoration: InputDecoration(
                                   contentPadding: const EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
                                   focusedBorder: OutlineInputBorder(
@@ -599,10 +601,8 @@ class _Bill_Generation_ItemlistState extends State<Bill_Generation_Itemlist> {
                                           color: Theme.of(context).primaryColor),
                                       borderRadius: const BorderRadius.all(Radius.circular(10))),
                                 ),
-                                onChanged: (value) {
-                                  setState(() {
-                                    billGenerationDirectController.itemListclickChanged();
-                                  });
+                                onChanged: (value) async {
+                                  await billGenerationDirectController.itemListclickChanged();
                                 }),
                           )),
                     ],
@@ -628,17 +628,22 @@ class _Bill_Generation_ItemlistState extends State<Bill_Generation_Itemlist> {
                                   if(billGenerationDirectController.itemlist_ListRateController[index].text != "" && billGenerationDirectController.itemlist_ListRateController[index].text != "0" && billGenerationDirectController.itemlist_ListRateController[index].text != "0.0"){
                                     return;
                                   } else {
-                                    setState(() {
-                                      billGenerationDirectController.itemlist_ListRateController[index].text = "";
-                                      billGenerationDirectController.itemListclickChanged();
-                                    });
+                                    billGenerationDirectController.itemlist_ListRateController[index].text = "";
                                   }
                                 },
                                 controller: billGenerationDirectController.itemlist_ListRateController[index],
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(color: Colors.black),
                                 cursorColor: Colors.black,
-                                keyboardType: TextInputType.number,
+                                keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
+
+                                inputFormatters: [
+                                  TextInputFormatter.withFunction((oldValue, newValue) {
+                                    return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
+                                        ? newValue
+                                        : oldValue;
+                                  }),
+                                ],
                                 decoration: InputDecoration(
                                   contentPadding: const EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
                                   focusedBorder: OutlineInputBorder(
@@ -648,10 +653,8 @@ class _Bill_Generation_ItemlistState extends State<Bill_Generation_Itemlist> {
                                       borderSide: BorderSide(color: Theme.of(context).primaryColor),
                                       borderRadius: const BorderRadius.all(Radius.circular(10))),
                                 ),
-                                onChanged: (value) {
-                                  setState(() {
-                                    billGenerationDirectController.itemListclickChanged();
-                                  });
+                                onChanged: (value) async {
+                                  await billGenerationDirectController.itemListclickChanged();
                                 }),
                           )),
                       const Expanded(
@@ -674,7 +677,15 @@ class _Bill_Generation_ItemlistState extends State<Bill_Generation_Itemlist> {
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(color: Colors.black),
                                 cursorColor: Colors.black,
-                                keyboardType: TextInputType.number,
+                                keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
+
+                                inputFormatters: [
+                                  TextInputFormatter.withFunction((oldValue, newValue) {
+                                    return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
+                                        ? newValue
+                                        : oldValue;
+                                  }),
+                                ],
                                 decoration: InputDecoration(
                                   contentPadding: const EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
                                   focusedBorder: OutlineInputBorder(

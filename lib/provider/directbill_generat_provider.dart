@@ -32,6 +32,27 @@ class DirectBillGenerateProvider {
     return data;
   }
 
+  static Future getWorkOrderList(
+      int pId, int subId, int workOrderNo) async {
+    try {
+      final response = await ApiManager.getAPICall(
+        "${ApiConstant.GET_WORKORDER_ENTRY_LIST}?PID=$pId&SubID=$subId&WorkOrderId=$workOrderNo",
+      );
+
+      final data = directbillEditApiResModelFromJson(response);
+
+      if (data.isNotEmpty) {
+        return data;
+      }
+      return null;
+    } catch (error) {
+      print(error);
+      BaseUtitiles.showToast("${RequestConstant.SOMETHINGWENT_WRONG} $error");
+      return null;
+    }
+  }
+
+
   static Future billadv_balance(int pId,int subId, siteId) async {
     var datasave;
     await ApiManager.getAPICall(ApiConstant.GET_DIRECTBILL_ADVANCE_BALANCE+"?PID=$pId&SubID=$subId&SID=$siteId").then((value) {

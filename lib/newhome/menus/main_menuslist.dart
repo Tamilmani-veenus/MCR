@@ -990,8 +990,45 @@ class _MainManusListState extends State<MainManusList> {
                                                                                         )
                                                                                       ],
                                                                                     ),
-                                                                                  )
-                                                                                : Container(
+                                                                                  ):
+                                            menuController.dailyEntryList[index] == "SubCont NMR Wkly Bill - Generation"
+                                                                                ? Container(
+                                              width: 40,
+                                              height: 40,
+                                              decoration: BoxDecoration(
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                borderRadius:
+                                                const BorderRadius
+                                                    .all(
+                                                  Radius.circular(10),
+                                                ),
+                                                gradient:
+                                                LinearGradient(
+                                                  begin: Alignment
+                                                      .topLeft,
+                                                  end: Alignment
+                                                      .bottomRight,
+                                                  colors: [
+                                                    purple,
+                                                    blue,
+                                                  ],
+                                                ),
+                                              ),
+                                              child: const Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .center,
+                                                children: [
+                                                  Icon(
+                                                    Icons
+                                                        .receipt_long_outlined,
+                                                    color: Colors.white,
+                                                    size: 25,
+                                                  )
+                                                ],
+                                              ),
+                                            ):Container(
                                                                                     width: 40,
                                                                                     height: 40,
                                                                                     decoration: BoxDecoration(
