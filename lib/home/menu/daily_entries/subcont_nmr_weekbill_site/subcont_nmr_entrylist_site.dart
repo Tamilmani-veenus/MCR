@@ -748,7 +748,7 @@ class _Subcont_NMR_EntryListScreenState_Site
                                                                   onTap: () async {
                                                                     nmrWklyController.EditListSaveDatas.value.clear();
                                                                     nmrWklyController.NmritemList.value.clear();
-                                                                    await  nmrWklyController.NmrEntryList_EditApi(nmrWklyController.NmrEtyList.value[index].nmrWorkId,context,1);
+                                                                    await  nmrWklyController.NmrEntryList_EditApi(nmrWklyController.NmrEtyList.value[index].nmrWorkId,context,"Edit");
                                                                     Navigator.pop(context);
                                                                     FocusScope.of(context).unfocus();
 

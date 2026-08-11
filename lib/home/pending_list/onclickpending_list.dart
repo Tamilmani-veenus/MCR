@@ -10116,7 +10116,7 @@ class _NMRBillVerificationState extends State<NMRBillVerification> {
                           itemBuilder: (context, index) {
                             return InkWell(
                               onTap: () async {
-                                // await nmrWklyController.NmrEntryList_EditApi(pendingListController.mainlist.value[index].id, context,widget.heading=="SUBCONTRACTOR BILL VERIFICATION - NMR"?"Verify":"Approve", 1);
+                                await nmrWklyController.NmrEntryList_EditApi(pendingListController.mainlist.value[index].id, context,widget.heading=="SUBCONTRACTOR BILL VERIFICATION - NMR"?"Verify":"Approve");
                               },
                               child: Container(
                                 margin: EdgeInsets.only(left: 3, right: 3),

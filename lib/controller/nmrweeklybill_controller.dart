@@ -274,9 +274,14 @@ class NMRWklyController extends GetxController {
     final list = await NMRWklyprovider.SaveSubContScreenEntryAPI(body, id);
     if (list != null ) {
       if (id != 0) {
+        if(saveButton.value==RequestConstant.RESUBMIT){
+          await getNmrEntryList();
+        }
+        else{
+          await pendingListController.getPendingList();
+        }
         BaseUtitiles.showToast(list);
         clearDatas();
-        await getNmrEntryList();
         Navigator.pop(context);
         Navigator.pop(context);
         Navigator.pop(context);
@@ -289,8 +294,8 @@ class NMRWklyController extends GetxController {
           return BaseUtitiles.showToast(list);
         } else {
           BaseUtitiles.showToast(list);
-          clearDatas();
           await getNmrEntryList();
+          clearDatas();
           Navigator.pop(context);
           Navigator.pop(context);
           Navigator.pop(context);
@@ -755,10 +760,10 @@ class NMRWklyController extends GetxController {
 
 
   Future NmrEntryList_EditApi(
-      int workid, BuildContext context, int check) async {
+      int workid, BuildContext context, type) async {
     await NMRWklyprovider.nmr_entryList_editAPI(workid).then((value) async {
       if (value != null && value.length > 0) {
-        saveButton.value=RequestConstant.RESUBMIT;
+        saveButton.value= type=="Edit"?RequestConstant.RESUBMIT:type=="Verify"?RequestConstant.VERIFY:RequestConstant.APPROVAL;
         EditListSaveDatas.value = value;
         setTextEditListControllersValue();
         return Navigator.pushReplacement(
