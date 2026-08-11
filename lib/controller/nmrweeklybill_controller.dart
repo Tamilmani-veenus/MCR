@@ -1,13 +1,22 @@
+import 'dart:convert';
+
+import 'package:mcr/controller/pendinglistcontroller.dart';
+
 import '../controller/logincontroller.dart';
 import '../controller/projectcontroller.dart';
 import '../controller/sitecontroller.dart';
 import '../controller/subcontcontroller.dart';
+import '../db_model/direct_bill_gst_calculation_model.dart';
+import '../db_services/direct_bill_itemlist_service.dart';
 import '../home/menu/daily_entries/subcont_nmr_weekbill_site/subcont_nmr_entry_site.dart';
 import '../home/menu/daily_entries/subcont_nmr_weekbill_site/subcont_nmr_entrylist_site.dart';
 import '../home/menu/daily_entries/subcont_nmr_weekbill_site/subcont_nmr_week_billgeneration_site.dart';
+// import '../models/billdirectgstcalculations.dart';
 import '../models/nmrwklybill_deduction_save_model.dart';
 import '../provider/common_provider.dart';
+import '../provider/directbill_generat_provider.dart';
 import '../provider/nmrwkly_provider.dart';
+import '../provider/workOrderDirectProvider.dart';
 import '../utilities/baseutitiles.dart';
 import '../utilities/requestconstant.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,6 +27,7 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
 import '../home/menu/daily_entries/subcont_nmr_weekbill_site/aprovedpopup.dart';
+import 'billgenerationdirect_controller.dart';
 
 class NMRWklyController extends GetxController {
   final NmrentryDateController = TextEditingController();
@@ -25,8 +35,8 @@ class NMRWklyController extends GetxController {
   final FromdateController = TextEditingController();
   final TodateController = TextEditingController();
   final RemarksController = TextEditingController();
-  final BillNoController = TextEditingController();
   final billamount = TextEditingController();
+  final foodDeduction = TextEditingController();
   final Creditamt = TextEditingController();
   final CreditRemarksController = TextEditingController();
   final Debitamt = TextEditingController();
@@ -34,40 +44,47 @@ class NMRWklyController extends GetxController {
   final tobededadv = TextEditingController();
   final Advded = TextEditingController();
   final Roundoff = TextEditingController();
+  final netBillAmt = TextEditingController();
   final netpayamt = TextEditingController();
   final EntrylistFrDate = TextEditingController();
   final EntrylistToDate = TextEditingController();
+  final BillNoController = TextEditingController();
+
+  RxList billDet_Calculation = [].obs;
+  RxBool isAdvanceReadOnly = true.obs;
 
   List<TextEditingController> SitenameController = [];
   List<TextEditingController> CategorynameController = [];
   List<TextEditingController> TotalNosController = [];
   List<TextEditingController> TotalOTController = [];
   List<TextEditingController> NetAmtController = [];
-
-  List<TextEditingController> WagesController = [];
   List<TextEditingController> TotalAmtController = [];
-  List<TextEditingController> TotalOTHrsController = [];
 
   RxList<NmrBillDet> getNMRDetList = <NmrBillDet>[].obs;
+  RxList<NMRBillAdd> getNMRAddLessDetList = <NMRBillAdd>[].obs;
   int workid = 0;
-  int aprovedButton = 0;
-  int buttonControl = 0;
   RxList NmrEtyList = [].obs;
   RxList mainEtyList = [].obs;
   RxList NmritemList = [].obs;
   RxList NmrcheckStatusList = [].obs;
   RxList NmrcheckCountList = [].obs;
   RxList getNMRBillNoValue = [].obs;
+  List<TextEditingController> WagesController = [];
+  List<TextEditingController> TotalOTHrsController = [];
 
-  int editCheck = 0;
-  int submitCheck = 0;
-  int checkColor = 0;
-
-  RxString saveButton = RequestConstant.SAVE.obs;
-
+  RxString saveButton = RequestConstant.SUBMIT.obs;
+  RxInt createdById = 0.obs;
   double totalNetBillamount = 0.0;
   double totalNetPayAmt = 0.0;
-  String to_be_dection_advance = "0";
+  double baseNetPayAmt = 0.0;
+  String oldAdvValue = "0.0";
+  RxList reqDetIdNmrDet = [].obs;
+  String oldRoundOffValue = "0.0";
+  String oldDebitValue = "0.0";
+  String oldFoodValue = "0.0";
+  String oldCreditValue = "0.0";
+  String to_be_dection_advance = "0.0";
+  bool isRestoring = false;
 
   RxList EditListSaveDatas = [].obs;
 
@@ -75,6 +92,14 @@ class NMRWklyController extends GetxController {
   SubcontractorController subcontractorController = Get.put(SubcontractorController());
   ProjectController projectController = Get.put(ProjectController());
   SiteController siteController = Get.put(SiteController());
+  BillGenerationDirectController billGenerationDirectController = Get.put(BillGenerationDirectController());
+  var directBillTable = DirectBillGSTCalTable();
+  late List<DirectBillGSTCalTable> directBillTableModelList = <DirectBillGSTCalTable>[];
+  var directBillGen_ItemlistService = DirectBillGen_ItemlistService();
+  RxList<DirectBillGSTCalTable> directBillGen_ItemReadList = <DirectBillGSTCalTable>[].obs;
+  late List<DirectBillGSTCalTable> updateBillGen_ItemReadList = <DirectBillGSTCalTable>[];
+  List<TextEditingController> percentControllers = [];
+  PendingListController pendingListController = Get.put(PendingListController());
 
 
   Future getNmrEntryList() async {
@@ -94,38 +119,30 @@ class NMRWklyController extends GetxController {
     });
   }
 
-  Future getNmrAdvance() async {
-    to_be_dection_advance="0";
-    await NMRWklyprovider.NMR_adv_balance(projectController.selectedProjectId.value,
-      subcontractorController.selectedSubcontId.value,
-      // siteController.selectedsiteId.value
-    ).then((value){
-      if (value != null) {
-        to_be_dection_advance = value;
-        return to_be_dection_advance;
-      }
+  Future getNMRBillNoList(int pid,  int subid) async {
+    getNMRBillNoValue.value = await CommonProvider.getNMRBillNoList(pid,subid);
+    getNMRBillNoValue.value.forEach((element){
+      BillNoController.text=element.EntryAutoNo.toString();
     });
   }
 
-  // Future submit_getNmrItemList() async {
-  //   NmritemList.value.clear();
-  //   await NMRWklyprovider.getSubcontNmrItem_List(
-  //           subcontractorController.selectedSubcontId.value,
-  //           projectController.selectedProjectId.value,
-  //           FromdateController.text,
-  //           TodateController.text)
-  //       .then((value) async {
-  //     if (value != null && value.length > 0) {
-  //       submitCheck = 1;
-  //       NmritemList.value = value;
-  //       BaseUtitiles.showToast(RequestConstant.RECORD_SUCCESSFULLY);
-  //       return NmritemList.value;
-  //     } else {
-  //       BaseUtitiles.showToast(RequestConstant.NORECORD_FOUND);
-  //     }
-  //   });
-  //   setTextControllersValue();
+  // void validateAdvanceAmount(String value) {
+  //   final double enteredAmt = double.tryParse(value) ?? 0.0;
+  //   final double maxAmt = double.tryParse(tobededadv.text) ?? 0.0;
+  //
+  //   if (enteredAmt > maxAmt) {
+  //     BaseUtitiles.showToast(
+  //         "Advance deduction cannot exceed the advance amount.");
+  //
+  //     Advded.text = "0.0";
+  //
+  //     // Move cursor to end
+  //     Advded.selection = TextSelection.fromPosition(
+  //       TextPosition(offset: Advded.text.length),
+  //     );
+  //   }
   // }
+
 
   Future submit_getNmrItemList_Site() async {
     NmritemList.value.clear();
@@ -137,7 +154,6 @@ class NMRWklyController extends GetxController {
         TodateController.text)
         .then((value) async {
       if (value != null && value.length > 0) {
-        submitCheck = 1;
         NmritemList.value = value;
         BaseUtitiles.showToast(RequestConstant.RECORD_SUCCESSFULLY);
         return NmritemList.value;
@@ -147,6 +163,7 @@ class NMRWklyController extends GetxController {
     });
     setTextControllersValue();
   }
+
 
   setTextControllersValue() async {
     int i = 0;
@@ -196,33 +213,32 @@ class NMRWklyController extends GetxController {
 
 
   clearDatas(){
-    NmritemList.value.clear();
-    projectController.projectname.text="--Select--";
+    NmritemList.value=[];
+    projectController.projectname.text="--SELECT--";
     projectController.selectedProjectId.value=0;
     siteController.Sitename.text=RequestConstant.SELECT;
     siteController.selectedsiteId.value=0;
-    subcontractorController.Subcontractorname.text="--Select--";
+    subcontractorController.Subcontractorname.text="--SELECT--";
     subcontractorController.selectedSubcontId.value=0;
     RemarksController.clear();
-    BillNoController.text="-";
+    // subcontractorController.InvoiceNo.text="-";
     NmrentryDateController.text = BaseUtitiles.initiateCurrentDateFormat();
     FromdateController.text=BaseUtitiles.initiateCurrentDateFormat();
     TodateController.text=BaseUtitiles.initiateCurrentDateFormat();
-    EditListSaveDatas.value.clear();
-    saveButton.value=RequestConstant.SAVE;
+    EditListSaveDatas.value=[];
     workid=0;
     billamount.text="0.0";
-    Creditamt.text="0";
-    Debitamt.text="0";
+    foodDeduction.text="0.0";
+    Creditamt.text="0.0";
+    Debitamt.text="0.0";
     CreditRemarksController.text="-";
     DebitRemarksController.text="-";
-    Advded.text="0";
-    Roundoff.text="0";
+    Advded.text="0.0";
+    Roundoff.text="0.0";
     netpayamt.text="0.0";
   }
 
   Future SaveButton_DeductionScreen(BuildContext context, int id) async {
-    buttonControl=1;
     getNMRDetList.value.clear();
     String body = subcontNmrSaveRequestToJson(NmrSaveRequest(
       workId: id != 0 ? id.toString() : "0",
@@ -235,7 +251,7 @@ class NMRWklyController extends GetxController {
       toDate: TodateController.text,
       remarks: RemarksController.text,
       rndOff: Roundoff.text,
-      billNo: BillNoController.text,
+      billNo: BillNoController.text==""?"-":BillNoController.text,
       billAmt: billamount.text,
       actAdvAmt: tobededadv.text,
       advAmt: Advded.text,
@@ -247,20 +263,25 @@ class NMRWklyController extends GetxController {
       preparedby: loginController.EmpId(),
       userId: loginController.UserId(),
       deviceName: BaseUtitiles.deviceName,
-      entryMode:saveButton.value=="Save"?"ADD":saveButton.value=="Re-Submit"?"UPDATE":saveButton.value=="Verify"?"VERIFY":saveButton.value=="Approve"?"APPROVE":"",
-      nmrBillDet: getNMRDetList.value.length == 0
-          ? getNmrBillDet(id)
-          : getNMRDetList.value,
+      entryMode:saveButton.value=="Submit"?"ADD":saveButton.value=="Re-Submit"?"UPDATE":saveButton.value=="Verify"?"VERIFY":saveButton.value=="Approve"?"APPROVE":"",
+      verifiedby: (saveButton.value==RequestConstant.SUBMIT || saveButton.value==RequestConstant.RESUBMIT)?"0":loginController.EmpId(),
+      verifystatus: (saveButton.value==RequestConstant.SUBMIT || saveButton.value==RequestConstant.RESUBMIT)?"N":"Y",
+      appstatus:(saveButton.value==RequestConstant.APPROVAL)?"Y":"N" ,
+      approvedby: (saveButton.value==RequestConstant.APPROVAL)?loginController.EmpId():"0",
+      nmrBillDet: getNmrBillDet(id),
+      nmrBillAdd: getNmrBillAddLess()
     ));
     final list = await NMRWklyprovider.SaveSubContScreenEntryAPI(body, id);
     if (list != null ) {
       if (id != 0) {
+        if(saveButton.value==RequestConstant.RESUBMIT){
+          await getNmrEntryList();
+        }
+        else{
+          await pendingListController.getPendingList();
+        }
         BaseUtitiles.showToast(list);
         clearDatas();
-        editCheck = 0;
-        submitCheck = 0;
-        buttonControl = 0;
-        await getNmrEntryList();
         Navigator.pop(context);
         Navigator.pop(context);
         Navigator.pop(context);
@@ -273,11 +294,8 @@ class NMRWklyController extends GetxController {
           return BaseUtitiles.showToast(list);
         } else {
           BaseUtitiles.showToast(list);
-          clearDatas();
-          editCheck = 0;
-          submitCheck = 0;
-          buttonControl = 0;
           await getNmrEntryList();
+          clearDatas();
           Navigator.pop(context);
           Navigator.pop(context);
           Navigator.pop(context);
@@ -295,9 +313,6 @@ class NMRWklyController extends GetxController {
         siteId: element.siteId.toString(),
         nmrAmt: element.nmrAmt.toString(),
         categoryId: element.categoryId.toString(),
-        // wages: editCheck==1? element.wages.toString() : element.Rate.toString(),
-        // amt: editCheck==1? element.amt.toString() : element.Totamt.toString(),
-        // totalOthrs:editCheck==1? element.totalOthrs.toString() : element.total_othrs.toString(),
         totnos: element.totnos.toString(),
         totalOtamt: element.totalOtamt.toString(),
       );
@@ -306,67 +321,42 @@ class NMRWklyController extends GetxController {
     return getNMRDetList.value;
   }
 
-  Future getNMRBillNoList(int pid,  int subid) async {
-    getNMRBillNoValue.value = await CommonProvider.getNMRBillNoList(pid,subid);
-    getNMRBillNoValue.value.forEach((element){
-      BillNoController.text=element.EntryAutoNo.toString();
+  List<NMRBillAdd>? getNmrBillAddLess() {
+    getNMRAddLessDetList.value=[];
+    directBillGen_ItemReadList.forEach((element) {
+      if(element.percentValue!>0) {
+        var list = NMRBillAdd(
+            id: element.addLessId.toString(),
+            percent:  element.percentValue.toString(),
+            amount: (element.amount ?? 0).abs().toString()
+        );
+        getNMRAddLessDetList.add(list);
+      }
     });
+    return getNMRAddLessDetList;
   }
 
-  // deduction_paymentCalculation() {
-  //   if(double.parse(to_be_dection_advance)< double.parse(Advded.text)){
-  //     BaseUtitiles.showToast("Please change the adv deduction amount");
-  //     Advded.text="0.0";
-  //   }
-  //   else{
-  //     var tot_netamnt = 0.0;
-  //     var netamount;
-  //     int roundoff;
-  //     if (NmritemList.value.isNotEmpty) {
-  //       if (editCheck == 1) {
-  //         NmritemList.value.forEach((element) {
-  //           tot_netamnt = tot_netamnt + element.nmrAmt!;
-  //         });
-  //         billamount.text = tot_netamnt.toString();
-  //         netamount = double.parse(billamount.text) + double.parse(Creditamt.text) - double.parse(Debitamt.text) - double.parse(Advded.text) +
-  //             double.parse(Roundoff.text);
-  //         roundoff = netamount.round();
-  //         netpayamt.text = roundoff.toString();
-  //       }
-  //       else {
-  //         NmritemList.value.forEach((element) {
-  //           tot_netamnt = tot_netamnt + element.netAmt;
-  //         });
-  //         billamount.text = tot_netamnt.toString();
-  //         netamount = double.parse(billamount.text) +
-  //             double.parse(Creditamt.text) -
-  //             double.parse(Debitamt.text) -
-  //             double.parse(Advded.text) +
-  //             double.parse(Roundoff.text);
-  //         roundoff = netamount.round();
-  //         netpayamt.text = roundoff.toString();
-  //       }
-  //     }
-  //   }
-  // }
 
-  void deduction_paymentCalculation() {
+  Future<bool> deduction_paymentCalculation() async {
+
     double advLimit = double.tryParse(tobededadv.text) ?? 0;
     double advDed = double.tryParse(Advded.text) ?? 0;
 
     if (advLimit < advDed) {
-      BaseUtitiles.showToast("Please change the adv deduction amount");
-      Advded.text = "0.0";
-      netpayamt.text = billamount.text;
-      return;
+      BaseUtitiles.showToast(
+          "Please change the adv deduction amount");
+      return false;
     }
 
-    if (NmritemList.value.isEmpty) return;
+    if (NmritemList.value.isEmpty) return false;
 
     double totalNetAmount = 0.0;
 
     for (var item in NmritemList.value) {
-      totalNetAmount += (editCheck == 1)
+      totalNetAmount +=
+      (saveButton.value == RequestConstant.RESUBMIT ||
+          saveButton.value == RequestConstant.VERIFY ||
+          saveButton.value == RequestConstant.APPROVAL)
           ? (item.nmrAmt ?? 0)
           : (item.netAmt ?? 0);
     }
@@ -374,43 +364,406 @@ class NMRWklyController extends GetxController {
     billamount.text = totalNetAmount.toStringAsFixed(2);
 
     double bill = double.tryParse(billamount.text) ?? 0;
+    double food = double.tryParse(foodDeduction.text) ?? 0;
     double credit = double.tryParse(Creditamt.text) ?? 0;
     double debit = double.tryParse(Debitamt.text) ?? 0;
     double adv = double.tryParse(Advded.text) ?? 0;
-    double round = double.tryParse(Roundoff.text) ?? 0;
+    String roundText = Roundoff.text.trim();
 
-    double netAmount =
-        bill + credit - debit - adv + round;
+    double round =
+    (roundText.isEmpty || roundText == "-")
+        ? 0
+        : double.tryParse(roundText) ?? 0;
+    // Recalculate all Add/Less, NetBill and NetPay
+    recalculateAddLessAmounts(
+      bill: bill,
+      credit: credit,
+      debit: debit,
+      adv: adv,
+      round: round,
+    );
 
-    int roundedAmount = netAmount.round();
+    // Optional validation
+    if ((double.tryParse(netpayamt.text) ?? 0) < 0) {
+      return false;
+    }
 
-    netpayamt.text = roundedAmount.toString();
+    directBillGen_ItemReadList.refresh();
+
+    await saveUpdatedCalcData();
+
+    return true;
+  }
+  // ADD THIS
+  bool calculateAndUpdate(int addLessId, double percent) {
+    final item = directBillGen_ItemReadList.firstWhereOrNull(
+          (e) => e.addLessId == addLessId,
+    );
+
+    if (item == null) return false;
+
+    // Save old percentage
+    final oldPercent = item.percentValue ?? 0.0;
+
+    // Update current percentage
+    item.percentValue = percent;
+
+    final roundText = Roundoff.text.trim();
+
+    final double round =
+    (roundText.isEmpty || roundText == "-")
+        ? 0
+        : double.tryParse(roundText) ?? 0;
+
+    // ============================================================
+    // ALWAYS USE BILL AMOUNT AS BASE
+    // ============================================================
+
+    final double bill =
+        double.tryParse(billamount.text) ?? 0;
+
+    recalculateAddLessAmounts(
+      bill: bill,
+      credit: double.tryParse(Creditamt.text) ?? 0,
+      debit: double.tryParse(Debitamt.text) ?? 0,
+      adv: double.tryParse(Advded.text) ?? 0,
+      round: round,
+    );
+
+    // ============================================================
+    // VALIDATE NET PAY
+    // ============================================================
+
+    final double netPay =
+        double.tryParse(netpayamt.text) ?? 0;
+
+    if (netPay < 0) {
+      BaseUtitiles.showToast(
+        "Net Pay Amount cannot be negative.",
+      );
+
+      // Restore only current percentage
+      item.percentValue = oldPercent;
+
+      // Recalculate using restored value
+      recalculateAddLessAmounts(
+        bill: bill,
+        credit: double.tryParse(Creditamt.text) ?? 0,
+        debit: double.tryParse(Debitamt.text) ?? 0,
+        adv: double.tryParse(Advded.text) ?? 0,
+        round: round,
+      );
+
+      directBillGen_ItemReadList.refresh();
+      update();
+
+      return false;
+    }
+
+    directBillGen_ItemReadList.refresh();
+    update();
+
+    return true;
   }
 
-  bool advance(String textAmount) {
-    bool value = true;
-    double amt = double.parse(textAmount);
-    if (amt > 0.0) {
-      value = false;
-      return value;
-    } else
-      return value;
+  void recalculateAddLessAmounts({
+    required double bill,
+    required double credit,
+    required double debit,
+    required double adv,
+    required double round,
+  }) {
+    // ============================================================
+    // BILL AMOUNT IS THE BASE FOR ALL PERCENTAGES
+    // ============================================================
+
+    final double baseAmount = bill;
+
+    // ============================================================
+    // STEP 1
+    // CALCULATE EVERY PERCENTAGE ROW
+    // ============================================================
+
+    for (var item in directBillGen_ItemReadList) {
+      final name =
+      (item.addLessName ?? "").trim().toUpperCase();
+
+      final percent =
+          item.percentValue ?? 0.0;
+
+      // Only percentage based rows
+      if (name == "S-GST" ||
+          name == "C-GST" ||
+          name == "I-GST" ||
+          name == "RETENTION" ||
+          name == "TDS" ||
+          name == "HOLD") {
+
+        final double amount =
+            baseAmount * percent / 100;
+
+        if (item.addLessType == "-") {
+          item.amount = -amount;
+        } else {
+          item.amount = amount;
+        }
+      }
+    }
+
+    // ============================================================
+    // STEP 2
+    // FINAL AMOUNT STARTS FROM BILL
+    // ============================================================
+
+    double finalAmount = baseAmount;
+
+    // Credit
+    finalAmount += credit;
+
+    // Debit
+    finalAmount -= debit;
+
+    // ============================================================
+    // STEP 3
+    // ADD / LESS AMOUNTS
+    // ============================================================
+
+    for (var item in directBillGen_ItemReadList) {
+      final name =
+      (item.addLessName ?? "").trim().toUpperCase();
+
+      if (name == "S-GST" ||
+          name == "C-GST" ||
+          name == "I-GST" ||
+          name == "RETENTION" ||
+          name == "TDS" ||
+          name == "HOLD") {
+
+        finalAmount += item.amount ?? 0.0;
+      }
+    }
+
+    // ============================================================
+    // STEP 4
+    // ROUNDOFF
+    // ============================================================
+
+    finalAmount += round;
+
+    // ============================================================
+    // STEP 5
+    // ADVANCE
+    // ============================================================
+
+    finalAmount -= adv;
+
+    // ============================================================
+    // STEP 6
+    // NET BILL = NET PAY
+    // ============================================================
+
+    netBillAmt.text =
+        finalAmount.toStringAsFixed(2);
+
+    netpayamt.text =
+        finalAmount.toStringAsFixed(2);
+
+    // ============================================================
+    // REFRESH
+    // ============================================================
+
+    directBillGen_ItemReadList.refresh();
+    update();
   }
 
-
-  String ButtonChanges(int id, int aproval) {
-    if (id != 0 || aproval != 0) {
-      return saveButton.value = RequestConstant.UPDATE;
-    } else
-      return saveButton.value = RequestConstant.SAVE;
+  void updateAdvanceReadOnly() {
+    final amt = double.tryParse(tobededadv.text) ?? 0.0;
+    isAdvanceReadOnly.value = amt <= 0;
   }
+
+  void updateNetPay() {
+    String roundText = Roundoff.text.trim();
+
+    double round =
+    (roundText.isEmpty || roundText == "-")
+        ? 0
+        : double.tryParse(roundText) ?? 0;
+    recalculateAddLessAmounts(
+      bill: double.tryParse(billamount.text) ?? 0,
+      credit: double.tryParse(Creditamt.text) ?? 0,
+      debit: double.tryParse(Debitamt.text) ?? 0,
+      adv: double.tryParse(Advded.text) ?? 0,
+      round: round,
+    );
+
+  }
+
+  // ADD THIS
+  Future<void> saveUpdatedCalcData() async {
+    await updateDirectBillCalDatas();
+  }
+
+  double getTotalAddLess() {
+
+    double total = 0;
+
+    for (final item in directBillGen_ItemReadList) {
+      total += item.amount ?? 0;
+    }
+
+    return total;
+  }
+
+  void initPercentControllers() {
+    percentControllers.clear();
+    for (var item in directBillGen_ItemReadList) {
+      percentControllers.add(
+        TextEditingController(
+          text: (item.percentValue ?? 0.0) == 0.0
+              ? ''
+              : item.percentValue.toString(),
+        ),
+      );
+    }
+  }
+
+  Future getNmrAdvance() async {
+    to_be_dection_advance="0";
+    await NMRWklyprovider.NMR_adv_balance(projectController.selectedProjectId.value,
+      subcontractorController.selectedSubcontId.value,
+      // siteController.selectedsiteId.value
+    ).then((value){
+      if (value != null) {
+        to_be_dection_advance = value;
+        return to_be_dection_advance;
+      }
+    });
+  }
+
+  Future DirectBill_CalculationList({type}) async {
+    billDet_Calculation.value=[];
+    final value =  await WorkOrderDirectProvider.getWorkOrderCalculation_List(type=="Subcont"?subcontractorController.selectedSubcontId.value:0);
+    if (value != null && value.length > 0) {
+      billDet_Calculation.value = value;
+      await DirectBillCal_itemlistTable_Delete();
+      await directBillCalculationSave();
+      await getDirectBillCalDatas();
+      if(saveButton.value == RequestConstant.RESUBMIT || saveButton.value == RequestConstant.VERIFY || saveButton.value == RequestConstant.APPROVAL) {
+        await preloadEditAddLessData(EditListSaveDatas[0].NMRAddLess);
+      }
+    }
+    else {
+      BaseUtitiles.showToast(RequestConstant.NORECORD_FOUND);
+    }
+  }
+
+  Future<void> directBillCalculationSave() async {
+    directBillTableModelList = [];
+
+    for (final element in billDet_Calculation.value) {
+      final directBillTable = DirectBillGSTCalTable();
+
+      directBillTable.reqDetId = 0;
+      directBillTable.addLessId = element.id;
+      directBillTable.percentValue = element.per;
+      directBillTable.amount = 0.0;
+      directBillTable.addLessName = element.addLessName;
+      directBillTable.addLessType = element.addLessType;
+
+      directBillTableModelList.add(directBillTable);
+    }
+
+    await directBillGen_ItemlistService
+        .DirectBillGST_ItemTable_Save(directBillTableModelList);
+  }
+
+  Future getDirectBillCalDatas() async {
+    var datas = await directBillGen_ItemlistService.DirectBillGST_ItemlistTable_readAll();
+    directBillGen_ItemReadList.value = <DirectBillGSTCalTable>[];
+    directBillGen_ItemReadList.clear();
+    datas.forEach((value) {
+      directBillTable = DirectBillGSTCalTable();
+      directBillTable.reqDetId=value['reqDetId'];
+      directBillTable.addLessId=value['addLessId'];
+      directBillTable.percentValue=value['percentValue'];
+      directBillTable.amount=value['amount'];
+      directBillTable.addLessName=value['addLessName'];
+      directBillTable.addLessType=value['addLessType'];
+      directBillGen_ItemReadList.add(directBillTable);
+    });
+    initPercentControllers();
+  }
+
+  updateDirectBillCalDatas() async {
+    int i=0;
+    updateBillGen_ItemReadList.clear();
+    directBillGen_ItemReadList.forEach((element) {
+      directBillTable = DirectBillGSTCalTable();
+      directBillTable.reqDetId=element.reqDetId;
+      directBillTable.addLessId=element.addLessId;
+      directBillTable.percentValue=element.percentValue;
+      directBillTable.amount=element.amount;
+      directBillTable.addLessName=element.addLessName;
+      directBillTable.addLessType=element.addLessType;
+      updateBillGen_ItemReadList.add(directBillTable);
+      i++;
+    });
+    await directBillGen_ItemlistService.DirectBillGST_ItemlistTable_Update(updateBillGen_ItemReadList);
+  }
+
+  DirectBillCal_itemlistTable_Delete() async {
+    await directBillGen_ItemlistService.DirectBillGST_ItemlistTable_delete();
+  }
+
+  Future<void> preloadEditAddLessData(List<dynamic> editAddLessList) async {
+
+    await getDirectBillCalDatas();
+
+    for (var editItem in editAddLessList) {
+
+      int index = directBillGen_ItemReadList.indexWhere(
+            (e) => e.addLessId == editItem.aLid,
+      );
+
+      if (index != -1) {
+
+        // directBillGen_ItemReadList[index].reqDetId = editItem.id;
+
+        directBillGen_ItemReadList[index].percentValue =
+            (editItem.percent ?? 0).toDouble();
+
+        // Don't use API amount. Recalculate it.
+        directBillGen_ItemReadList[index].amount = 0;
+
+        percentControllers[index].text =
+        (editItem.percent ?? 0) == 0
+            ? ''
+            : editItem.percent.toString();
+      }
+    }
+
+    directBillGen_ItemReadList.refresh();
+    String roundText = Roundoff.text.trim();
+
+    double round =
+    (roundText.isEmpty || roundText == "-")
+        ? 0
+        : double.tryParse(roundText) ?? 0;
+    recalculateAddLessAmounts(
+      bill: double.tryParse(billamount.text) ?? 0,
+      credit: double.tryParse(Creditamt.text) ?? 0,
+      debit: double.tryParse(Debitamt.text) ?? 0,
+      adv: double.tryParse(Advded.text) ?? 0,
+      round: round,
+    );
+  }
+
 
   Future NmrEntryList_EditApi(
-      int workid, BuildContext context, int check) async {
-    check != 0 ? aprovedButton = 1 : aprovedButton = 0;
+      int workid, BuildContext context, type) async {
     await NMRWklyprovider.nmr_entryList_editAPI(workid).then((value) async {
       if (value != null && value.length > 0) {
-        editCheck = 1;
+        saveButton.value= type=="Edit"?RequestConstant.RESUBMIT:type=="Verify"?RequestConstant.VERIFY:RequestConstant.APPROVAL;
         EditListSaveDatas.value = value;
         setTextEditListControllersValue();
         return Navigator.pushReplacement(
@@ -460,8 +813,6 @@ class NMRWklyController extends GetxController {
                   Expanded(
                     child: TextButton(
                         onPressed: () {
-                          submitCheck=0;
-                          editCheck=0;
                           NmritemList.value.clear();
                           Nmr_EntryList_DeleteApi(NmrEtyList[index].nmrWorkId,NmrEtyList[index].subcontid,NmrEtyList[index].workNo);
                           NmrEtyList.removeAt(index);
@@ -494,7 +845,6 @@ class NMRWklyController extends GetxController {
     );
   }
 
-
   Future getNmrcheckstatus(int pid,String subId,int sid,String fadte,String tdate,BuildContext context) async {
     NmrcheckStatusList.value.clear();
     await NMRWklyprovider.getNmrcheckedapproved(pid,subId,sid,fadte,tdate).then((value) async {
@@ -526,3 +876,4 @@ class NMRWklyController extends GetxController {
     });
   }
 }
+

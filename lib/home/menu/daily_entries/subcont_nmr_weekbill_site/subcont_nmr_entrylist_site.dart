@@ -25,18 +25,8 @@ class _Subcont_NMR_EntryListScreenState_Site
   @override
   void initState() {
 
-    if(nmrWklyController.editCheck==1){
-
-    }
-    else{
-      nmrWklyController.editCheck=0;
-    }
-
-    setState(() {
-      nmrWklyController.NmrEtyList.value.clear();
+    nmrWklyController.NmrEtyList.value.clear();
       nmrWklyController.mainEtyList.value.clear();
-    });
-
     DateTime currentDate = DateTime.now();
     DateTime lastDayOfMonth = DateTime(currentDate.year, currentDate.month - 1, 0);
     nmrWklyController.EntrylistFrDate.text = lastDayOfMonth.toString().substring(0, 10);
@@ -64,9 +54,10 @@ class _Subcont_NMR_EntryListScreenState_Site
             visible: commanController.addMode.value == 1 ? true : false,
             child: FloatingActionButton.extended(
               onPressed: (){
-                nmrWklyController.submitCheck =0;
-                nmrWklyController.editCheck =0;
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const Subcont_Nmr_EntryScreen_Site()));
+                setState(() {
+                  nmrWklyController.saveButton.value=RequestConstant.SUBMIT;
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const Subcont_Nmr_EntryScreen_Site()));
+                });
               },
               label: const Text("Add", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: RequestConstant.Lable_Font_SIZE,),),
               icon: const Icon(Icons.add, color: Colors.white, size: RequestConstant.Heading_Font_SIZE, ),
@@ -757,9 +748,9 @@ class _Subcont_NMR_EntryListScreenState_Site
                                                                   onTap: () async {
                                                                     nmrWklyController.EditListSaveDatas.value.clear();
                                                                     nmrWklyController.NmritemList.value.clear();
-                                                                    await  nmrWklyController.NmrEntryList_EditApi(nmrWklyController.NmrEtyList.value[index].nmrWorkId,context,1);
-                                                                    // Navigator.pop(context);
-                                                                    // FocusScope.of(context).unfocus();
+                                                                    await  nmrWklyController.NmrEntryList_EditApi(nmrWklyController.NmrEtyList.value[index].nmrWorkId,context,"Edit");
+                                                                    Navigator.pop(context);
+                                                                    FocusScope.of(context).unfocus();
 
                                                                   }),
                                                               Container(

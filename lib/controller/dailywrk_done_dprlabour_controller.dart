@@ -414,7 +414,7 @@ int workid=0;
           approvedby: "0",
           userId: loginController.UserId(),
           empId: loginController.EmpId(),
-          entryMode: saveButton.value == "Save" ? "ADD" : saveButton.value ==
+          entryMode: saveButton.value == "Submit" ? "ADD" : saveButton.value ==
               "Update" ? "UPDATE" : saveButton.value == "Verify"
               ? "VERIFY"
               : saveButton.value == "Approve" ? "APPROVE" : "",

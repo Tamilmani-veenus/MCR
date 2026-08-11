@@ -97,7 +97,7 @@ class  RequisitionSlipController extends GetxController{
       totalPerHrs: TotalHrs.text,
       userId: loginController.UserId(),
       deviceName: BaseUtitiles.deviceName,
-      entryMode:saveButton.value=="Save"?"ADD":saveButton.value=="Update"?"UPDATE":saveButton.value=="Verify"?"VERIFY":saveButton.value=="Approve"?"APPROVE":"",
+      entryMode:saveButton.value=="Submit"?"ADD":saveButton.value=="Update"?"UPDATE":saveButton.value=="Verify"?"VERIFY":saveButton.value=="Approve"?"APPROVE":"",
 
     ));
     final list = await RequisitionslipProvider.SaveReqslipScreenEntryAPI(body, id);

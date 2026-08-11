@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/services.dart';
 import 'package:mcr/home/menu/daily_entries/subcont_nmr_weekbill_site/subcont_nmr_deduction_site.dart';
 import '../../../../app_theme/app_colors.dart';
 import '../../../../constants/ui_constant/icons_const.dart';
@@ -28,7 +31,6 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
   SiteController siteController = Get.put(SiteController());
   AutoYearWiseNoController autoYearWiseNoController=Get.put(AutoYearWiseNoController());
   NMRWklyController nmrWklyController= Get.put(NMRWklyController());
-  // HDTRefreshController _hdtRefreshController = HDTRefreshController();
   DailyEntriesController dailyEntriesController = Get.put(DailyEntriesController());
   BottomsheetControllers bottomsheetControllers = Get.put(BottomsheetControllers());
 
@@ -37,8 +39,32 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
   void initState(){
     var duration = Duration(seconds: 0);
     Future.delayed(duration,() async {
+      if(nmrWklyController.saveButton.value == RequestConstant.SUBMIT){
+        await autoYearWiseNoController.NMR_AutoYearWise();
+        await projectController.getProjectList(context, 0);
+        await siteController.subcontEntry_siteDropdowntList(context,0);
+        await subcontractorController.getSubcontList(context, projectController.selectedProjectId.value,siteController.selectedsiteId.value, 1);
 
-      if(nmrWklyController.editCheck==1){
+        nmrWklyController.NmritemList.value=[];
+        projectController.projectname.text="--SELECT--";
+        projectController.selectedProjectId.value=0;
+        siteController.Sitename.text="--SELECT--";
+        siteController.selectedsiteId.value=0;
+        subcontractorController.Subcontractorname.text="--SELECT--";
+        subcontractorController.selectedSubcontId.value=0;
+        // subcontractorController.InvoiceNo.text = "";
+        nmrWklyController.BillNoController.text = "";
+        nmrWklyController.createdById.value = 0;
+        nmrWklyController.RemarksController.text = "";
+        nmrWklyController.NmrentryDateController.text = BaseUtitiles.initiateCurrentDateFormat();
+        nmrWklyController.FromdateController.text=BaseUtitiles.initiateCurrentDateFormat();
+        nmrWklyController.TodateController.text=BaseUtitiles.initiateCurrentDateFormat();
+        nmrWklyController.autoYearWiseNoController.text=autoYearWiseNoController.NMR_autoYrsWise.value;
+      }
+
+      await nmrWklyController.DirectBill_CalculationList();
+
+      if(nmrWklyController.saveButton.value == RequestConstant.RESUBMIT || nmrWklyController.saveButton.value == RequestConstant.VERIFY || nmrWklyController.saveButton.value == RequestConstant.APPROVAL){
         nmrWklyController.EditListSaveDatas.value.forEach((element) {
           siteController.Sitename.text=element.siteName.toString();
           projectController.projectname.text=element.projectName.toString();
@@ -54,29 +80,6 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
           nmrWklyController.TodateController.text=element.toDate!;
           nmrWklyController.RemarksController.text=element.remarks!;
         });
-      }
-      else if(nmrWklyController.submitCheck==1){
-        nmrWklyController.NmritemList.value;
-      }
-      else{
-        await autoYearWiseNoController.NMR_AutoYearWise();
-        await projectController.getProjectList(context, 0);
-        await siteController.subcontEntry_siteDropdowntList(context,0);
-        await subcontractorController.getSubcontList(context, projectController.selectedProjectId.value,siteController.selectedsiteId.value, 1);
-        nmrWklyController.autoYearWiseNoController.text=autoYearWiseNoController.NMR_autoYrsWise.value;
-        nmrWklyController.NmritemList.value=[];
-        projectController.projectname.text="--SELECT--";
-        projectController.selectedProjectId.value=0;
-        siteController.Sitename.text="--SELECT--";
-        siteController.selectedsiteId.value=0;
-        subcontractorController.Subcontractorname.text="--SELECT--";
-        subcontractorController.selectedSubcontId.value=0;
-        nmrWklyController.BillNoController.text = "";
-        nmrWklyController.RemarksController.clear();
-        nmrWklyController.NmrentryDateController.text = BaseUtitiles.initiateCurrentDateFormat();
-        nmrWklyController.FromdateController.text=BaseUtitiles.initiateCurrentDateFormat();
-        nmrWklyController.TodateController.text=BaseUtitiles.initiateCurrentDateFormat();
-        nmrWklyController.autoYearWiseNoController.text=autoYearWiseNoController.NMR_autoYrsWise.value;
       }
     });
     super.initState();
@@ -112,10 +115,13 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text("NMR Weekly Bill - Generation",
-                              style: TextStyle(
-                                  fontSize: RequestConstant.Heading_Font_SIZE,
-                                  fontWeight: FontWeight.bold),
+                            Expanded(
+                              child: Text(
+                                "NMR Weekly Bill - Generation",
+                                style: TextStyle(
+                                    fontSize: nmrWklyController.saveButton.value == RequestConstant.VERIFY || nmrWklyController.saveButton.value == RequestConstant.APPROVAL ? 16 : RequestConstant.Heading_Font_SIZE,
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
                             TextButton(
                                 onPressed: () {
@@ -199,7 +205,7 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
                                           child: ConstIcons.date),
                                     ),
                                     onTap: () async {
-                                      if(nmrWklyController.editCheck==1){}
+                                      if(nmrWklyController.saveButton.value == RequestConstant.RESUBMIT){}
                                       else{
                                         var entryDate = await showDatePicker(
                                             context: context,
@@ -264,7 +270,7 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
                                     child: ConstIcons.projectName),
                               ),
                               onTap: () {
-                                if(nmrWklyController.editCheck==1 || nmrWklyController.NmritemList.value.length>0){
+                                if(nmrWklyController.saveButton.value==RequestConstant.RESUBMIT || nmrWklyController.NmritemList.value.length>0){
                                 }
                                 else{
                                   setState(() {
@@ -313,7 +319,7 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
                                     child: ConstIcons.siteName),
                               ),
                               onTap: () async {
-                                if(nmrWklyController.editCheck==1|| nmrWklyController.NmritemList.value.length>0){
+                                if(nmrWklyController.saveButton.value==RequestConstant.RESUBMIT|| nmrWklyController.NmritemList.value.length>0){
 
                                 }
                                 else{
@@ -362,7 +368,7 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
                                     child: ConstIcons.subcontractorName),
                               ),
                               onTap: () async {
-                                if(nmrWklyController.editCheck==1 || nmrWklyController.NmritemList.value.length>0||projectController.selectedProjectId.value==0||siteController.selectedsiteId.value==0){
+                                if(nmrWklyController.saveButton.value==RequestConstant.RESUBMIT || nmrWklyController.NmritemList.value.length>0||projectController.selectedProjectId.value==0||siteController.selectedsiteId.value==0){
                                 }
                                 else{
                                   await subcontractorController.getSubcontList(context, projectController.selectedProjectId.value,siteController.selectedsiteId.value, 1);
@@ -471,7 +477,7 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
                                       ),
                                     ),
                                     onTap: () async {
-                                      if(nmrWklyController.editCheck==1){
+                                      if(nmrWklyController.saveButton.value == RequestConstant.RESUBMIT){
 
                                       }
                                       else if(nmrWklyController.NmritemList.value.isNotEmpty){
@@ -506,7 +512,7 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
                                     },
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return 'Select Date';
+                                        return '\u26A0 ${RequestConstant.VALIDATE}';
                                       }
                                       return null;
                                     },
@@ -514,7 +520,7 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
                                 ),
                               ),
                             ),
-                            Container(
+                            SizedBox(
                               width: BaseUtitiles.getWidthtofPercentage(context, 45),
                               child: Card(
                                 shape: RoundedRectangleBorder(
@@ -545,7 +551,7 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
                                               color: Theme.of(context).primaryColor)),
                                     ),
                                     onTap: () async {
-                                      if(nmrWklyController.editCheck==1){
+                                      if(nmrWklyController.saveButton.value == RequestConstant.RESUBMIT){
 
                                       }
                                       else if(nmrWklyController.NmritemList.value.isNotEmpty){
@@ -579,7 +585,7 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
                                     },
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return 'Select Date';
+                                        return '\u26A0 ${RequestConstant.VALIDATE}';
                                       }
                                       return null;
                                     },
@@ -623,25 +629,6 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
                         ),
                       ),
                       SizedBox(height: BaseUtitiles.getheightofPercentage(context, 1)),
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.center,
-                      //   children: [
-                      //     ElevatedButton(
-                      //         style: ElevatedButton.styleFrom(
-                      //           primary: Setmybackground,
-                      //         ),
-                      //         onPressed: () {
-                      //        // Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => const Subcont_NMR_Deduction_Site() ));
-                      //         },
-                      //         child: Row(
-                      //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      //           children: [
-                      //             Icon(Icons.add, color: Theme.of(context).primaryColor),
-                      //             const SizedBox(width: 5),
-                      //             Text("Add Items", style: TextStyle(color: Theme.of(context).primaryColor)),
-                      //           ],)),
-                      //   ],
-                      // ),
                       Container(
                         height: BaseUtitiles.getheightofPercentage(context, 4),
                         child: ElevatedButton(
@@ -657,15 +644,19 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
                                 borderRadius: BorderRadius.circular(30)),),
                           child: Text(RequestConstant.SUBMIT,style: TextStyle(color: Colors.white)),
                           onPressed: () async {
-                            if(nmrWklyController.editCheck==1){
-                            }
-                            else{
-                              if(projectController.selectedProjectId.value!=0 && siteController.selectedsiteId.value !=0 &&  subcontractorController.selectedSubcontId.value!=0){
-                                await nmrWklyController.getNmrcheckstatusCount(projectController.selectedProjectId.value,subcontractorController.selectedSubcontId.value.toString(),siteController.selectedsiteId.value,nmrWklyController.FromdateController.text,nmrWklyController.TodateController.text);
-                                await nmrWklyController.getNmrcheckstatus(projectController.selectedProjectId.value,subcontractorController.selectedSubcontId.value.toString(),siteController.selectedsiteId.value,nmrWklyController.FromdateController.text,nmrWklyController.TodateController.text,context);
+                            if(_formkey.currentState!.validate())
+                            {
+                              _formkey.currentState!.save();
+                              if(nmrWklyController.saveButton.value == RequestConstant.RESUBMIT){
                               }
-                              //  nmrWklyController.submit_getNmrItemList_Site();
+                              else{
+                                if(projectController.selectedProjectId.value!=0 && siteController.selectedsiteId.value !=0 &&  subcontractorController.selectedSubcontId.value!=0){
+                                  await nmrWklyController.getNmrcheckstatusCount(projectController.selectedProjectId.value,subcontractorController.selectedSubcontId.value.toString(),siteController.selectedsiteId.value,nmrWklyController.FromdateController.text,nmrWklyController.TodateController.text);
+                                  await nmrWklyController.getNmrcheckstatus(projectController.selectedProjectId.value,subcontractorController.selectedSubcontId.value.toString(),siteController.selectedsiteId.value,nmrWklyController.FromdateController.text,nmrWklyController.TodateController.text,context);
+                                }
+                              }
                             }
+
 
                           },
                         ),
@@ -673,344 +664,6 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
 
 
                       SizedBox(height: height),
-
-                      // Container(
-                      //   padding: EdgeInsets.only(left: 20, bottom: 8),
-                      //   child: Row(
-                      //     children: [
-                      //       Expanded(
-                      //         flex: 1,
-                      //         child: Container(
-                      //           height: BaseUtitiles.getheightofPercentage(context, 4),
-                      //           child: TextField(
-                      //             controller: nmrWklyController.autoYearWiseNoController,
-                      //             readOnly: true,
-                      //             textAlign: TextAlign.center,
-                      //             decoration: InputDecoration(
-                      //               contentPadding: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                      //               focusedBorder: OutlineInputBorder(
-                      //                 borderSide: BorderSide(color:Theme.of(context).primaryColor, width: 1.0),
-                      //               ),
-                      //               enabledBorder: OutlineInputBorder(
-                      //                 borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.0),
-                      //               ),
-                      //               border: OutlineInputBorder(),
-                      //             ),
-                      //           ),
-                      //         ),
-                      //       ),
-                      //       Expanded(
-                      //         flex: 1,
-                      //         child: Container(
-                      //           height: BaseUtitiles.getheightofPercentage(context, 4),
-                      //           margin: EdgeInsets.only(left: 10, right: 20),
-                      //           decoration: BoxDecoration(),
-                      //           child: TextField(
-                      //             readOnly: true,
-                      //             controller: nmrWklyController.NmrentryDateController,
-                      //             decoration: InputDecoration(
-                      //               contentPadding: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                      //               focusedBorder: OutlineInputBorder(
-                      //                 borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.0),
-                      //               ),
-                      //               enabledBorder: OutlineInputBorder(
-                      //                 borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.0),
-                      //               ),
-                      //               border: OutlineInputBorder(),
-                      //               prefixIcon: Icon(Icons.date_range_sharp,
-                      //                   color: Theme.of(context).primaryColor),
-                      //             ),
-                      //             onTap: () async {
-                      //               if(nmrWklyController.editCheck==1){
-                      //
-                      //               }
-                      //               else{
-                      //                 var Entrydate = await showDatePicker(
-                      //                     context: context,
-                      //                     initialDate: DateTime.now(),
-                      //                     firstDate: DateTime(1900),
-                      //                     lastDate: DateTime(2100),
-                      //                     builder: (context, child) {
-                      //                       return Theme(data: Theme.of(context).copyWith(
-                      //                         colorScheme: ColorScheme.light(
-                      //                           primary: Theme.of(context).primaryColor, // header background color
-                      //                           onPrimary: Colors.white, // header text color
-                      //                           onSurface: Colors.black, // body text color
-                      //                         ),
-                      //                         textButtonTheme: TextButtonThemeData(
-                      //                           style: TextButton.styleFrom(
-                      //                             primary: Colors.black, // button text color
-                      //                           ),
-                      //                         ),
-                      //                       ),
-                      //                         child: child!,
-                      //                       );
-                      //                     });
-                      //                 nmrWklyController.NmrentryDateController.text =BaseUtitiles.selectDateFormat(Entrydate!);
-                      //               }
-                      //             },
-                      //           ),
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
-                      // Container(
-                      //   margin: EdgeInsets.only(top: 10,bottom: 10),
-                      //   height: BaseUtitiles.getheightofPercentage(context, 5),
-                      //   width: BaseUtitiles.getWidthtofPercentage(context, 90),
-                      //   child: TextField(
-                      //     style: TextStyle(fontSize: RequestConstant.Dropdown_Font_SIZE),
-                      //     readOnly: true,
-                      //     controller: projectController.projectname,
-                      //     decoration: new InputDecoration(
-                      //       contentPadding: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                      //       labelText: RequestConstant.PROJECT_NAME,
-                      //       focusedBorder: OutlineInputBorder(
-                      //         borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.0),
-                      //       ),
-                      //       enabledBorder: OutlineInputBorder(
-                      //         borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.0),
-                      //       ),
-                      //     ),
-                      //     onTap: () {
-                      //       if(nmrWklyController.editCheck==1|| nmrWklyController.NmritemList.value.length>0){
-                      //       }
-                      //       else{
-                      //         projectController.getProjectList(context,0);
-                      //       }
-                      //     },
-                      //   ),
-                      // ),
-                      // Container(
-                      //   margin: EdgeInsets.only(bottom: 10),
-                      //   height: BaseUtitiles.getheightofPercentage(context, 5),
-                      //   width: BaseUtitiles.getWidthtofPercentage(context, 90),
-                      //   child: TextField(
-                      //     style: TextStyle(fontSize: RequestConstant.Dropdown_Font_SIZE),
-                      //     readOnly: true,
-                      //     controller: siteController.Sitename,
-                      //     decoration: new InputDecoration(
-                      //       contentPadding: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                      //       labelText:RequestConstant.SITE_NAME,
-                      //       focusedBorder: OutlineInputBorder(
-                      //         borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.0),
-                      //       ),
-                      //       enabledBorder: OutlineInputBorder(
-                      //         borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.0),
-                      //       ),
-                      //     ),
-                      //     onTap: () {
-                      //       if(nmrWklyController.editCheck==1|| nmrWklyController.NmritemList.value.length>0){
-                      //
-                      //       }
-                      //       else{
-                      //         siteController.subcontEntry_siteDropdowntList(context,0);
-                      //       }
-                      //
-                      //     },
-                      //   ),
-                      // ),
-                      // Container(
-                      //   margin: EdgeInsets.only(bottom: 10),
-                      //   height: BaseUtitiles.getheightofPercentage(context, 5),
-                      //   width: BaseUtitiles.getWidthtofPercentage(context, 90),
-                      //   child: TextField(
-                      //     style: TextStyle(fontSize: RequestConstant.Dropdown_Font_SIZE),
-                      //     readOnly: true,
-                      //     controller: subcontractorController.Subcontractorname,
-                      //     decoration: new InputDecoration(
-                      //       contentPadding: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                      //       labelText: RequestConstant.SUBCONTRACTOR_NAME,
-                      //       focusedBorder: OutlineInputBorder(
-                      //         borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.0),
-                      //       ),
-                      //       enabledBorder: OutlineInputBorder(
-                      //         borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.0),
-                      //       ),
-                      //
-                      //     ),
-                      //
-                      //     onTap: () async{
-                      //       if(nmrWklyController.editCheck==1 || nmrWklyController.NmritemList.value.length>0||projectController.selectedProjectId.value==0||siteController.selectedsiteId.value==0){
-                      //
-                      //       }
-                      //       else{
-                      //         await subcontractorController.getSubcontList(context,projectController.selectedProjectId.value);
-                      //       }
-                      //     },
-                      //   ),
-                      //
-                      // ),
-                      // Container(
-                      //   alignment: Alignment.center,
-                      //   margin: EdgeInsets.only(top: 10,bottom: 10,right: 10,left: 10),
-                      //   height: BaseUtitiles.getheightofPercentage(context, 4),
-                      //   decoration: BoxDecoration(
-                      //     borderRadius: BorderRadius.circular(50),
-                      //     color: Theme.of(context).primaryColor,
-                      //     boxShadow: [
-                      //       BoxShadow(
-                      //           offset: Offset(0, 10),
-                      //           blurRadius: 35,
-                      //           color: Colors.grey
-                      //       ),
-                      //     ],
-                      //   ),
-                      //   child: Text("Sub Contractor Work Done Details",style: TextStyle(color: Colors.white),),
-                      // ),
-                      // Container(
-                      //   child: Row(
-                      //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      //     children: <Widget>[
-                      //       Container(
-                      //         height: BaseUtitiles.getheightofPercentage(context, 4),
-                      //         width: BaseUtitiles.getWidthtofPercentage(context, 40),
-                      //         margin: EdgeInsets.only(left: 5, right: 5),
-                      //         decoration: BoxDecoration(),
-                      //         child: TextField(
-                      //           readOnly: true,
-                      //           controller: nmrWklyController.FromdateController,
-                      //           decoration: InputDecoration(
-                      //             contentPadding: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                      //             focusedBorder: OutlineInputBorder(
-                      //               borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.0),
-                      //             ),
-                      //             enabledBorder: OutlineInputBorder(
-                      //               borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.0),
-                      //             ),
-                      //             border: OutlineInputBorder(),
-                      //             prefixIcon: Icon(Icons.date_range_sharp,
-                      //                 color: Theme.of(context).primaryColor),
-                      //           ),
-                      //           onTap: () async {
-                      //             if(nmrWklyController.editCheck==1){
-                      //
-                      //             }
-                      //             else if(nmrWklyController.NmritemList.value.isNotEmpty){
-                      //
-                      //             }
-                      //             else{
-                      //               var Frdate = await showDatePicker(
-                      //                   fieldHintText: "From",
-                      //                   context: context,
-                      //                   initialDate: DateTime.now(),
-                      //                   firstDate: DateTime(1900),
-                      //                   lastDate: DateTime(2100),
-                      //                   builder: (context, child) {
-                      //                     return Theme(data: Theme.of(context).copyWith(
-                      //                       colorScheme: ColorScheme.light(
-                      //                         primary: Theme.of(context).primaryColor, // header background color
-                      //                         onPrimary: Colors.white, // header text color
-                      //                         onSurface: Colors.black, // body text color
-                      //                       ),
-                      //                       textButtonTheme: TextButtonThemeData(
-                      //                         style: TextButton.styleFrom(
-                      //                           primary: Colors.black, // button text color
-                      //                         ),
-                      //                       ),
-                      //                     ),
-                      //                       child: child!,
-                      //                     );
-                      //                   });
-                      //               nmrWklyController.FromdateController.text = BaseUtitiles.selectDateFormat(Frdate!);
-                      //               nmrWklyController.TodateController.text= BaseUtitiles.NMR_After_OneWeekDate(Frdate);
-                      //             }
-                      //           },
-                      //         ),
-                      //       ),
-                      //
-                      //       Container(
-                      //         height: BaseUtitiles.getheightofPercentage(context, 4),
-                      //         width: BaseUtitiles.getWidthtofPercentage(context, 40),
-                      //         margin: EdgeInsets.only(left: 5, right: 5),
-                      //         decoration: BoxDecoration(),
-                      //         child: TextField(
-                      //           readOnly: true,
-                      //           controller: nmrWklyController.TodateController,
-                      //           decoration: InputDecoration(
-                      //             contentPadding: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                      //             focusedBorder: OutlineInputBorder(
-                      //               borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.0),
-                      //             ),
-                      //             enabledBorder: OutlineInputBorder(
-                      //               borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.0),
-                      //             ),
-                      //             border: OutlineInputBorder(),
-                      //             prefixIcon: Icon(Icons.date_range_sharp,
-                      //                 color: Theme.of(context).primaryColor),
-                      //           ),
-                      //           onTap: () async {
-                      //
-                      //             // if(nmrWklyController.editCheck==1){
-                      //             //
-                      //             // }
-                      //             // else{
-                      //             //   var Todate = await showDatePicker(
-                      //             //       context: context,
-                      //             //       initialDate: DateTime.now(),
-                      //             //       firstDate: DateTime(1900),
-                      //             //       lastDate: DateTime(2100));
-                      //             //   nmrWklyController.FromdateController.text =BaseUtitiles.selectDateFormat(Todate!);
-                      //             // }
-                      //           },
-                      //
-                      //         ),
-                      //       ),
-                      //
-                      //     ],
-                      //   ),
-                      // ),
-                      // Container(
-                      //   margin: EdgeInsets.only(top: 10,bottom: 10),
-                      //   height: BaseUtitiles.getheightofPercentage(context, 5),
-                      //   width: BaseUtitiles.getWidthtofPercentage(context, 90),
-                      //   child: TextField(
-                      //     controller: nmrWklyController.RemarksController,
-                      //     textAlign: TextAlign.center,
-                      //     decoration: InputDecoration(
-                      //       contentPadding: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                      //       labelText: RequestConstant.REMARKS,
-                      //       focusedBorder: OutlineInputBorder(
-                      //         borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.0),
-                      //       ),
-                      //       enabledBorder: OutlineInputBorder(
-                      //         borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.0),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
-                      // Container(
-                      //   height: BaseUtitiles.getheightofPercentage(context, 4),
-                      //   child: ElevatedButton(
-                      //     style: ElevatedButton.styleFrom(
-                      //       primary: Theme.of(context).primaryColor,
-                      //       //background color of button
-                      //       side: BorderSide(width: 3, color: Colors.black),
-                      //       //border width and color
-                      //       elevation: 3,
-                      //       //elevation of button
-                      //       shape: RoundedRectangleBorder(
-                      //         //to set border radius to button
-                      //           borderRadius: BorderRadius.circular(30)),),
-                      //     child: Text(RequestConstant.SUBMIT),
-                      //     onPressed: () async {
-                      //       if(nmrWklyController.editCheck==1){
-                      //       }
-                      //       else{
-                      //         if(projectController.selectedProjectId.value!=0 && siteController.selectedsiteId.value!=0 && subcontractorController.selectedSubcontId.value!=0){
-                      //           await  nmrWklyController.getNmrcheckstatusCount(projectController.selectedProjectId.value,subcontractorController.selectedSubcontId.value.toString(),siteController.selectedsiteId.value,nmrWklyController.FromdateController.text,nmrWklyController.TodateController.text);
-                      //           await  nmrWklyController.getNmrcheckstatus(projectController.selectedProjectId.value,subcontractorController.selectedSubcontId.value.toString(),siteController.selectedsiteId.value,nmrWklyController.FromdateController.text,nmrWklyController.TodateController.text,context);
-                      //         }
-                      //       //  nmrWklyController.submit_getNmrItemList_Site();
-                      //       }
-                      //
-                      //     },
-                      //   ),
-                      // ),
-                      // Obx(()=>Visibility(
-                      //     visible: nmrWklyController.NmritemList.value.isEmpty?false:true,
-                      //     child: ListDetails())),
 
                     ],
                   ),
@@ -1112,7 +765,6 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
                       ),
                     ),
                     onTap: () {
-                      dailyEntriesController.checkColor = 1;
                       ResetAlert(context);
                     },
                   ),
@@ -1139,14 +791,17 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
                         ),
                       ),
                       onTap: () {
-                        // if(_formkey.currentState!.validate()) {
-                        //   _formkey.currentState!.save();
-                        //   nmrWklyController.checkColor = 0;
-                        Navigator.of(context).push(MaterialPageRoute(builder: (
-                            BuildContext context) => const Subcont_NMR_Deduction_Site()));
-
-                        // SubmitAlert(context);
-                        // }},
+                        if(_formkey.currentState!.validate()) {
+                          _formkey.currentState!.save();
+                          if(nmrWklyController.NmritemList.isEmpty)
+                          {}
+                          else {
+                            nmrWklyController.tobededadv.addListener(() {
+                              nmrWklyController.updateAdvanceReadOnly();
+                            });
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (BuildContext context) => const Subcont_NMR_Deduction_Site()));
+                          }}
                       }
                   ),
                 ),
@@ -1196,18 +851,22 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
                   Expanded(
                     child: TextButton(
                         onPressed: () async {
-                          nmrWklyController.NmritemList.value.clear();
-                          projectController.projectname.text="--Select--";
-                          projectController.selectedProjectId.value=0;
-                          siteController.Sitename.text=RequestConstant.SELECT;
-                          siteController.selectedsiteId.value=0;
-                          subcontractorController.Subcontractorname.text="--Select--";
-                          subcontractorController.selectedSubcontId.value=0;
-                          nmrWklyController.RemarksController.clear();
-                          nmrWklyController.NmrentryDateController.text = BaseUtitiles.initiateCurrentDateFormat();
-                          nmrWklyController.FromdateController.text=BaseUtitiles.initiateCurrentDateFormat();
-                          nmrWklyController.TodateController.text=BaseUtitiles.initiateCurrentDateFormat();
-                          nmrWklyController.autoYearWiseNoController.text=autoYearWiseNoController.NMR_autoYrsWise.value;
+                          Future.delayed(Duration(seconds: 0),(){
+                            nmrWklyController.NmritemList.value=[];
+                            projectController.projectname.text="--SELECT--";
+                            projectController.selectedProjectId.value=0;
+                            siteController.Sitename.text="--SELECT--";
+                            siteController.selectedsiteId.value=0;
+                            subcontractorController.Subcontractorname.text="--SELECT--";
+                            subcontractorController.selectedSubcontId.value=0;
+                            nmrWklyController.BillNoController.text = "";
+                            nmrWklyController.RemarksController.text = "";
+                            nmrWklyController.NmrentryDateController.text = BaseUtitiles.initiateCurrentDateFormat();
+                            nmrWklyController.FromdateController.text=BaseUtitiles.initiateCurrentDateFormat();
+                            nmrWklyController.TodateController.text=BaseUtitiles.initiateCurrentDateFormat();
+                            nmrWklyController.autoYearWiseNoController.text=autoYearWiseNoController.NMR_autoYrsWise.value;
+                          });
+                          Navigator.pop(context);
                         },
                         child: Text("Reset",
                             style: TextStyle(
@@ -1223,98 +882,6 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
       ),
     );
   }
-
-  Future SubmitAlert(BuildContext context) async {
-    return await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Alert!'),
-        content: Text(nmrWklyController.editCheck == 1
-            ? 'Are you sure to Re-Submit?'
-            : 'Are you sure to Submit?'),
-        actions: [
-          Container(
-            margin: EdgeInsets.only(left: 20, right: 20),
-            child: IntrinsicHeight(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text("Cancel",
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontWeight: FontWeight.bold,
-                                fontSize: RequestConstant.Lable_Font_SIZE))),
-                  ),
-                  VerticalDivider(
-                    color: Colors.grey.shade400,
-                    //color of divider
-                    width: 5,
-                    //width space of divider
-                    thickness: 2,
-                    //thickness of divier line
-                    indent: 15,
-                    //Spacing at the top of divider.
-                    endIndent: 15, //Spacing at the bottom of divider.
-                  ),
-                  Expanded(
-                    child: TextButton(
-                        onPressed: () async {
-
-                          if (nmrWklyController.buttonControl == 0) {
-                            if (nmrWklyController.editCheck == 1) {
-                            } else {
-                              if (projectController.selectedProjectId.value !=
-                                  0 &&
-                                  siteController.selectedsiteId.value != 0 &&
-                                  subcontractorController
-                                      .selectedSubcontId.value !=
-                                      0) {
-                                await nmrWklyController.getNmrcheckstatusCount(
-                                    projectController.selectedProjectId.value,
-                                    subcontractorController
-                                        .selectedSubcontId.value
-                                        .toString(),
-                                    siteController.selectedsiteId.value,
-                                    nmrWklyController.FromdateController.text,
-                                    nmrWklyController.TodateController.text);
-                                await nmrWklyController.getNmrcheckstatus(
-                                    projectController.selectedProjectId.value,
-                                    subcontractorController
-                                        .selectedSubcontId.value
-                                        .toString(),
-                                    siteController.selectedsiteId.value,
-                                    nmrWklyController.FromdateController.text,
-                                    nmrWklyController.TodateController.text,
-                                    context);
-                              }
-                            }
-                          } else {
-                            nmrWklyController.buttonControl = 1;
-                            BaseUtitiles.showToast(
-                                "Already Submited Please wait...");
-                          }
-                        },
-                        child: Text(RequestConstant.SUBMIT,
-                            style: TextStyle(
-                                color: Theme.of(context).primaryColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: RequestConstant.Lable_Font_SIZE))),
-                  )
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-
 
   Widget ListDetailss(BuildContext context,ScrollController scrollController ) {
     return SingleChildScrollView(
@@ -1435,7 +1002,15 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
                                             .TotalNosController[index],
                                         readOnly: true,
                                         cursorColor: Colors.black,
-                                        keyboardType: TextInputType.number,
+                                        keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
+
+                                        inputFormatters: [
+                                          TextInputFormatter.withFunction((oldValue, newValue) {
+                                            return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
+                                                ? newValue
+                                                : oldValue;
+                                          }),
+                                        ],
                                         textAlign: TextAlign.center,
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.fromLTRB(
@@ -1519,7 +1094,15 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
                                         controller: nmrWklyController.TotalOTController[index],
                                         style: TextStyle(color: Colors.black),
                                         cursorColor: Colors.black,
-                                        keyboardType: TextInputType.number,
+                                        keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
+
+                                        inputFormatters: [
+                                          TextInputFormatter.withFunction((oldValue, newValue) {
+                                            return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
+                                                ? newValue
+                                                : oldValue;
+                                          }),
+                                        ],
                                         textAlign: TextAlign.center,
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.fromLTRB(
@@ -1571,7 +1154,15 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
                                         controller: nmrWklyController.NetAmtController[index],
                                         style: TextStyle(color: Colors.black),
                                         cursorColor: Colors.black,
-                                        keyboardType: TextInputType.number,
+                                        keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
+
+                                        inputFormatters: [
+                                          TextInputFormatter.withFunction((oldValue, newValue) {
+                                            return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
+                                                ? newValue
+                                                : oldValue;
+                                          }),
+                                        ],
                                         textAlign: TextAlign.center,
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.fromLTRB(

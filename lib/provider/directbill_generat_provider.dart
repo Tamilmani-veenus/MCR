@@ -18,7 +18,7 @@ class DirectBillGenerateProvider {
       int? Userid, String UserType, String frdate, String todate) async {
     var data = null;
     await ApiManager.getAPICall(ApiConstant.GET_DIRECTBILL_ENTRY_LIST +
-        "?UserId=$Userid&UserType=$UserType&Frdate=$frdate&Todate=$todate")
+        "?UserId=$Userid&UserType=$UserType&Frdate=$frdate&Todate=$todate&Type=D")
         .then((value) {
       print("AdvEntryList:" + value);
       data = billDirectentrylistFromJson(value);

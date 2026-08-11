@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final nmrSaveRequest = nmrSaveRequestFromJson(jsonString);
+
 import 'dart:convert';
 
 NmrSaveRequest subcontNmrSaveRequestFromJson(String str) => NmrSaveRequest.fromJson(json.decode(str));
@@ -29,7 +33,12 @@ class NmrSaveRequest {
     this.userId,
     this.deviceName,
     this.entryMode,
+    this.appstatus,
+    this.verifystatus,
+    this.verifiedby,
+    this.approvedby,
     this.nmrBillDet,
+    this.nmrBillAdd,
   });
 
   String? workId;
@@ -55,7 +64,12 @@ class NmrSaveRequest {
   String? userId;
   String? deviceName;
   String? entryMode;
+  String? appstatus;
+  String? verifystatus;
+  String? verifiedby;
+  String? approvedby;
   List<NmrBillDet>? nmrBillDet;
+  List<NMRBillAdd>? nmrBillAdd;
 
   factory NmrSaveRequest.fromJson(Map<String, dynamic> json) => NmrSaveRequest(
     workId: json["WorkId"],
@@ -81,7 +95,12 @@ class NmrSaveRequest {
     userId: json["UserId"],
     deviceName: json["DeviceName"],
     entryMode: json["EntryMode"],
+    appstatus: json["Appstatus"],
+    verifystatus: json["Verifystatus"],
+    verifiedby: json["Verifiedby"],
+    approvedby: json["Approvedby"],
     nmrBillDet: List<NmrBillDet>.from(json["NMRBillDet"].map((x) => NmrBillDet.fromJson(x))),
+    nmrBillAdd: List<NMRBillAdd>.from(json["NMRBillAdd"].map((x) => NMRBillAdd.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -108,7 +127,12 @@ class NmrSaveRequest {
     "UserId": userId,
     "DeviceName": deviceName,
     "EntryMode": entryMode,
+    "Approvedby": approvedby,
+    "Verifiedby": verifiedby,
+    "Verifystatus": verifystatus,
+    "Appstatus": appstatus,
     "NMRBillDet": List<dynamic>.from(nmrBillDet!.map((x) => x.toJson())),
+    "NMRBillAdd": List<dynamic>.from(nmrBillAdd!.map((x) => x.toJson())),
   };
 }
 
@@ -160,6 +184,30 @@ class NmrBillDet {
   };
 }
 
+class NMRBillAdd {
+  NMRBillAdd({
+    this.id,
+    this.percent,
+    this.amount,
+  });
+
+  String? id;
+  String? percent;
+  String? amount;
+
+
+  factory NMRBillAdd.fromJson(Map<String, dynamic> json) => NMRBillAdd(
+    id: json["AL_id"],
+    percent: json["percent"],
+    amount: json["Amount"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "AL_id": id,
+    "percent": percent,
+    "Amount": amount,
+  };
+}
 
 
 NMR_SaveDeduction_SaveResponse saveDeduction_SaveResponseFromJson(String str) => NMR_SaveDeduction_SaveResponse.fromJson(json.decode(str));
@@ -181,4 +229,3 @@ class NMR_SaveDeduction_SaveResponse {
     "RetString": RetString,
   };
 }
-

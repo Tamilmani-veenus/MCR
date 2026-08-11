@@ -34,6 +34,7 @@ class NmrEditResponse {
     this.userId,
     this.entryMode,
     this.nmrBillDet,
+    this.NMRAddLess,
   });
 
   int? workId;
@@ -64,6 +65,7 @@ class NmrEditResponse {
   String? userId;
   String? entryMode;
   List<NmrBillDet>? nmrBillDet;
+  List<NmrAddLess>? NMRAddLess;
 
   factory NmrEditResponse.fromJson(Map<String, dynamic> json) => NmrEditResponse(
     workId: json["WorkId"],
@@ -94,6 +96,7 @@ class NmrEditResponse {
     userId: json["UserId"],
     entryMode: json["EntryMode"],
     nmrBillDet: List<NmrBillDet>.from(json["NMRBillDet"].map((x) => NmrBillDet.fromJson(x))),
+    NMRAddLess: List<NmrAddLess>.from(json["NMRAddLess"].map((x) => NmrAddLess.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -125,6 +128,7 @@ class NmrEditResponse {
     "UserId": userId,
     "EntryMode": entryMode,
     "NMRBillDet": List<dynamic>.from(nmrBillDet!.map((x) => x.toJson())),
+    "NMRAddLess": List<dynamic>.from(NMRAddLess!.map((x) => x.toJson())),
   };
 }
 
@@ -187,5 +191,37 @@ class NmrBillDet {
     "total_othrs": totalOthrs,
     "wages": wages,
 
+  };
+}
+
+class NmrAddLess {
+  int? aLid;
+  String? particular;
+  String? addless;
+  double? percent;
+  double? amount;
+
+  NmrAddLess({
+    this.aLid,
+    this.particular,
+    this.addless,
+    this.percent,
+    this.amount,
+  });
+
+  factory NmrAddLess.fromJson(Map<String, dynamic> json) => NmrAddLess(
+    aLid: json["ALid"],
+    particular: json["Particular"],
+    addless: json["Addless"],
+    percent: json["percent"],
+    amount: json["Amount"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "ALid": aLid,
+    "Particular": particular,
+    "Addless": addless,
+    "percent": percent,
+    "Amount": amount,
   };
 }

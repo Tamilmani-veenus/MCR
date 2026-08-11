@@ -172,8 +172,6 @@ class Menu_Controller extends GetxController {
     }
 
     else if (value == "SubCont NMR Wkly Bill - Generation") {
-      nmrWklyController.editCheck = 0;
-      nmrWklyController.submitCheck = 0;
       nmrWklyController.NmritemList.value.clear();
       Navigator.push(
         context, MaterialPageRoute(
