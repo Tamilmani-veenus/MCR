@@ -62,6 +62,13 @@ class _Subcont_NMR_DeductionState_Site
 
       if (nmrWklyController.saveButton.value == RequestConstant.SUBMIT) {
         nmrWklyController.workid = 0;
+        for (final controller in billGenerationDirectController.percentControllers) {
+          controller.clear();
+        }
+        for (final item in billGenerationDirectController.directBillGen_ItemReadList) {
+          item.percentValue = 0.0;
+          item.amount = 0.0;
+        }
         nmrWklyController.billamount.text = "0.0";
         // nmrWklyController.foodDeduction.text = "0.0";
         nmrWklyController.Creditamt.text = "0.0";

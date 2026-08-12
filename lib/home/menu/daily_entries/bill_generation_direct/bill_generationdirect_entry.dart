@@ -92,13 +92,15 @@ class _Subcont_Nmr_EntryScreenState_Site
         siteController.selectedsiteId.value = 0;
         subcontractorController.Subcontractorname.text = "--SELECT--";
         subcontractorController.selectedSubcontId.value=0;
-        billGenerationDirectController.DirectBillTypeText.text = "--SELECT--";
-        billGenerationDirectController.directBillTypeID.value = "0";
+        // billGenerationDirectController.DirectBillTypeText.text = "--SELECT--";
+        // billGenerationDirectController.directBillTypeID.value = "0";
         subcontractorController.WorkOrderNo.text = "--SELECT--";
         billGenerationDirectController.billInvoiceDateController.text = BaseUtitiles.initiateCurrentDateFormat();
         subcontractorController.InvoiceNo.text="";
         billGenerationDirectController.billPaymentWkDateController
             .text = BaseUtitiles.initiateCurrentDateFormat();
+        billGenerationDirectController.FromdateController.text = BaseUtitiles.initiateCurrentDateFormat();
+        billGenerationDirectController.TodateController.text = BaseUtitiles.initiateCurrentDateFormat();
         billGenerationDirectController.RemarksController.text = "";
         billGenerationDirectController.to_be_dection_advance = "0";
         billGenerationDirectController.saveButton.value = RequestConstant.SUBMIT;
@@ -654,7 +656,6 @@ class _Subcont_Nmr_EntryScreenState_Site
                         padding: const EdgeInsets.only(top: 3, left: 10, bottom: 5),
                         child: TextFormField(
                           autovalidateMode: AutovalidateMode.always,
-                          readOnly: true,
                           controller: subcontractorController.InvoiceNo,
                           cursorColor: Colors.black,
                           style: TextStyle(color: Colors.black),
@@ -683,6 +684,182 @@ class _Subcont_Nmr_EntryScreenState_Site
                         ),
                       ),
                     ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(top: 10),
+                        alignment: Alignment.center,
+                        height: BaseUtitiles.getheightofPercentage(context, 4),
+                        width: BaseUtitiles.getWidthtofPercentage(context, 65),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(40),
+                          // color: Colors.pink.shade50,
+                          color: Theme.of(context).primaryColor,
+                          boxShadow: [
+                            BoxShadow(
+                                offset: Offset(0, 10),
+                                blurRadius: 50,
+                                color: Color(0xffEEEEEE)),
+                          ],
+                        ),
+                        child: Text(
+                          "Sub Contractor Work Done",
+                          style: TextStyle(
+                              fontSize: RequestConstant.Lable_Font_SIZE,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          margin: EdgeInsets.only(top: 5, left: 10, right: 10),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(color: Colors.white70, width: 1),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            elevation: 3,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 3, left: 10, bottom: 5),
+                              child: TextFormField(
+                                readOnly: true,
+                                controller: billGenerationDirectController.FromdateController,
+                                cursorColor: Colors.black,
+                                style: TextStyle(color: Colors.black),
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.zero,
+                                  border: InputBorder.none,
+                                  labelText: RequestConstant.FROMDATE,
+                                  labelStyle: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: RequestConstant.Lable_Font_SIZE),
+                                  prefixIconConstraints:
+                                  BoxConstraints(minWidth: 0, minHeight: 0),
+                                  prefixIcon: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 8, horizontal: 8),
+                                      child: ConstIcons.date),
+                                ),
+                                onTap: () async {
+                                  if (billGenerationDirectController.saveButton.value == RequestConstant.RESUBMIT) {
+                                  } else {
+                                    var Frdate = await showDatePicker(
+                                        fieldHintText: "From",
+                                        context: context,
+                                        initialDate: DateTime.now(),
+                                        firstDate: DateTime(1900),
+                                        lastDate: DateTime(2100),
+                                        builder: (context, child) {
+                                          return Theme(
+                                            data: Theme.of(context).copyWith(
+                                              colorScheme: ColorScheme.light(
+                                                primary:
+                                                Theme.of(context).primaryColor,
+                                                // header background color
+                                                onPrimary: Colors.white,
+                                                // header text color
+                                                onSurface:
+                                                Colors.black, // body text color
+                                              ),
+                                              textButtonTheme: TextButtonThemeData(
+                                                style: TextButton.styleFrom(
+                                                  primary: Colors
+                                                      .black, // button text color
+                                                ),
+                                              ),
+                                            ),
+                                            child: child!,
+                                          );
+                                        });
+                                    billGenerationDirectController
+                                        .FromdateController.text =
+                                        BaseUtitiles.selectDateFormat(Frdate!);
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(color: Colors.white70, width: 1),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            elevation: 3,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 3, left: 10, bottom: 5),
+                              child: TextFormField(
+                                readOnly: true,
+                                controller: billGenerationDirectController.TodateController,
+                                cursorColor: Colors.black,
+                                style: TextStyle(color: Colors.black),
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.zero,
+                                  border: InputBorder.none,
+                                  labelText: RequestConstant.TODATE,
+                                  labelStyle: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: RequestConstant.Lable_Font_SIZE),
+                                  prefixIconConstraints:
+                                  BoxConstraints(minWidth: 0, minHeight: 0),
+                                  prefixIcon: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 8, horizontal: 8),
+                                      child: ConstIcons.date),
+                                ),
+                                onTap: () async {
+                                  if (billGenerationDirectController.saveButton.value == RequestConstant.RESUBMIT) {
+                                  } else {
+                                    var Todate = await showDatePicker(
+                                        context: context,
+                                        initialDate: DateTime.now(),
+                                        firstDate: DateTime(1900),
+                                        lastDate: DateTime(2100),
+                                        builder: (context, child) {
+                                          return Theme(
+                                            data: Theme.of(context).copyWith(
+                                              colorScheme: ColorScheme.light(
+                                                primary:
+                                                Theme.of(context).primaryColor,
+                                                // header background color
+                                                onPrimary: Colors.white,
+                                                // header text color
+                                                onSurface:
+                                                Colors.black, // body text color
+                                              ),
+                                              textButtonTheme: TextButtonThemeData(
+                                                style: TextButton.styleFrom(
+                                                  primary: Colors
+                                                      .black, // button text color
+                                                ),
+                                              ),
+                                            ),
+                                            child: child!,
+                                          );
+                                        });
+                                    billGenerationDirectController
+                                        .TodateController.text =
+                                        BaseUtitiles.selectDateFormat(Todate!);
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
 
                   Container(

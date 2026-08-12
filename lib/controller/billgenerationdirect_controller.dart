@@ -11,6 +11,7 @@ import '../db_services/direct_bill_itemlist_service.dart';
 import '../home/menu/daily_entries/bill_generation_direct/bill_generationdirect_entry.dart';
 import '../models/directbill_gener_saveapireq_model.dart';
 import '../provider/directbill_generat_provider.dart';
+import '../provider/workOrderDirectProvider.dart';
 import '../utilities/baseutitiles.dart';
 import '../utilities/requestconstant.dart';
 import 'package:flutter/cupertino.dart';
@@ -50,6 +51,7 @@ class BillGenerationDirectController extends GetxController {
   final tobededadv = TextEditingController();
   final Advded = TextEditingController();
   final Roundoff = TextEditingController();
+  final balAmt = TextEditingController();
   final netBillAmt = TextEditingController();
   final finalBillAmt = TextEditingController();
   final netpayamt = TextEditingController();
@@ -78,11 +80,11 @@ class BillGenerationDirectController extends GetxController {
   ProjectController projectController = Get.put(ProjectController());
   SiteController siteController = Get.put(SiteController());
   SubcontractorController subcontractorController =
-  Get.put(SubcontractorController());
+      Get.put(SubcontractorController());
   PendingListController pendingListController =
-  Get.put(PendingListController());
+      Get.put(PendingListController());
   DailyWrkDone_DPR_Controller dailyWrkDone_DPR_Controller =
-  Get.put(DailyWrkDone_DPR_Controller());
+      Get.put(DailyWrkDone_DPR_Controller());
 
   String to_be_dection_advance = "0";
 
@@ -94,36 +96,34 @@ class BillGenerationDirectController extends GetxController {
 
   var ItemListTableModel = DirectBillGenItemListTableModel();
   late List<DirectBillGenItemListTableModel> ItemListTableModelList =
-  <DirectBillGenItemListTableModel>[];
+      <DirectBillGenItemListTableModel>[];
   List ItemListTableModelReadList = <DirectBillGenItemListTableModel>[];
   RxList ItemGetTableListdata = [].obs;
   late List<DirectBillGenItemListTableModel> itemListUpdateModelList =
-  <DirectBillGenItemListTableModel>[];
+      <DirectBillGenItemListTableModel>[];
   late List<DirectBillGenItemListTableModel> deleteitemListModelList =
-  <DirectBillGenItemListTableModel>[];
+      <DirectBillGenItemListTableModel>[];
 
   var directBillTable = DirectBillGSTCalTable();
   late List<DirectBillGSTCalTable> directBillTableModelList =
-  <DirectBillGSTCalTable>[];
+      <DirectBillGSTCalTable>[];
   RxList<DirectBillGSTCalTable> directBillGen_ItemReadList =
       <DirectBillGSTCalTable>[].obs;
   late List<DirectBillGSTCalTable> updateBillGen_ItemReadList =
-  <DirectBillGSTCalTable>[];
+      <DirectBillGSTCalTable>[];
   List<TextEditingController> percentControllers = [];
 
-  // RxList<SubContractorWorkQtyDet> getDetList = <SubContractorWorkQtyDet>[].obs;
-  // RxList<SubContractorBillAddLessSetup> getDetAddLessList =
-  //     <SubContractorBillAddLessSetup>[].obs;
-
+  RxList<BillDet> getDetList = <BillDet>[].obs;
+  RxList<BillAddless> getDetAddLessList = <BillAddless>[].obs;
 
   Future DirectBill_EntryList() async {
     main_entryList.value.clear();
     bill_entryList.value.clear();
     await DirectBillGenerateProvider.getBillDirectEntry_List(
-        loginController.user.value.userId,
-        loginController.UserType(),
-        EntrylistFrDate.text,
-        EntrylistToDate.text)
+            loginController.user.value.userId,
+            loginController.UserType(),
+            EntrylistFrDate.text,
+            EntrylistToDate.text)
         .then((value) async {
       if (value != null && value.length > 0) {
         main_entryList.value = value;
@@ -136,44 +136,30 @@ class BillGenerationDirectController extends GetxController {
   }
 
   Future DirectBill_CalculationList({type}) async {
-    // billDet_Calculation.value=[];
-    // final value = await DirectBillGenerateProvider.getBillDirectCalculation_List(
-    //   pId:projectController.selectedProjectId.value,
-    //   siteId:siteController.selectedsiteId.value,
-    //   subId:subcontractorController.selectedSubcontId.value,
-    //   wrkOrdId:subcontractorController.selectedWorkOrderId.value,
-    //   type: type,
-    // );
-    // if (value != null) {
-    //   if (value.success == true) {
-    //     if (value.result!.isNotEmpty) {
-    //       billDet_Calculation.value = value.result!;
-    //       await DirectBillCal_itemlistTable_Delete();
-    //       await directBillCalculationSave();
-    //       await getDirectBillCalDatas();
-    //       if (saveButton.value == RequestConstant.RESUBMIT ||
-    //           saveButton.value == RequestConstant.VERIFY ||
-    //           saveButton.value == RequestConstant.APPROVAL) {
-    //         setBaseNetPay();
-    //         await preloadEditAddLessData(
-    //             bill_editListApiDatas[0].subContractorBillAddLessSetupS);
-    //       }
-    //     }
-    //     // else {
-    //     //   BaseUtitiles.showToast(RequestConstant.NORECORD_FOUND);
-    //     // }
-    //   }
-    //   // else {
-    //   //   BaseUtitiles.showToast(value.message ?? 'Something went wrong..');
-    //   // }
-    // }
-    // else {
-    //   BaseUtitiles.showToast("Something Went Wrong...");
-    // }
+    billDet_Calculation.value = [];
+    final value = await WorkOrderDirectProvider.getWorkOrderCalculation_List(
+        type == "WorkOrd" ? subcontractorController.selectedSubcontId.value : 0,
+        type == "WorkOrd"
+            ? subcontractorController.selectedWorkOrderId.value
+            : 0);
+    if (value != null && value.length > 0) {
+      billDet_Calculation.value = value;
+      await DirectBillCal_itemlistTable_Delete();
+      await directBillCalculationSave();
+      await getDirectBillCalDatas();
+      if (saveButton.value == RequestConstant.RESUBMIT ||
+          saveButton.value == RequestConstant.VERIFY ||
+          saveButton.value == RequestConstant.APPROVAL) {
+        setBaseNetPay();
+        await preloadEditAddLessData(
+            bill_editListApiDatas[0].subContractorBillAddLessSetupS);
+      }
+    } else {
+      BaseUtitiles.showToast(RequestConstant.NORECORD_FOUND);
+    }
   }
 
   void setBaseNetPay() {
-
     double bill = double.tryParse(billamount.text) ?? 0;
 
     double credit = double.tryParse(Creditamt.text) ?? 0;
@@ -182,25 +168,22 @@ class BillGenerationDirectController extends GetxController {
 
     double matDebit = double.tryParse(materialDebitamt.text) ?? 0;
 
-    double netBill =
-        bill +
-            credit -
-            debit -
-            matDebit;
+    double netBill = bill + credit - debit - matDebit;
 
     baseNetPayAmt = netBill;
 
     netBillAmt.text = netBill.toStringAsFixed(2);
+    balAmt.text = netBill.toStringAsFixed(2);
 
     print("=== Base Net Bill : $baseNetPayAmt ===");
   }
 
   Future getNmrAdvance() async {
-    to_be_dection_advance="0";
+    to_be_dection_advance = "0";
     await DirectBillGenerateProvider.billadv_balance(
-        projectController.selectedProjectId.value,
-        siteController.selectedsiteId.value,
-        subcontractorController.selectedSubcontId.value)
+            projectController.selectedProjectId.value,
+            siteController.selectedsiteId.value,
+            subcontractorController.selectedSubcontId.value)
         .then((value) async {
       if (value != null) {
         to_be_dection_advance = value;
@@ -210,28 +193,32 @@ class BillGenerationDirectController extends GetxController {
   }
 
   Future getWorkOrderList() async {
+    ItemGetTableListdata.value = [];
+    bill_editListApiDatas.value = [];
     await DirectBillGenerateProvider.getWorkOrderList(
-        projectController.selectedProjectId.value,
-        subcontractorController.selectedSubcontId.value,
-        subcontractorController.selectedWorkOrderId.value).then((value) async {
+            projectController.selectedProjectId.value,
+            siteController.selectedsiteId.value,
+            subcontractorController.selectedSubcontId.value,
+            subcontractorController.selectedWorkOrderId.value,
+            FromdateController.text,
+            TodateController.text)
+        .then((value) async {
       if (value != null && value.length > 0) {
-        billgen_itemlistTable_Delete();
-        ItemGetTableListdata.value=[];
-        bill_editListApiDatas.value=[];
+        await billgen_DeleteApiRows();
         bill_editListApiDatas.value = value;
-        // billgen_EditTable_SaveTable();
-        getItemlistTablesDatas();
+        await billgen_EditTable_SaveTable();
+        await getItemlistTablesDatas();
       }
-
     });
   }
+
   billgen_itemlistTable_Delete() async {
     await directBillGen_ItemlistService.DirectBillGen_ItemlistTable_delete();
   }
 
-  // billgen_DeleteApiRows() async {
-  //   await directBillGen_ItemlistService.billgen_DeleteApiRows();
-  // }
+  billgen_DeleteApiRows() async {
+    await directBillGen_ItemlistService.billgen_DeleteApiRows();
+  }
 
   Future deleteByIditemlistTableable(
       DirectBillGenItemListTableModel data) async {
@@ -249,18 +236,18 @@ class BillGenerationDirectController extends GetxController {
   billgen_itemlist_SaveTable() async {
     ItemListTableModelList.clear();
     ItemListTableModel = new DirectBillGenItemListTableModel();
-    // ItemListTableModel.reqDetId = 0;
+    ItemListTableModel.workDetId = 0;
     ItemListTableModel.Name = itemDescController.text;
     ItemListTableModel.unit = itemUnitController.text;
     ItemListTableModel.qty = double.parse(itemQuantityController.text);
     ItemListTableModel.rate = double.parse(itemRateController.text);
-    // ItemListTableModel.isApi  = 0;
+    ItemListTableModel.isApi = 0;
     ItemListTableModel.amount =
         (ItemListTableModel.qty!) * (ItemListTableModel.rate!);
     ItemListTableModelList.add(ItemListTableModel);
     var savedatas =
-    await directBillGen_ItemlistService.DirectBillGen_ItemlistTable_Save(
-        ItemListTableModelList);
+        await directBillGen_ItemlistService.DirectBillGen_ItemlistTable_Save(
+            ItemListTableModelList);
     return savedatas;
   }
 
@@ -274,13 +261,13 @@ class BillGenerationDirectController extends GetxController {
       ItemListTableModel = new DirectBillGenItemListTableModel();
       ItemListTextInitiate();
       ItemListTableModel.Id = value['id'];
-      // ItemListTableModel.reqDetId = value['reqDetId'];
+      ItemListTableModel.workDetId = value['workDetId'];
       ItemListTableModel.Name = value['Name'];
       ItemListTableModel.unit = value['unit'];
       ItemListTableModel.qty = value['qty'];
       ItemListTableModel.rate = value['rate'];
       ItemListTableModel.amount = value['amount'];
-      // ItemListTableModel.isApi = value['isApi'];
+      ItemListTableModel.isApi = value['isApi'];
       ItemListTableModelReadList.add(ItemListTableModel);
       ItemGetTableListdata.value = ItemListTableModelReadList;
     });
@@ -313,12 +300,12 @@ class BillGenerationDirectController extends GetxController {
     ItemGetTableListdata.value.forEach((element) {
       ItemListTextInitiate();
       itemlist_ListAmtController[i].text = (double.parse(
-          itemlist_ListQtyController[i].text != ""
-              ? itemlist_ListQtyController[i].text
-              : "0") *
-          double.parse(itemlist_ListRateController[i].text != ""
-              ? itemlist_ListRateController[i].text
-              : "0"))
+                  itemlist_ListQtyController[i].text != ""
+                      ? itemlist_ListQtyController[i].text
+                      : "0") *
+              double.parse(itemlist_ListRateController[i].text != ""
+                  ? itemlist_ListRateController[i].text
+                  : "0"))
           .toString();
       i++;
     });
@@ -331,10 +318,10 @@ class BillGenerationDirectController extends GetxController {
     ItemGetTableListdata.forEach((element) {
       ItemListTableModel = DirectBillGenItemListTableModel();
       ItemListTableModel.Id = element.Id;
-      // ItemListTableModel.reqDetId = element.reqDetId;
+      ItemListTableModel.workDetId = element.workDetId;
       ItemListTableModel.Name = element.Name;
       ItemListTableModel.unit = itemlist_ListUnitsController[i].text;
-      // ItemListTableModel.isApi = element.isApi;
+      ItemListTableModel.isApi = element.isApi;
       ItemListTableModel.qty = double.parse(
           itemlist_ListQtyController[i].text != ""
               ? itemlist_ListQtyController[i].text
@@ -387,135 +374,129 @@ class BillGenerationDirectController extends GetxController {
     tobededadv.text = to_be_dection_advance;
   }
 
-  // Future SaveButton_DeductionScreen(
-  //     BuildContext context, int id, int workOrderId) async {
-  //   getDetList.value.clear();
-  //   await Future.delayed(const Duration(seconds: 0));
-  //   String body = billDirectGenSaveApiReqToJson(BillDirectGenSaveApiReq(
-  //     workId: id != 0 ? id : 0,
-  //     workNo: autoYearWiseNoController.text,
-  //     workDate: billentryDateController.text,
-  //     entryType: "D",
-  //     billType: directBillTypeID.value,
-  //     projectId: projectController.selectedProjectId.value,
-  //     siteId: siteController.selectedsiteId.value,
-  //     subContId: subcontractorController.selectedSubcontId.value,
-  //     workOrderId: workOrderId,
-  //     // refWorkId: 0,
-  //     fromDate: BaseUtitiles.initiateCurrentDateFormat(),
-  //     toDate: BaseUtitiles.initiateCurrentDateFormat(),
-  //     billno: subcontractorController.InvoiceNo.text,
-  //     remarks: RemarksController.text,
-  //     rndOff: double.tryParse(Roundoff.text) ?? 0.0,
-  //     billAmount: double.tryParse(billamount.text)?? 0.0,
-  //     netBillAmount: double.tryParse(netBillAmt.text)?? 0.0,
-  //     actAdvAmt: double.tryParse(tobededadv.text)?? 0.0,
-  //     advAmt: double.tryParse(Advded.text)?? 0.0,
-  //     netPayAmt: double.tryParse(netpayamt.text)?? 0.0,
-  //     debitAmt: double.tryParse(Debitamt.text)?? 0.0,
-  //     creditAmt: double.tryParse(Creditamt.text)?? 0.0,
-  //     debitRemarks: DebitRemarksController.text,
-  //     creditRemarks: CreditRemarksController.text,
-  //     materialDebitRemarks: materialDebitRemarks.text,
-  //     materialDebitAmount: double.tryParse(materialDebitamt.text)?? 0.0,
-  //     finalBillAmount: double.tryParse(finalBillAmt.text)?? 0.0,
-  //     penaltyAmount: 0,
-  //     paymentDate: billPaymentWkDateController.text,
-  //     partRateStatus: 0,
-  //     createdBy:  saveButton.value == RequestConstant.SUBMIT?int.parse(loginController.EmpId()):createdById.value,
-  //     // createdDt: BaseUtitiles().convertToUtcIso(billentryDateController.text),
-  //     verifyStatus: saveButton.value == RequestConstant.VERIFY ||
-  //         saveButton.value == RequestConstant.APPROVAL
-  //         ? "Y"
-  //         : "N",
-  //     approveStatus: saveButton.value == RequestConstant.APPROVAL ? "Y" : "N",
-  //     subContractorWorkQtyDetS: getNmrBillDet(id),
-  //     subContractorBillAddLessSetupS:
-  //     getNmrBillDetAddLess(id, autoYearWiseNoController.text),
-  //   ));
-  //   final decodedJson = jsonDecode(body);
-  //
-  //   const JsonEncoder encoder = JsonEncoder.withIndent('  ');
-  //   final prettyJson = encoder.convert(decodedJson);
-  //
-  //   debugPrint(prettyJson, wrapWidth: 1024);
-  //
-  //   final list = await DirectBillGenerateProvider.SaveSubContScreenEntryAPI(
-  //       body, id, context);
-  //
-  //   if (list != null) {
-  //     if (list["success"] == true) {
-  //       clearDatas();
-  //       BaseUtitiles.showToast(list["message"]);
-  //       if (saveButton.value == RequestConstant.VERIFY ||
-  //           saveButton.value == RequestConstant.APPROVAL) {
-  //         await pendingListController.getPendingList();
-  //       } else {
-  //         await DirectBill_EntryList();
-  //         billgen_itemlistTable_Delete();
-  //       }
-  //       BaseUtitiles.popMultiple(context, count: 5);
-  //     } else {
-  //       BaseUtitiles.showToast(list["message"] ?? 'Something went wrong..');
-  //       BaseUtitiles.popMultiple(context, count: 2);
-  //     }
-  //   } else {
-  //     BaseUtitiles.showToast("Something went wrong..");
-  //     BaseUtitiles.popMultiple(context, count: 2);
-  //   }
-  // }
-  //
-  // List<SubContractorWorkQtyDet>? getNmrBillDet(id) {
-  //   getDetList.value.clear();
-  //   ItemGetTableListdata.value.forEach((element) {
-  //     var list = SubContractorWorkQtyDet(
-  //       id: saveButton.value == RequestConstant.RESUBMIT ? element.reqDetId : 0,
-  //       subContractorWorkQtyMasId: id != 0 ? id : 0,
-  //       headItemid: 0,
-  //       subItemid: 0,
-  //       level3ItemId: 0,
-  //       // refWorkDetId: 0,
-  //       flatNo: "0",
-  //       actualQty: 0,
-  //       actualAmount: 0,
-  //       itemDes: element.Name.toString(),
-  //       unit: element.unit.toString(),
-  //       qty: element.qty,
-  //       rate: element.rate,
-  //       amount: element.amount,
-  //       balanceBillQty: 0,
-  //       currentBillQty: 0,
-  //       // balanceQty: 0,
-  //       partRateStatus: 0,
-  //       qtysClosed: "0",
-  //       totalQty: 0,
-  //       workType: "D",
-  //       dbrWorkDetId: 0,
-  //       siteId: siteController.selectedsiteId.value,
-  //       boqCode: "0",
-  //     );
-  //     getDetList.value.add(list);
-  //   });
-  //   return getDetList.value;
-  // }
-  //
-  // List<SubContractorBillAddLessSetup>? getNmrBillDetAddLess(int id, workNo) {
-  //   getDetAddLessList.value.clear();
-  //   directBillGen_ItemReadList.value.forEach((element) {
-  //     if (element.percentValue! > 0) {
-  //       var list = SubContractorBillAddLessSetup(
-  //         id: element.reqDetId,
-  //         subContractorWorkQtyMasId: id,
-  //         addLessId: element.addLessId,
-  //         percentValue: element.percentValue,
-  //         workNo: workNo,
-  //         amount: element.amount,
-  //       );
-  //       getDetAddLessList.value.add(list);
-  //     }
-  //   });
-  //   return getDetAddLessList.value;
-  // }
+  Future SaveButton_DeductionScreen(BuildContext context, int id) async {
+    await Future.delayed(const Duration(seconds: 0));
+    String body = billDirectGenSaveApiReqToJson(BillDirectGenSaveApiReq(
+        workId: saveButton.value == "Submit" ? 0 : id,
+        workNo: autoYearWiseNoController.text,
+        workDate: billentryDateController.text,
+        projectId: projectController.selectedProjectId.value,
+        siteId: siteController.selectedsiteId.value,
+        subContId: subcontractorController.selectedSubcontId.value,
+        appstatus: "N",
+        approvedby: 0,
+        balAmt: double.tryParse(balAmt.text) ?? 0.0,
+        remarks: RemarksController.text,
+        preparedby: int.parse(loginController.EmpId()),
+        fromDate: FromdateController.text,
+        toDate: TodateController.text,
+        entryType: "D",
+        workOrderid: subcontractorController.selectedWorkOrderId.value,
+        billAmt: double.tryParse(billamount.text) ?? 0.0,
+        actAdvAmt: double.tryParse(tobededadv.text) ?? 0.0,
+        advAmt: double.tryParse(Advded.text) ?? 0.0,
+        netPayAmt: double.tryParse(netpayamt.text) ?? 0.0,
+        debitAmt: double.tryParse(Debitamt.text) ?? 0.0,
+        creditAmt: double.tryParse(Creditamt.text) ?? 0.0,
+        billWhaAmount: double.tryParse(netBillAmt.text) ?? 0.0,
+        rndOff: double.tryParse(Roundoff.text) ?? 0.0,
+        debitRemarks: DebitRemarksController.text,
+        creditRemarks: CreditRemarksController.text,
+        billNo: subcontractorController.InvoiceNo.text,
+        verifySatus: "N",
+        verifyby: 0,
+        materialdebitAmt: double.tryParse(materialDebitamt.text) ?? 0.0,
+        materiadebitremarks: materialDebitRemarks.text,
+        paymentDate: billPaymentWkDateController.text,
+        entryMode: saveButton.value == "Submit"
+            ? "ADD"
+            : saveButton.value == "Re-Submit"
+                ? "UPDATE"
+                : saveButton.value == "Verify"
+                    ? "VERIFY"
+                    : saveButton.value == "Approve"
+                        ? "APPROVE"
+                        : "",
+        userId: int.tryParse(loginController.UserId()),
+        deviceName: BaseUtitiles.deviceName,
+        billDet: getNmrBillDet(),
+        billAddless: getNmrBillDetAddLess()));
+    final decodedJson = jsonDecode(body);
+
+    const JsonEncoder encoder = JsonEncoder.withIndent('  ');
+    final prettyJson = encoder.convert(decodedJson);
+
+    debugPrint(prettyJson, wrapWidth: 1024);
+
+    final list = await DirectBillGenerateProvider.SaveBillDirectAPI(
+        body, saveButton.value, context);
+
+    if (list != null) {
+      if (id != 0) {
+        billgen_itemlistTable_Delete();
+        ItemGetTableListdata.value.clear();
+        BaseUtitiles.showToast(list);
+        clearDatas();
+        DirectBill_EntryList();
+        Navigator.pop(context);
+        Navigator.pop(context);
+        Navigator.pop(context);
+        Navigator.pop(context);
+        Navigator.pop(context);
+        return;
+      } else {
+        if (list == RequestConstant.DUPLICATE_OCCURED) {
+          Navigator.pop(context);
+          Navigator.pop(context);
+          return BaseUtitiles.showToast(list!);
+        } else {
+          billgen_itemlistTable_Delete();
+          ItemGetTableListdata.value.clear();
+          BaseUtitiles.showToast(list!);
+          clearDatas();
+          await DirectBill_EntryList();
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.pop(context);
+          return;
+        }
+      }
+    }
+  }
+
+  List<BillDet>? getNmrBillDet() {
+    getDetList.value = [];
+    ItemGetTableListdata.forEach((element) {
+      var list = BillDet(
+        unit: element.unit.toString(),
+        rate: element.rate,
+        amt: element.amount,
+        actualQty: element.qty,
+        workorderdetid: element.workDetId,
+        itemDes: element.Name,
+        wtype: "D",
+      );
+      getDetList.add(list);
+    });
+    return getDetList;
+  }
+
+  List<BillAddless>? getNmrBillDetAddLess() {
+    getDetAddLessList.value = [];
+    directBillGen_ItemReadList.forEach((element) {
+      if (element.percentValue! > 0) {
+        var list = BillAddless(
+          alId: element.addLessId,
+          percent: element.percentValue,
+          amount: element.amount?.abs().toDouble(),
+        );
+        getDetAddLessList.add(list);
+      }
+    });
+    return getDetAddLessList;
+  }
 
   void updateAdvanceReadOnly() {
     final amt = double.tryParse(tobededadv.text) ?? 0.0;
@@ -523,8 +504,6 @@ class BillGenerationDirectController extends GetxController {
   }
 
   Future<bool> deductionPaymentCalculation() async {
-    await getItemlistTablesDatas();
-
     double advLimit = double.tryParse(tobededadv.text) ?? 0;
     double advDed = double.tryParse(Advded.text) ?? 0;
 
@@ -543,65 +522,33 @@ class BillGenerationDirectController extends GetxController {
     }
 
     billamount.text = totalNetAmount.toStringAsFixed(2);
+    balAmt.text = totalNetAmount.toStringAsFixed(2);
 
-    // Read values
     double bill = double.tryParse(billamount.text) ?? 0;
+    // double food = double.tryParse(foodDeduction.text) ?? 0;
     double credit = double.tryParse(Creditamt.text) ?? 0;
-    double debit = double.tryParse(Debitamt.text) ?? 0;
     double matDebit = double.tryParse(materialDebitamt.text) ?? 0;
+    double debit = double.tryParse(Debitamt.text) ?? 0;
     double adv = double.tryParse(Advded.text) ?? 0;
     String roundText = Roundoff.text.trim();
 
-    double round =
-    (roundText.isEmpty || roundText == "-")
+    double round = (roundText.isEmpty || roundText == "-")
         ? 0
         : double.tryParse(roundText) ?? 0;
-    // Calculate Net Bill Amount (Base Amount)
-    double netBillAmount = bill + credit - debit - matDebit;
+    // Recalculate all Add/Less, NetBill and NetPay
+    recalculateAddLessAmounts(
+      bill: bill,
+      credit: credit,
+      matDebit: matDebit,
+      debit: debit,
+      adv: adv,
+      round: round,
+    );
 
-    // Update Net Bill Text
-    netBillAmt.text = netBillAmount.toStringAsFixed(2);
-
-    // Recalculate Add/Less Amounts using Net Bill Amount
-    recalculateAddLessAmounts();
-
-    // Calculate updated Add/Less totals
-    double netAddLessTotal = 0.0;
-    double finalAddLessTotal = 0.0;
-
-    for (var item in directBillGen_ItemReadList) {
-      double amt = item.amount ?? 0;
-
-      netAddLessTotal += amt;
-
-      if (item.addLessType == "+") {
-        finalAddLessTotal += amt;
-      }
-    }
-
-    // Net Pay
-    double netAmount =
-        netBillAmount -
-            adv +
-            round +
-            netAddLessTotal;
-
-    // Final Bill
-    double finalBillAmount =
-        netBillAmount +
-            round +
-            finalAddLessTotal;
-
-    // Validation
-    if (netAmount < 0) {
-      BaseUtitiles.showToast(
-          "Net Pay Amount cannot be negative.");
+    // Optional validation
+    if ((double.tryParse(netpayamt.text) ?? 0) < 0) {
       return false;
     }
-
-    // Update UI
-    netpayamt.text = netAmount.toStringAsFixed(2);
-    finalBillAmt.text = finalBillAmount.toStringAsFixed(2);
 
     directBillGen_ItemReadList.refresh();
 
@@ -611,136 +558,195 @@ class BillGenerationDirectController extends GetxController {
   }
   // ADD THIS
 
-  bool calculateAndUpdate(
-      int addLessId,
-      double percent,
-      ) {
+  bool calculateAndUpdate(int addLessId, double percent) {
     final item = directBillGen_ItemReadList.firstWhereOrNull(
-          (e) => e.addLessId == addLessId,
+      (e) => e.addLessId == addLessId,
     );
 
     if (item == null) return false;
 
-    // OLD VALUES
-    double oldPercent = item.percentValue ?? 0.0;
+    // Save old percentage
+    final oldPercent = item.percentValue ?? 0.0;
 
-    double oldAmount = item.amount ?? 0.0;
-
-    // NEW AMOUNT
-    double netBill =
-        double.tryParse(netBillAmt.text) ?? 0;
-
-    double amt = (netBill * percent) / 100;
-
-    double newAmount;
-
-    if (amt == 0) {
-      newAmount = 0.0;
-    } else {
-      newAmount = item.addLessType == "-" ? -amt : amt;
-    }
-
+    // Update current percentage
     item.percentValue = percent;
-    item.amount = newAmount;
 
-    // TEMP TOTAL
-    double netAddLessTotal = 0.0;
-    double finalAddLessTotal = 0.0;
+    final roundText = Roundoff.text.trim();
 
-    for (var e in directBillGen_ItemReadList) {
-      double amt = e.amount ?? 0;
-
-      // Net Bill includes both + and -
-      netAddLessTotal += amt;
-
-      // Final Bill includes only +
-      if (e.addLessType == "+") {
-        finalAddLessTotal += amt;
-      }
-    }
-    double bill = double.tryParse(billamount.text) ?? 0;
-
-    double matDebitAmt = double.tryParse(materialDebitamt.text) ?? 0;
-
-    double credit = double.tryParse(Creditamt.text) ?? 0;
-
-    double debit = double.tryParse(Debitamt.text) ?? 0;
-
-    double adv = double.tryParse(Advded.text) ?? 0;
-
-    String roundText = Roundoff.text.trim();
-
-    double round =
-    (roundText.isEmpty || roundText == "-")
+    final double round = (roundText.isEmpty || roundText == "-")
         ? 0
         : double.tryParse(roundText) ?? 0;
-    double netAmount = bill + credit - debit - adv - matDebitAmt + round + netAddLessTotal;
 
-    double finalAmount  = bill + credit - debit - adv - matDebitAmt + round + finalAddLessTotal;
+    // ============================================================
+    // ALWAYS USE BILL AMOUNT AS BASE
+    // ============================================================
 
-    // NEGATIVE VALIDATION
-    if (netAmount < 0) {
+    final double bill = double.tryParse(billamount.text) ?? 0;
+
+    recalculateAddLessAmounts(
+      bill: bill,
+      credit: double.tryParse(Creditamt.text) ?? 0,
+      debit: double.tryParse(Debitamt.text) ?? 0,
+      matDebit: double.tryParse(materialDebitamt.text) ?? 0,
+      adv: double.tryParse(Advded.text) ?? 0,
+      round: round,
+    );
+
+    // ============================================================
+    // VALIDATE NET PAY
+    // ============================================================
+
+    final double netPay = double.tryParse(netpayamt.text) ?? 0;
+
+    if (netPay < 0) {
       BaseUtitiles.showToast(
-        "Net Pay Amount cannot be negative. "
-            "Please reduce the deductions "
-            "or add-less percentages.",
+        "Net Pay Amount cannot be negative.",
       );
 
-      // RESTORE OLD VALUES
+      // Restore only current percentage
       item.percentValue = oldPercent;
-      item.amount = oldAmount;
+
+      // Recalculate using restored value
+      recalculateAddLessAmounts(
+        bill: bill,
+        credit: double.tryParse(Creditamt.text) ?? 0,
+        debit: double.tryParse(Debitamt.text) ?? 0,
+        matDebit: double.tryParse(materialDebitamt.text) ?? 0,
+        adv: double.tryParse(Advded.text) ?? 0,
+        round: round,
+      );
 
       directBillGen_ItemReadList.refresh();
+      update();
 
       return false;
     }
 
-    netpayamt.text = netAmount.toStringAsFixed(2);
-    finalBillAmt.text = finalAmount.toStringAsFixed(2);
-
     directBillGen_ItemReadList.refresh();
-
     update();
 
     return true;
   }
 
-  void recalculateAddLessAmounts() {
-    double netBill = double.tryParse(netBillAmt.text) ?? 0;
+  void recalculateAddLessAmounts({
+    required double bill,
+    required double credit,
+    required double debit,
+    required double matDebit,
+    required double adv,
+    required double round,
+  }) {
+    // ============================================================
+    // BILL AMOUNT IS THE BASE FOR ALL PERCENTAGES
+    // ============================================================
+
+    final double baseAmount = bill;
+
+    // ============================================================
+    // STEP 1
+    // CALCULATE EVERY PERCENTAGE ROW
+    // ============================================================
 
     for (var item in directBillGen_ItemReadList) {
-      double percent = item.percentValue ?? 0.0;
+      final name = (item.addLessName ?? "").trim().toUpperCase();
 
-      double amount = (netBill * percent) / 100;
+      final percent = item.percentValue ?? 0.0;
 
-      if (amount == 0) {
-        item.amount = 0.0;
-      } else {
-        item.amount =
-        item.addLessType == "-" ? -amount : amount;
+      // Only percentage based rows
+      if (name == "S-GST" ||
+          name == "C-GST" ||
+          name == "I-GST" ||
+          name == "RETENTION" ||
+          name == "TDS" ||
+          name == "HOLD") {
+        final double amount = baseAmount * percent / 100;
+
+        if (item.addLessType == "-") {
+          item.amount = -amount;
+        } else {
+          item.amount = amount;
+        }
       }
     }
 
+    // ============================================================
+    // STEP 2
+    // FINAL AMOUNT STARTS FROM BILL
+    // ============================================================
+
+    double finalAmount = baseAmount;
+
+    // Credit
+    finalAmount += credit;
+
+    // Debit
+    finalAmount -= debit;
+
+    finalAmount -= matDebit;
+
+    // ============================================================
+    // STEP 3
+    // ADD / LESS AMOUNTS
+    // ============================================================
+
+    for (var item in directBillGen_ItemReadList) {
+      final name = (item.addLessName ?? "").trim().toUpperCase();
+
+      if (name == "S-GST" ||
+          name == "C-GST" ||
+          name == "I-GST" ||
+          name == "RETENTION" ||
+          name == "TDS" ||
+          name == "HOLD") {
+        finalAmount += item.amount ?? 0.0;
+      }
+    }
+
+    // ============================================================
+    // STEP 4
+    // ROUNDOFF
+    // ============================================================
+
+    finalAmount += round;
+
+    // ============================================================
+    // STEP 5
+    // ADVANCE
+    // ============================================================
+
+    finalAmount -= adv;
+
+    // ============================================================
+    // STEP 6
+    // NET BILL = NET PAY
+    // ============================================================
+
+    netBillAmt.text = finalAmount.toStringAsFixed(2);
+
+    netpayamt.text = finalAmount.toStringAsFixed(2);
+
+    // ============================================================
+    // REFRESH
+    // ============================================================
+
     directBillGen_ItemReadList.refresh();
+    update();
   }
 
   void updateNetPay() {
-    double bill = double.tryParse(billamount.text) ?? 0;
-    double matDebit = double.tryParse(materialDebitamt.text) ?? 0;
-    double credit = double.tryParse(Creditamt.text) ?? 0;
-    double debit = double.tryParse(Debitamt.text) ?? 0;
-    double adv = double.tryParse(Advded.text) ?? 0;
     String roundText = Roundoff.text.trim();
 
-    double round =
-    (roundText.isEmpty || roundText == "-")
+    double round = (roundText.isEmpty || roundText == "-")
         ? 0
         : double.tryParse(roundText) ?? 0;
-    double addLessTotal = totalAddLess;
-
-    double netAmount = bill + credit - debit - adv - matDebit + round + addLessTotal;
-
-    netpayamt.text = netAmount.toStringAsFixed(2);
+    recalculateAddLessAmounts(
+      bill: double.tryParse(billamount.text) ?? 0,
+      credit: double.tryParse(Creditamt.text) ?? 0,
+      debit: double.tryParse(Debitamt.text) ?? 0,
+      matDebit: double.tryParse(materialDebitamt.text) ?? 0,
+      adv: double.tryParse(Advded.text) ?? 0,
+      round: round,
+    );
   }
 
 // ADD THIS
@@ -748,12 +754,14 @@ class BillGenerationDirectController extends GetxController {
     await updateDirectBillCalDatas();
   }
 
-// ADD THIS
-  double get totalAddLess {
-    return directBillGen_ItemReadList.fold(
-      0.0,
-          (sum, item) => sum + (item.amount ?? 0.0),
-    );
+  double getTotalAddLess() {
+    double total = 0;
+
+    for (final item in directBillGen_ItemReadList) {
+      total += item.amount ?? 0;
+    }
+
+    return total;
   }
 
   Future<void> directBillCalculationSave() async {
@@ -764,7 +772,7 @@ class BillGenerationDirectController extends GetxController {
 
       directBillTable.reqDetId = 0;
       directBillTable.addLessId = element.id;
-      directBillTable.percentValue = element.percentage.value;
+      directBillTable.percentValue = element.per;
       directBillTable.amount = 0.0;
       directBillTable.addLessName = element.addLessName;
       directBillTable.addLessType = element.addLessType;
@@ -772,8 +780,8 @@ class BillGenerationDirectController extends GetxController {
       directBillTableModelList.add(directBillTable);
     }
 
-    await directBillGen_ItemlistService
-        .DirectBillGST_ItemTable_Save(directBillTableModelList);
+    await directBillGen_ItemlistService.DirectBillGST_ItemTable_Save(
+        directBillTableModelList);
   }
 
   Future getDirectBillCalDatas() async {
@@ -823,7 +831,7 @@ class BillGenerationDirectController extends GetxController {
     // Update local rows with edit API values
     for (var editItem in editAddLessList) {
       int index = directBillGen_ItemReadList.indexWhere(
-            (e) => e.addLessId == editItem.addLessId,
+        (e) => e.addLessId == editItem.addLessId,
       );
 
       if (index != -1) {
@@ -863,10 +871,11 @@ class BillGenerationDirectController extends GetxController {
   }
 
   Future directBillEntryList_EditApi(int workid, BuildContext context) async {
-    await DirectBillGenerateProvider.directBill_entryList_editAPI(workid).then((value) async {
+    await DirectBillGenerateProvider.directBill_entryList_editAPI(workid)
+        .then((value) async {
       if (value != null && value.length > 0) {
         bill_editListApiDatas.value = value;
-        // billgen_EditTable_SaveTable();
+        billgen_EditTable_SaveTable();
         getItemlistTablesDatas();
         Navigator.pop(context);
         Navigator.push(
@@ -874,12 +883,13 @@ class BillGenerationDirectController extends GetxController {
           MaterialPageRoute(
               builder: (context) => Bill_Generation_EntryScreen()),
         );
-
       }
     });
   }
-  Future EntryList_DeleteApi(int WorkId,int subId,String WorkNo) async {
-    await DirectBillGenerateProvider.entryList_deleteAPI(WorkId,subId,WorkNo,loginController.UserId(), BaseUtitiles.deviceName)
+
+  Future EntryList_DeleteApi(int WorkId, int subId, String WorkNo) async {
+    await DirectBillGenerateProvider.entryList_deleteAPI(WorkId, subId, WorkNo,
+            loginController.UserId(), BaseUtitiles.deviceName)
         .then((value) async {
       if (value != null && value.length > 0) {
         return value;
@@ -887,41 +897,42 @@ class BillGenerationDirectController extends GetxController {
     });
   }
 
+  billgen_EditTable_SaveTable() async {
+    ItemListTableModelList.clear();
+    bill_editListApiDatas.value.forEach((element) {
+      // if (name == "ItemListDet") {
+      ItemListTableModel = DirectBillGenItemListTableModel();
+      ItemListTableModel.workDetId = element.dworkDet_id;
+      ItemListTableModel.Name = element.itemDesc.toString();
+      ItemListTableModel.unit = element.unit.toString();
+      ItemListTableModel.qty = element.qty;
+      ItemListTableModel.rate = element.rate;
+      ItemListTableModel.amount = element.amount;
+      ItemListTableModel.isApi = 1;
+      ItemListTableModelList.add(ItemListTableModel);
+      // }
+      // else {
+        element.subContractorWorkQtyDetS!.forEach((value) {
+          ItemListTableModel = DirectBillGenItemListTableModel();
+          ItemListTableModel.workDetId = value.reqDetId;
+          ItemListTableModel.Name = value.itemDesc.toString();
+          ItemListTableModel.unit = value.unit.toString();
+          ItemListTableModel.qty = value.qty;
+          ItemListTableModel.rate = value.rate;
+          ItemListTableModel.amount = value.amount;
+          ItemListTableModel.isApi = 1;
+          ItemListTableModelList.add(ItemListTableModel);
+        });
+      // }
+    });
 
-  // billgen_EditTable_SaveTable(name) async {
-  //   ItemListTableModelList.clear();
-  //   bill_editListApiDatas.value.forEach((element) {
-  //     if (name == "ItemListDet") {
-  //       ItemListTableModel = DirectBillGenItemListTableModel();
-  //       ItemListTableModel.Name = element.itemDesc.toString();
-  //       ItemListTableModel.unit = element.unit.toString();
-  //       ItemListTableModel.qty = element.qty;
-  //       ItemListTableModel.rate = element.rate;
-  //       ItemListTableModel.amount = element.amount;
-  //       ItemListTableModel.isApi  = 1;
-  //       ItemListTableModelList.add(ItemListTableModel);
-  //     } else {
-  //       element.subContractorWorkQtyDetS!.forEach((value) {
-  //         ItemListTableModel = DirectBillGenItemListTableModel();
-  //         ItemListTableModel.reqDetId = value.reqDetId;
-  //         ItemListTableModel.Name = value.itemDesc.toString();
-  //         ItemListTableModel.unit = value.unit.toString();
-  //         ItemListTableModel.qty = value.qty;
-  //         ItemListTableModel.rate = value.rate;
-  //         ItemListTableModel.amount = value.amount;
-  //         ItemListTableModel.isApi = 1;
-  //         ItemListTableModelList.add(ItemListTableModel);
-  //       });
-  //     }
-  //   });
-  //
-  //   var savedatas =
-  //   await directBillGen_ItemlistService.DirectBillGen_ItemlistTable_Save(
-  //       ItemListTableModelList);
-  //   return savedatas;
-  // }
+    var savedatas =
+        await directBillGen_ItemlistService.DirectBillGen_ItemlistTable_Save(
+            ItemListTableModelList);
+    return savedatas;
+  }
 
-  Future DeleteAlert(BuildContext context, int index ) async {
+  Future DeleteAlert(BuildContext context, int index) async {
     return await showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -957,11 +968,18 @@ class BillGenerationDirectController extends GetxController {
                         onPressed: () {
                           billgen_itemlistTable_Delete();
                           ItemGetTableListdata.value.clear();
-                          EntryList_DeleteApi(bill_entryList[index].workId,bill_entryList[index].subContId,bill_entryList[index].workNo);
+                          EntryList_DeleteApi(
+                              bill_entryList[index].workId,
+                              bill_entryList[index].subContId,
+                              bill_entryList[index].workNo);
                           bill_entryList.removeAt(index);
                           Navigator.of(context).pop();
                         },
-                        child: Text("Delete", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: RequestConstant.Lable_Font_SIZE))),
+                        child: Text("Delete",
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: RequestConstant.Lable_Font_SIZE))),
                   )
                 ],
               ),
@@ -971,5 +989,4 @@ class BillGenerationDirectController extends GetxController {
       ),
     );
   }
-
 }

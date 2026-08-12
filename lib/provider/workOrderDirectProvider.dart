@@ -31,9 +31,9 @@ class WorkOrderDirectProvider{
   }
 
   static Future<List<BillDirectDetCalculations>> getWorkOrderCalculation_List(
-      int subContId) async {
+      int subContId,WorkId) async {
     var data = null;
-    await ApiManager.getAPICall(ApiConstant.GET_DIRECTBILL_CALCULATION_LIST + "?Subcontid=$subContId&WorkId=0")
+    await ApiManager.getAPICall(ApiConstant.GET_DIRECTBILL_CALCULATION_LIST + "?Subcontid=$subContId&WorkId=$WorkId")
         .then((value) {
       print("AddLessCals:" + value);
       data = billDirectDetCalculationsFromJson(value);

@@ -60,6 +60,13 @@ class _Bill_Generation_direct_deductionState
 
       if (billGenerationDirectController.saveButton.value == RequestConstant.SUBMIT) {
         billGenerationDirectController.workid = 0;
+        for (final controller in billGenerationDirectController.percentControllers) {
+          controller.clear();
+        }
+        for (final item in billGenerationDirectController.directBillGen_ItemReadList) {
+          item.percentValue = 0.0;
+          item.amount = 0.0;
+        }
         billGenerationDirectController.materialDebitamt.text = "0.0";
         billGenerationDirectController.Creditamt.text = "0.0";
         billGenerationDirectController.Debitamt.text = "0.0";
@@ -775,6 +782,80 @@ class _Bill_Generation_direct_deductionState
                   ),
                   Row(
                     children: [
+
+                      // Expanded(
+                      //   flex: 1,
+                      //   child: Container(
+                      //     margin:
+                      //     const EdgeInsets.only(top: 10, left: 10, right: 10),
+                      //     child: Card(
+                      //       shape: RoundedRectangleBorder(
+                      //         side: const BorderSide(
+                      //             color: Colors.white70, width: 1),
+                      //         borderRadius: BorderRadius.circular(15),
+                      //       ),
+                      //       elevation: 3,
+                      //       child: Padding(
+                      //         padding: const EdgeInsets.only(
+                      //             top: 3, left: 10, bottom: 5),
+                      //         child: TextFormField(
+                      //           readOnly: true,
+                      //           autovalidateMode:
+                      //           AutovalidateMode.always,
+                      //           onTap: () {
+                      //             if (billGenerationDirectController
+                      //                 .finalBillAmt.text !=
+                      //                 "" &&
+                      //                 billGenerationDirectController
+                      //                     .finalBillAmt.text !=
+                      //                     "0" &&
+                      //                 billGenerationDirectController
+                      //                     .finalBillAmt.text !=
+                      //                     "0.0") {
+                      //               return;
+                      //             } else {
+                      //               setState(() {
+                      //                 billGenerationDirectController
+                      //                     .finalBillAmt.text = "";
+                      //                 billGenerationDirectController
+                      //                     .deductionPaymentCalculation();
+                      //               });
+                      //             }
+                      //           },
+                      //           keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
+                      //
+                      //           inputFormatters: [
+                      //             TextInputFormatter.withFunction((oldValue, newValue) {
+                      //               return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
+                      //                   ? newValue
+                      //                   : oldValue;
+                      //             }),
+                      //           ],
+                      //           controller:
+                      //           billGenerationDirectController.finalBillAmt,
+                      //           cursorColor: Colors.black,
+                      //           style: const TextStyle(color: Colors.black),
+                      //           decoration:  InputDecoration(
+                      //             contentPadding: EdgeInsets.zero,
+                      //             border: InputBorder.none,
+                      //             labelText: "Final Bill Amt",
+                      //             labelStyle: TextStyle(
+                      //               color: Colors.grey,
+                      //               fontSize: RequestConstant.Lable_Font_SIZE,
+                      //             ),
+                      //             prefixIconConstraints:
+                      //             BoxConstraints(minWidth: 0, minHeight: 0),
+                      //             prefixIcon: Padding(
+                      //               padding: EdgeInsets.symmetric(
+                      //                   vertical: 8, horizontal: 8),
+                      //               child:Icon( Icons.paid, color: Theme.of(context).primaryColor),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                       Expanded(
                         flex: 1,
                         child: Container(
@@ -794,43 +875,14 @@ class _Bill_Generation_direct_deductionState
                                 readOnly: true,
                                 autovalidateMode:
                                 AutovalidateMode.always,
-                                onTap: () {
-                                  if (billGenerationDirectController
-                                      .netBillAmt.text !=
-                                      "" &&
-                                      billGenerationDirectController
-                                          .netBillAmt.text !=
-                                          "0" &&
-                                      billGenerationDirectController
-                                          .netBillAmt.text !=
-                                          "0.0") {
-                                    return;
-                                  } else {
-                                    setState(() {
-                                      billGenerationDirectController
-                                          .netBillAmt.text = "";
-                                      billGenerationDirectController
-                                          .deductionPaymentCalculation();
-                                    });
-                                  }
-                                },
-                                keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
-
-                                inputFormatters: [
-                                  TextInputFormatter.withFunction((oldValue, newValue) {
-                                    return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
-                                        ? newValue
-                                        : oldValue;
-                                  }),
-                                ],
                                 controller:
-                                billGenerationDirectController.netBillAmt,
+                                billGenerationDirectController.balAmt,
                                 cursorColor: Colors.black,
                                 style: const TextStyle(color: Colors.black),
-                                decoration:  InputDecoration(
+                                decoration: const InputDecoration(
                                   contentPadding: EdgeInsets.zero,
                                   border: InputBorder.none,
-                                  labelText: "Net Bill Amt",
+                                  labelText: "Bal Amt",
                                   labelStyle: TextStyle(
                                     color: Colors.grey,
                                     fontSize: RequestConstant.Lable_Font_SIZE,
@@ -840,91 +892,15 @@ class _Bill_Generation_direct_deductionState
                                   prefixIcon: Padding(
                                     padding: EdgeInsets.symmetric(
                                         vertical: 8, horizontal: 8),
-                                    child:Icon( Icons.attach_money, color: Theme.of(context).primaryColor),
+                                    child: ConstIcons.roundoff,
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          margin:
-                          const EdgeInsets.only(top: 10, left: 10, right: 10),
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              side: const BorderSide(
-                                  color: Colors.white70, width: 1),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            elevation: 3,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 3, left: 10, bottom: 5),
-                              child: TextFormField(
-                                readOnly: true,
-                                autovalidateMode:
-                                AutovalidateMode.always,
-                                onTap: () {
-                                  if (billGenerationDirectController
-                                      .finalBillAmt.text !=
-                                      "" &&
-                                      billGenerationDirectController
-                                          .finalBillAmt.text !=
-                                          "0" &&
-                                      billGenerationDirectController
-                                          .finalBillAmt.text !=
-                                          "0.0") {
-                                    return;
-                                  } else {
-                                    setState(() {
-                                      billGenerationDirectController
-                                          .finalBillAmt.text = "";
-                                      billGenerationDirectController
-                                          .deductionPaymentCalculation();
-                                    });
-                                  }
-                                },
-                                keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
 
-                                inputFormatters: [
-                                  TextInputFormatter.withFunction((oldValue, newValue) {
-                                    return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
-                                        ? newValue
-                                        : oldValue;
-                                  }),
-                                ],
-                                controller:
-                                billGenerationDirectController.finalBillAmt,
-                                cursorColor: Colors.black,
-                                style: const TextStyle(color: Colors.black),
-                                decoration:  InputDecoration(
-                                  contentPadding: EdgeInsets.zero,
-                                  border: InputBorder.none,
-                                  labelText: "Final Bill Amt",
-                                  labelStyle: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: RequestConstant.Lable_Font_SIZE,
-                                  ),
-                                  prefixIconConstraints:
-                                  BoxConstraints(minWidth: 0, minHeight: 0),
-                                  prefixIcon: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 8, horizontal: 8),
-                                    child:Icon( Icons.paid, color: Theme.of(context).primaryColor),
-                                  ),
-                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                  Row(
-                    children: [
                       Expanded(
                         flex: 1,
                         child: Container(
@@ -1039,6 +1015,83 @@ class _Bill_Generation_direct_deductionState
                                   }
                                 },
 
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          margin:
+                          const EdgeInsets.only(top: 10, left: 10, right: 10),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              side: const BorderSide(
+                                  color: Colors.white70, width: 1),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            elevation: 3,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 3, left: 10, bottom: 5),
+                              child: TextFormField(
+                                readOnly: true,
+                                autovalidateMode:
+                                AutovalidateMode.always,
+                                onTap: () {
+                                  if (billGenerationDirectController
+                                      .netBillAmt.text !=
+                                      "" &&
+                                      billGenerationDirectController
+                                          .netBillAmt.text !=
+                                          "0" &&
+                                      billGenerationDirectController
+                                          .netBillAmt.text !=
+                                          "0.0") {
+                                    return;
+                                  } else {
+                                    setState(() {
+                                      billGenerationDirectController
+                                          .netBillAmt.text = "";
+                                      billGenerationDirectController
+                                          .deductionPaymentCalculation();
+                                    });
+                                  }
+                                },
+                                keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
+
+                                inputFormatters: [
+                                  TextInputFormatter.withFunction((oldValue, newValue) {
+                                    return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
+                                        ? newValue
+                                        : oldValue;
+                                  }),
+                                ],
+                                controller:
+                                billGenerationDirectController.netBillAmt,
+                                cursorColor: Colors.black,
+                                style: const TextStyle(color: Colors.black),
+                                decoration:  InputDecoration(
+                                  contentPadding: EdgeInsets.zero,
+                                  border: InputBorder.none,
+                                  labelText: "Net Bill Amt",
+                                  labelStyle: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: RequestConstant.Lable_Font_SIZE,
+                                  ),
+                                  prefixIconConstraints:
+                                  BoxConstraints(minWidth: 0, minHeight: 0),
+                                  prefixIcon: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 8),
+                                    child:Icon( Icons.attach_money, color: Theme.of(context).primaryColor),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -1277,8 +1330,12 @@ class _Bill_Generation_direct_deductionState
                                 Obx(() {
                                   final updated = billGenerationDirectController.directBillGen_ItemReadList
                                       .firstWhereOrNull((e) => e.addLessId == item.addLessId);
+
+                                  final amount = (updated?.amount ?? 0.0);
+                                  final displayAmount = amount == 0 || amount.abs() < 0.005 ? 0.0 : amount;
+
                                   return tableCellText(
-                                    (updated?.amount ?? 0.0).toStringAsFixed(2),
+                                    displayAmount.toStringAsFixed(2),
                                     align: TextAlign.right,
                                   );
                                 }),
@@ -1313,14 +1370,16 @@ class _Bill_Generation_direct_deductionState
                                 height: 50,
                                 alignment: Alignment.center,
                                 child: Text(
-                                  billGenerationDirectController.totalAddLess.toStringAsFixed(2), // ← getter from controller
+                                  billGenerationDirectController
+                                      .getTotalAddLess()
+                                      .toStringAsFixed(2),
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 15,
                                     color: Colors.black,
                                   ),
                                 ),
-                              )),
+                              ))
 
                             ],
                           ),
@@ -1530,11 +1589,11 @@ class _Bill_Generation_direct_deductionState
 
                           if (_formKey.currentState!.validate()) {
                             // if (await BaseUtitiles.checkNetworkAndShowLoader(context)) {
-                            //   // await billGenerationDirectController
-                            //   //     .SaveButton_DeductionScreen(
-                            //   //     context,
-                            //   //     billGenerationDirectController
-                            //   //         .workid,subcontractorController.selectedWorkOrderId.value);
+                              await billGenerationDirectController
+                                  .SaveButton_DeductionScreen(
+                                  context,
+                                  billGenerationDirectController
+                                      .workid);
                             // }
                           } else if (double.parse(billGenerationDirectController.netpayamt.text) < 0) {
                             BaseUtitiles.showToast(

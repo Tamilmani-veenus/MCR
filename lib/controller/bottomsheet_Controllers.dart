@@ -423,8 +423,8 @@ class BottomsheetControllers {
                             subcontractorController.WorkOrderNo.text = list[index].workOrderNo.toString();
                             subcontractorController.selectedWorkOrderId.value = list[index].workOrderId;
                             searchcontroller.text = "";
-                            await nmrWklyController.DirectBill_CalculationList(type: "Subcont");
                             await billGenerationDirectController.getWorkOrderList();
+                            await billGenerationDirectController.DirectBill_CalculationList(type: "WorkOrd");
                             Navigator.pop(context);
                           },
                         ),

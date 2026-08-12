@@ -7,6 +7,7 @@ import '../apimanager/apimanager.dart';
 import '../models/bill_genration_direct_entrylist_model.dart';
 
 import '../models/directbill_editapi_res_model.dart';
+import '../models/directbill_itemlistdet_resmodel.dart';
 import '../models/nmrwklybill_deduction_save_model.dart';
 import '../utilities/apiconstant.dart';
 import '../utilities/baseutitiles.dart';
@@ -33,20 +34,21 @@ class DirectBillGenerateProvider {
   }
 
   static Future getWorkOrderList(
-      int pId, int subId, int workOrderNo) async {
+      int pId, int siteId, int subId, int workOrderNo,fromDate,toDate) async {
     try {
       final response = await ApiManager.getAPICall(
-        "${ApiConstant.GET_WORKORDER_ENTRY_LIST}?PID=$pId&SubID=$subId&WorkOrderId=$workOrderNo",
+        "${ApiConstant.GET_WORKORDER_ENTRY_LIST}?PID=$pId&SID=$siteId&SUBID=$subId&WorkOrderId=$workOrderNo&Type=D&WorkFromdate=$fromDate&WorkTodate=$toDate",
       );
 
-      final data = directbillEditApiResModelFromJson(response);
+      final data = billDirectWorkOrdDetFromJson(response);
 
       if (data.isNotEmpty) {
         return data;
       }
       return null;
-    } catch (error) {
+    } catch (error,e) {
       print(error);
+      print(e);
       BaseUtitiles.showToast("${RequestConstant.SOMETHINGWENT_WRONG} $error");
       return null;
     }
@@ -69,19 +71,17 @@ class DirectBillGenerateProvider {
     return datasave;
   }
 
-  static Future<String?> SaveSubContScreenEntryAPI(String body, int workId,context) async {
+  static Future<String?> SaveBillDirectAPI(String body, saveButton,context) async {
     String? ratingRes;
 
     try {
-      if (workId != 0) {
-        // PUT request
+      if (saveButton == RequestConstant.RESUBMIT) {
         final value = await ApiManager.putUpdateAPIButton(ApiConstant.PUT_DIRECTBILL_UPDATE_API, body);
         var response = saveDeduction_SaveResponseFromJson(value);
         if (response.RetString != null) {
           ratingRes = response.RetString;
         }
       } else {
-        // POST request
         final value = await ApiManager.postAPICall(ApiConstant.DIRECTBILL_SAVE_API, body);
         var response = saveDeduction_SaveResponseFromJson(value);
         if (response.RetString != null) {
