@@ -29,7 +29,7 @@ class ApiConstant{
   static const String GETPROJECTCOMPANYWISE_DROPDOWNLIST = BASE_URL + "api/CommonFile/GetProjectCompwise";
   static const String GET_HEAD_DROPDOWNLIST = BASE_URL + "api/SubContDPRNew/GetHeadname";
   static const String GETSUBCONTRACTDROPDOWNLIST = BASE_URL + "api/CommonFile/GetSubContractorAll";
-  static const String GETSUBCONTRACTBILLDIRLIST = BASE_URL + "api/SubContDirectBill/GetSubcontList";
+  static const String GETSUBCONTRACTBILLDIRLIST = BASE_URL + "api/CommonFile/GetSubContNameByWO";
   static const String GETSUBCONTRACTLIST = BASE_URL + "api/CommonFile/GetSubContractor";
   static const String GETNMRREPORT = BASE_URL + "api/Report/GetNmrReportMas";
   static const String GETLABOURLIST = BASE_URL + "api/CommonFile/GetLabour";
@@ -55,10 +55,12 @@ class ApiConstant{
   static const String GETMATERIAL_DETAILS_LIST = BASE_URL + "api/Report/GetStockDetail";
   static const String GETMATERIAL_SUBHAED_DROPDOWNLIST = BASE_URL + "api/CommonFile/GetMaterialHead";
   static const String GETMATERIALWISEDROPDOWNLIST = BASE_URL + "api/CommonFile/GetMaterialSubAll";
+  static const String GET_WORKORDER_ENTRY_LIST = BASE_URL + "api/SubContDirectBill/GetWorkOrderList";
   static const String GETMATERIALWISE_SHOW_LIST = BASE_URL + "api/Report/GetStockAbstract";
   static const String GETSUBCONT_ENTRY_SHOW_CLICK = BASE_URL + "api/CommonFile/GetSubContCategory";
   static const String GETINVOICENOLIST = BASE_URL + "api/SubContDirectBill/GetinvoiceNo";
   static const String GETAUTONO_YEAR_WISE = BASE_URL + "api/CommonFile/GetAutoNoYearWise";
+  static const String GETWRKORDERNOLIST = BASE_URL + "api/CommonFile/GetWorkOrderNo";
   static const String GETSUBCONT_ATTEN_ENTRY_LIST = BASE_URL + "api/SubContLabAttendance/GetAttendanceEntryList";
   static const String GETMENU_LIST_API = BASE_URL + "api/CommonFile/GetMenusList";
   static const String GETCONTROLL_RIGHTS_ENTRYLIST = BASE_URL + "api/CommonFile/GetControlRights";

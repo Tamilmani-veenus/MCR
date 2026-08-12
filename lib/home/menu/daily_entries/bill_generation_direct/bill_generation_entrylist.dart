@@ -25,21 +25,6 @@ class _Subcont_NMR_EntryListScreenState_Site
 
   @override
   void initState() {
-    if(billGenerationDirectController.entrycheck==2){
-      billGenerationDirectController.entrycheck=0;
-    }
-    else if(billGenerationDirectController.entrycheck==0){
-
-    }
-    else{
-      billGenerationDirectController.entrycheck=1;
-    }
-
-    setState(() {
-      billGenerationDirectController.main_entryList.value.clear();
-      billGenerationDirectController.bill_entryList.value.clear();
-    });
-    billGenerationDirectController.editCheck=0;
     DateTime currentDate = DateTime.now();
     DateTime lastDayOfMonth = new DateTime(currentDate.year, currentDate.month - 1, 0);
     billGenerationDirectController.EntrylistFrDate.text = lastDayOfMonth.toString().substring(0, 10);
@@ -72,8 +57,6 @@ class _Subcont_NMR_EntryListScreenState_Site
             backgroundColor: Setmybackground,
             floatingActionButton: FloatingActionButton.extended(
               onPressed: (){
-                billGenerationDirectController.editCheck =0;
-                billGenerationDirectController.entrycheck =0;
                 Navigator.push(context, MaterialPageRoute(builder: (context) => Bill_Generation_EntryScreen()));
               },
               label: Text("Add", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: RequestConstant.Lable_Font_SIZE,),),
@@ -616,7 +599,6 @@ class _Subcont_NMR_EntryListScreenState_Site
                                                                 ],
                                                               ),
                                                               onTap: () async {
-                                                                billGenerationDirectController.entrycheck=1;
                                                                 billGenerationDirectController.billgen_itemlistTable_Delete();
                                                                 billGenerationDirectController.ItemGetTableListdata.clear();
                                                                 billGenerationDirectController.bill_editListApiDatas.value.clear();

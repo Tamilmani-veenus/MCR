@@ -207,8 +207,6 @@ class Menu_Controller extends GetxController {
 
 
     else if (value == "Bill Generation - Direct") {
-      billGenerationDirectController.entrycheck=0;
-      billGenerationDirectController.editCheck=0;
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => Bill_Generation_direct_Entrylist()),
