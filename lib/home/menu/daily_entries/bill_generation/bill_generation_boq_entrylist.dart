@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import '../../../../utilities/baseutitiles.dart';
+import 'bill_generation_boq_entry.dart';
 import 'bill_generation_boq_entryScreen.dart';
 
 class Bill_Generation_Boq_Entrylist extends StatefulWidget {
@@ -53,7 +54,7 @@ class _Bill_Generation_Boq_EntrylistState_Site
             floatingActionButton: FloatingActionButton.extended(
               onPressed: (){
                 billGenerationBoqController.saveButton.value = RequestConstant.SUBMIT;
-                Navigator.push(context, MaterialPageRoute(builder: (context) => BillGenerationBoqEntryScreen()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Bill_Generation_Boq_EntryScreen()));
               },
               label: Text("Add", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: RequestConstant.Lable_Font_SIZE,),),
               icon: Icon(Icons.add, color: Colors.white, size: RequestConstant.Heading_Font_SIZE, ),
