@@ -43,6 +43,9 @@ class DatabaseConnection {
     String directBillGenItemlistTable = "CREATE TABLE directBillGenItemlistTable (id INTEGER PRIMARY KEY UNIQUE,Name TEXT,unit TEXT,qty REAL,rate REAL,amount REAL)";
     await database.execute(directBillGenItemlistTable);
 
+    String billGenBoqItemlistTable = "CREATE TABLE billGenBoqItemlistTable (id INTEGER PRIMARY KEY UNIQUE,Name TEXT,unit TEXT,qty REAL,rate REAL,amount REAL)";
+    await database.execute(billGenBoqItemlistTable);
+
     String workOrdDirectItemlistTable = "CREATE TABLE workOrdDirectItemlistTable (id INTEGER PRIMARY KEY UNIQUE,Name TEXT,unit TEXT,qty REAL,rate REAL,amount REAL,reqDetId INTEGER)";
     await database.execute(workOrdDirectItemlistTable);
 
