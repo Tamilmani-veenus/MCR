@@ -48,33 +48,23 @@ class _Subcont_Nmr_EntryScreenState_Site
     Future.delayed(duration, () async {
       if (billGenerationDirectController.saveButton.value == RequestConstant.RESUBMIT || billGenerationDirectController.saveButton.value == RequestConstant.VERIFY || billGenerationDirectController.saveButton.value == RequestConstant.APPROVAL) {
         billGenerationDirectController.bill_editListApiDatas.forEach((element) {
-          billGenerationDirectController.workid = element.id!;
-          billGenerationDirectController.autoYearWiseNoController.text =
-              element.workNo.toString();
-          billGenerationDirectController.billentryDateController.text =
-              element.workDate.toString();
+          billGenerationDirectController.workid = element.workId!;
+          billGenerationDirectController.autoYearWiseNoController.text = element.workNo.toString();
+          billGenerationDirectController.billentryDateController.text = element.workDate.toString();
           projectController.projectname.text = element.projectName.toString();
           projectController.selectedProjectId.value = element.projectId;
           siteController.Sitename.text = element.siteName.toString();
           siteController.selectedsiteId.value = element.siteId;
-          subcontractorController.Subcontractorname.text =
-              element.subContName.toString();
+          subcontractorController.Subcontractorname.text = element.subContName.toString();
           subcontractorController.selectedSubcontId.value = element.subContId;
-          // billGenerationDirectController.DirectBillTypeText.text = element.billTypeDesc;
-          // billGenerationDirectController.directBillTypeID.value = element.billType;
           subcontractorController.InvoiceNo.text = element.billNo.toString();
-          billGenerationDirectController.billInvoiceDateController.text =
-              element.workDate.toString();
+          billGenerationDirectController.billInvoiceDateController.text = element.workDate.toString();
           billGenerationDirectController.billPaymentWkDateController.text = element.paymentDate;
-          // subcontractorController.selectedWorkOrderId.value =element.workOrderId;
-          // subcontractorController.WorkOrderNo.text = element.workOrderNo ?? "--SELECT--";
-          billGenerationDirectController.FromdateController.text =
-              element.fromWorkDate.toString();
-          billGenerationDirectController.TodateController.text =
-              element.toWorkDate.toString();
-          billGenerationDirectController.RemarksController.text =
-              element.remarks.toString();
-          // billGenerationDirectController.createdById.value=element.createdBy;
+          subcontractorController.selectedWorkOrderId.value =element.workOrderId;
+          subcontractorController.WorkOrderNo.text = element.workOrderNo ?? "--SELECT--";
+          billGenerationDirectController.FromdateController.text = element.fromDate.toString();
+          billGenerationDirectController.TodateController.text = element.toDate.toString();
+          billGenerationDirectController.RemarksController.text = element.remarks.toString();
         });
       }
       await billGenerationDirectController.DirectBill_CalculationList();
@@ -92,8 +82,6 @@ class _Subcont_Nmr_EntryScreenState_Site
         siteController.selectedsiteId.value = 0;
         subcontractorController.Subcontractorname.text = "--SELECT--";
         subcontractorController.selectedSubcontId.value=0;
-        // billGenerationDirectController.DirectBillTypeText.text = "--SELECT--";
-        // billGenerationDirectController.directBillTypeID.value = "0";
         subcontractorController.WorkOrderNo.text = "--SELECT--";
         billGenerationDirectController.billInvoiceDateController.text = BaseUtitiles.initiateCurrentDateFormat();
         subcontractorController.InvoiceNo.text="";

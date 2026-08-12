@@ -152,7 +152,7 @@ class BillGenerationDirectController extends GetxController {
           saveButton.value == RequestConstant.APPROVAL) {
         setBaseNetPay();
         await preloadEditAddLessData(
-            bill_editListApiDatas[0].subContractorBillAddLessSetupS);
+            bill_editListApiDatas[0].billEditAddless);
       }
     } else {
       BaseUtitiles.showToast(RequestConstant.NORECORD_FOUND);
@@ -206,7 +206,7 @@ class BillGenerationDirectController extends GetxController {
       if (value != null && value.length > 0) {
         await billgen_DeleteApiRows();
         bill_editListApiDatas.value = value;
-        await billgen_EditTable_SaveTable();
+        await billgen_EditTable_SaveTable("ItemListDet");
         await getItemlistTablesDatas();
       }
     });
@@ -383,8 +383,6 @@ class BillGenerationDirectController extends GetxController {
         projectId: projectController.selectedProjectId.value,
         siteId: siteController.selectedsiteId.value,
         subContId: subcontractorController.selectedSubcontId.value,
-        appstatus: "N",
-        approvedby: 0,
         balAmt: double.tryParse(balAmt.text) ?? 0.0,
         remarks: RemarksController.text,
         preparedby: int.parse(loginController.EmpId()),
@@ -403,30 +401,18 @@ class BillGenerationDirectController extends GetxController {
         debitRemarks: DebitRemarksController.text,
         creditRemarks: CreditRemarksController.text,
         billNo: subcontractorController.InvoiceNo.text,
-        verifySatus: "N",
-        verifyby: 0,
+        entryMode:saveButton.value=="Submit"?"ADD":saveButton.value=="Re-Submit"?"UPDATE":saveButton.value=="Verify"?"VERIFY":saveButton.value=="Approve"?"APPROVE":"",
+        verifyby: (saveButton.value==RequestConstant.SUBMIT || saveButton.value==RequestConstant.RESUBMIT)?0:int.tryParse(loginController.EmpId()),
+        verifySatus: (saveButton.value==RequestConstant.SUBMIT || saveButton.value==RequestConstant.RESUBMIT)?"N":"Y",
+        appstatus:(saveButton.value==RequestConstant.APPROVAL)?"Y":"N" ,
+        approvedby: (saveButton.value==RequestConstant.APPROVAL)?int.tryParse(loginController.EmpId()):0,
         materialdebitAmt: double.tryParse(materialDebitamt.text) ?? 0.0,
         materiadebitremarks: materialDebitRemarks.text,
         paymentDate: billPaymentWkDateController.text,
-        entryMode: saveButton.value == "Submit"
-            ? "ADD"
-            : saveButton.value == "Re-Submit"
-                ? "UPDATE"
-                : saveButton.value == "Verify"
-                    ? "VERIFY"
-                    : saveButton.value == "Approve"
-                        ? "APPROVE"
-                        : "",
         userId: int.tryParse(loginController.UserId()),
         deviceName: BaseUtitiles.deviceName,
         billDet: getNmrBillDet(),
         billAddless: getNmrBillDetAddLess()));
-    final decodedJson = jsonDecode(body);
-
-    const JsonEncoder encoder = JsonEncoder.withIndent('  ');
-    final prettyJson = encoder.convert(decodedJson);
-
-    debugPrint(prettyJson, wrapWidth: 1024);
 
     final list = await DirectBillGenerateProvider.SaveBillDirectAPI(
         body, saveButton.value, context);
@@ -435,15 +421,22 @@ class BillGenerationDirectController extends GetxController {
       if (id != 0) {
         billgen_itemlistTable_Delete();
         ItemGetTableListdata.value.clear();
-        BaseUtitiles.showToast(list);
-        clearDatas();
-        DirectBill_EntryList();
-        Navigator.pop(context);
-        Navigator.pop(context);
-        Navigator.pop(context);
-        Navigator.pop(context);
-        Navigator.pop(context);
-        return;
+        if (id != 0) {
+          if(saveButton.value==RequestConstant.RESUBMIT){
+            await DirectBill_EntryList();
+          }
+          else{
+            await pendingListController.getPendingList();
+          }
+          BaseUtitiles.showToast(list);
+          clearDatas();
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.pop(context);
+          return;
+        }
       } else {
         if (list == RequestConstant.DUPLICATE_OCCURED) {
           Navigator.pop(context);
@@ -831,22 +824,22 @@ class BillGenerationDirectController extends GetxController {
     // Update local rows with edit API values
     for (var editItem in editAddLessList) {
       int index = directBillGen_ItemReadList.indexWhere(
-        (e) => e.addLessId == editItem.addLessId,
+        (e) => e.addLessId == editItem.addlessid,
       );
 
       if (index != -1) {
-        directBillGen_ItemReadList[index].reqDetId = editItem.id;
+        // directBillGen_ItemReadList[index].reqDetId = editItem.id;
 
         directBillGen_ItemReadList[index].percentValue =
-            (editItem.percentValue ?? 0).toDouble();
+            (editItem.per ?? 0).toDouble();
 
         directBillGen_ItemReadList[index].amount =
             (editItem.amount ?? 0).toDouble();
 
         // Update controller text also
-        percentControllers[index].text = (editItem.percentValue ?? 0) == 0
+        percentControllers[index].text = (editItem.per ?? 0) == 0
             ? ''
-            : editItem.percentValue.toString();
+            : editItem.per.toString();
       }
     }
 
@@ -870,12 +863,13 @@ class BillGenerationDirectController extends GetxController {
     }
   }
 
-  Future directBillEntryList_EditApi(int workid, BuildContext context) async {
+  Future directBillEntryList_EditApi(int workid, BuildContext context,type) async {
     await DirectBillGenerateProvider.directBill_entryList_editAPI(workid)
         .then((value) async {
       if (value != null && value.length > 0) {
+        saveButton.value= type=="Edit"?RequestConstant.RESUBMIT:type=="Verify"?RequestConstant.VERIFY:RequestConstant.APPROVAL;
         bill_editListApiDatas.value = value;
-        billgen_EditTable_SaveTable();
+        billgen_EditTable_SaveTable("");
         getItemlistTablesDatas();
         Navigator.pop(context);
         Navigator.push(
@@ -897,10 +891,10 @@ class BillGenerationDirectController extends GetxController {
     });
   }
 
-  billgen_EditTable_SaveTable() async {
+  billgen_EditTable_SaveTable(name) async {
     ItemListTableModelList.clear();
     bill_editListApiDatas.value.forEach((element) {
-      // if (name == "ItemListDet") {
+      if (name == "ItemListDet") {
       ItemListTableModel = DirectBillGenItemListTableModel();
       ItemListTableModel.workDetId = element.dworkDet_id;
       ItemListTableModel.Name = element.itemDesc.toString();
@@ -910,11 +904,11 @@ class BillGenerationDirectController extends GetxController {
       ItemListTableModel.amount = element.amount;
       ItemListTableModel.isApi = 1;
       ItemListTableModelList.add(ItemListTableModel);
-      // }
-      // else {
-        element.subContractorWorkQtyDetS!.forEach((value) {
+      }
+      else {
+        element.billEditDet!.forEach((value) {
           ItemListTableModel = DirectBillGenItemListTableModel();
-          ItemListTableModel.workDetId = value.reqDetId;
+          ItemListTableModel.workDetId = value.workorderDetId;
           ItemListTableModel.Name = value.itemDesc.toString();
           ItemListTableModel.unit = value.unit.toString();
           ItemListTableModel.qty = value.qty;
@@ -923,7 +917,7 @@ class BillGenerationDirectController extends GetxController {
           ItemListTableModel.isApi = 1;
           ItemListTableModelList.add(ItemListTableModel);
         });
-      // }
+      }
     });
 
     var savedatas =

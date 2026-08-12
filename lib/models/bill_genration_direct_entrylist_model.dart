@@ -20,6 +20,8 @@ class BillDirectentrylist {
     this.tworkDate,
     this.workOrderid,
     this.status,
+    this.appStatus,
+    this.verifyStatus,
     this.partRate,
     this.netPayAmt,
     this.preparedby,
@@ -40,6 +42,8 @@ class BillDirectentrylist {
   String? tworkDate;
   int? workOrderid;
   String? status;
+  String? appStatus;
+  String? verifyStatus;
   String? partRate;
   double? netPayAmt;
   int? preparedby;
@@ -60,6 +64,8 @@ class BillDirectentrylist {
     tworkDate: json["twork_date"],
     workOrderid: json["work_orderid"],
     status: json["Status"],
+    appStatus: json["AppStatus"],
+    verifyStatus: json["VerifyStatus"],
     partRate: json["Part_rate"],
     netPayAmt: json["net_pay_amt"],
     preparedby: json["Preparedby"],
@@ -81,6 +87,8 @@ class BillDirectentrylist {
     "twork_date": tworkDate,
     "work_orderid": workOrderid,
     "Status": status,
+    "AppStatus": appStatus,
+    "VerifyStatus": verifyStatus,
     "Part_rate": partRate,
     "net_pay_amt": netPayAmt,
     "Preparedby": preparedby,

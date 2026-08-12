@@ -39,21 +39,21 @@ class _Bill_Generation_direct_deductionState
 
       if (billGenerationDirectController.saveButton.value == RequestConstant.RESUBMIT || billGenerationDirectController.saveButton.value == RequestConstant.VERIFY || billGenerationDirectController.saveButton.value == RequestConstant.APPROVAL) {
         for (var element in billGenerationDirectController.bill_editListApiDatas) {
-          billGenerationDirectController.workid = element.id;
-          billGenerationDirectController.billamount.text = element.billAmount.toString();
-          billGenerationDirectController.finalBillAmt.text = element.finalBillAmount.toString();
-          billGenerationDirectController.netBillAmt.text = element.netBillAmount.toString();
-          billGenerationDirectController.Creditamt.text = element.creditAmount.toString();
-          billGenerationDirectController.Debitamt.text = element.debitAmount.toString();
-          billGenerationDirectController.Advded.text = element.advanceAmount.toString();
-          billGenerationDirectController.materialDebitamt.text = element.materialDebitAmount.toString();
-          billGenerationDirectController.Roundoff.text = element.roundOff.toString();
+          billGenerationDirectController.workid = element.workId;
+          billGenerationDirectController.billamount.text = element.billAmt.toString();
+          // billGenerationDirectController.finalBillAmt.text = element.finalBillAmount.toString();
+          billGenerationDirectController.netBillAmt.text = element.netPayAmt.toString();
+          billGenerationDirectController.Creditamt.text = element.creditAmt.toString();
+          billGenerationDirectController.Debitamt.text = element.debitAmt.toString();
+          billGenerationDirectController.Advded.text = element.advAmt.toString();
+          billGenerationDirectController.materialDebitamt.text = element.materialDebit.toString();
+          billGenerationDirectController.Roundoff.text = element.rndOff.toString();
           billGenerationDirectController.CreditRemarksController.text = element.creditRemarks.toString();
           billGenerationDirectController.DebitRemarksController.text = element.debitRemarks.toString();
           billGenerationDirectController.materialDebitRemarks.text = element.materialDebitRemarks.toString();
-          billGenerationDirectController.tobededadv.text = element.actualAdvanceAmount.toString();
-          billGenerationDirectController.to_be_dection_advance = element.advanceAmount.toString();
-          billGenerationDirectController.netpayamt.text = element.netPayAmount.toString();
+          billGenerationDirectController.tobededadv.text = element.actAdvAmt.toString();
+          billGenerationDirectController.to_be_dection_advance = element.advAmt.toString();
+          billGenerationDirectController.netpayamt.text = element.netPayAmt.toString();
         }
         await billGenerationDirectController.deductionPaymentCalculation();
       }
@@ -73,7 +73,7 @@ class _Bill_Generation_direct_deductionState
         billGenerationDirectController.Advded.text = "0.0";
         billGenerationDirectController.Roundoff.text = "0.0";
         billGenerationDirectController.netBillAmt.text = "0.0";
-        billGenerationDirectController.finalBillAmt.text = "0.0";
+        // billGenerationDirectController.finalBillAmt.text = "0.0";
         billGenerationDirectController.tobededadv.text = billGenerationDirectController.to_be_dection_advance;
         billGenerationDirectController.CreditRemarksController.text = "-";
         billGenerationDirectController.DebitRemarksController.text = "-";
@@ -1588,13 +1588,13 @@ class _Bill_Generation_direct_deductionState
                         onPressed:  () async {
 
                           if (_formKey.currentState!.validate()) {
-                            // if (await BaseUtitiles.checkNetworkAndShowLoader(context)) {
+                            if (await BaseUtitiles.checkNetworkAndShowLoader(context)) {
                               await billGenerationDirectController
                                   .SaveButton_DeductionScreen(
                                   context,
                                   billGenerationDirectController
                                       .workid);
-                            // }
+                            }
                           } else if (double.parse(billGenerationDirectController.netpayamt.text) < 0) {
                             BaseUtitiles.showToast(
                                 "Net pay amount must be greater than 0");
@@ -1665,9 +1665,6 @@ class _Bill_Generation_direct_deductionState
                         onPressed: () async {
                           billGenerationDirectController.to_be_dection_advance =
                           "0";
-                          billGenerationDirectController.saveButton.value =
-                              RequestConstant.SUBMIT;
-                          billGenerationDirectController.workid = 0;
                           projectController.projectname.text = "--SELECT--";
                           projectController.selectedProjectId.value = 0;
                           subcontractorController.Subcontractorname.text =

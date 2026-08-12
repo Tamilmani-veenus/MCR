@@ -21,16 +21,20 @@ class DirectbillEditApiResModel {
   String? entryType;
   String? fromDate;
   String? toDate;
-  int? rndOff;
-  int? billAmt;
-  int? actAdvAmt;
-  int? advAmt;
-  int? netPayAmt;
-  int? debitAmt;
-  int? creditAmt;
+  String? materialDebitRemarks;
+  double? rndOff;
+  double? materialDebit;
+  double? billAmt;
+  double? actAdvAmt;
+  double? advAmt;
+  double? netPayAmt;
+  double? debitAmt;
+  double? creditAmt;
   String? debitRemarks;
   String? creditRemarks;
   String? remarks;
+  String? billNo;
+  String? paymentDate;
   int? preparedby;
   String? preparedbyName;
   dynamic? userId;
@@ -44,12 +48,15 @@ class DirectbillEditApiResModel {
     this.workId,
     this.workNo,
     this.workDate,
+    this.materialDebitRemarks,
     this.projectId,
+    this.billNo,
     this.siteId,
     this.subContId,
     this.projectName,
     this.siteName,
     this.subContName,
+    this.materialDebit,
     this.entryType,
     this.fromDate,
     this.toDate,
@@ -58,6 +65,7 @@ class DirectbillEditApiResModel {
     this.actAdvAmt,
     this.advAmt,
     this.netPayAmt,
+    this.paymentDate,
     this.debitAmt,
     this.creditAmt,
     this.debitRemarks,
@@ -78,11 +86,15 @@ class DirectbillEditApiResModel {
     workNo: json["WorkNo"],
     workDate: json["WorkDate"],
     projectId: json["ProjectId"],
+    materialDebitRemarks: json["MaterialDebitRemarks"],
+    billNo: json["BillNo"],
     siteId: json["SiteId"],
     subContId: json["SubContId"],
+    materialDebit: json["MaterialDebit"],
     projectName: json["ProjectName"],
     siteName: json["SiteName"],
     subContName: json["SubContName"],
+    paymentDate: json["PaymentDate"],
     entryType: json["EntryType"],
     fromDate: json["FromDate"],
     toDate: json["ToDate"],
@@ -110,8 +122,12 @@ class DirectbillEditApiResModel {
     "WorkId": workId,
     "WorkNo": workNo,
     "WorkDate": workDate,
+    "MaterialDebitRemarks": materialDebitRemarks,
     "ProjectId": projectId,
     "SiteId": siteId,
+    "BillNo": billNo,
+    "PaymentDate": paymentDate,
+    "MaterialDebit": materialDebit,
     "SubContId": subContId,
     "ProjectName": projectName,
     "SiteName": siteName,
@@ -144,8 +160,8 @@ class BillEditAddless {
   int? addlessid;
   String? particular;
   String? addless;
-  int? per;
-  int? amount;
+ double? per;
+ double? amount;
 
   BillEditAddless({
    this.addlessid,
@@ -178,6 +194,7 @@ class BillEditDet {
   double? qty;
   double? rate;
   double? amount;
+  int? workorderDetId;
 
   BillEditDet({
    this.itemDesc,
@@ -185,6 +202,7 @@ class BillEditDet {
    this.qty,
    this.rate,
    this.amount,
+   this.workorderDetId,
   });
 
   factory BillEditDet.fromJson(Map<String, dynamic> json) => BillEditDet(
@@ -193,6 +211,7 @@ class BillEditDet {
     qty: json["Qty"],
     rate: json["Rate"],
     amount: json["Amount"],
+    workorderDetId: json["WorkorderDetId"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -201,5 +220,6 @@ class BillEditDet {
     "Qty": qty,
     "Rate": rate,
     "Amount": amount,
+    "WorkorderDetId": workorderDetId,
   };
 }

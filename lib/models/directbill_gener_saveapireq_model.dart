@@ -125,8 +125,8 @@ class BillDirectGenSaveApiReq {
   );
 
   Map<String, dynamic> toJson() => {
-    "WorkNo": workNo,
     "WorkId": workId,
+    "WorkNo": workNo,
     "WorkDate": workDate,
     "ProjectId": projectId,
     "SiteId": siteId,

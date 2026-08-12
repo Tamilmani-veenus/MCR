@@ -75,14 +75,14 @@ class DirectBillGenerateProvider {
     String? ratingRes;
 
     try {
-      if (saveButton == RequestConstant.RESUBMIT) {
-        final value = await ApiManager.putUpdateAPIButton(ApiConstant.PUT_DIRECTBILL_UPDATE_API, body);
+      if (saveButton == RequestConstant.SUBMIT) {
+        final value = await ApiManager.postAPICall(ApiConstant.DIRECTBILL_SAVE_API, body);
         var response = saveDeduction_SaveResponseFromJson(value);
         if (response.RetString != null) {
           ratingRes = response.RetString;
         }
       } else {
-        final value = await ApiManager.postAPICall(ApiConstant.DIRECTBILL_SAVE_API, body);
+        final value = await ApiManager.putUpdateAPIButton(ApiConstant.PUT_DIRECTBILL_UPDATE_API, body);
         var response = saveDeduction_SaveResponseFromJson(value);
         if (response.RetString != null) {
           ratingRes = response.RetString;

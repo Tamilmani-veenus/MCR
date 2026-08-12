@@ -726,7 +726,7 @@ class PendingListController extends GetxController {
                                                                                                                 context,
                                                                                                                 MaterialPageRoute(builder: (context) => AdvanceReqAproval(onclickPendingListData: onclickPendingListData, heading: name)),
                                                                                                               )
-                                                                                                            : name == "SUBCONTRACTOR BILL VERIFICATION - NMR" || name == "SUBCONTRACTOR BILL APPROVAL - NMR"
+                                                                                                            : name == "SUBCONTRACTOR BILL VERIFICATION - NMR" || name == "SUBCONTRACTOR BILL APPROVAL - NMR" || name =="SUBCONTRACTOR BILL VERIFICATION - DIRECT" || name =="SUBCONTRACTOR BILL APPROVAL - DIRECT"
                                                                                                                 ? Navigator.push(
                                                                                                                     context,
                                                                                                                     MaterialPageRoute(builder: (context) => NMRBillVerification(onclickPendingListData: onclickPendingListData, heading: name)),
