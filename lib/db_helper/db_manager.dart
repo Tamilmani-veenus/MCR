@@ -66,6 +66,13 @@ class DBManager {
     var connection =  _database;
     return await connection?.rawDelete("delete from $table");
   }
+  deleteApiRows(table) async {
+    var connection = _database;
+    return await connection?.rawDelete(
+      "DELETE FROM $table WHERE isApi = ?",
+      [1],
+    );
+  }
 
   deleteMaterialByIdTransBWSites(table, data) async {
     var connection =  _database;

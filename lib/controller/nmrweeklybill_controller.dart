@@ -642,7 +642,7 @@ class NMRWklyController extends GetxController {
 
   Future DirectBill_CalculationList({type}) async {
     billDet_Calculation.value=[];
-    final value =  await WorkOrderDirectProvider.getWorkOrderCalculation_List(type=="Subcont"?subcontractorController.selectedSubcontId.value:0);
+    final value =  await WorkOrderDirectProvider.getWorkOrderCalculation_List(type=="Subcont"?subcontractorController.selectedSubcontId.value:0,0);
     if (value != null && value.length > 0) {
       billDet_Calculation.value = value;
       await DirectBillCal_itemlistTable_Delete();

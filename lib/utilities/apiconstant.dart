@@ -55,7 +55,7 @@ class ApiConstant{
   static const String GETMATERIAL_DETAILS_LIST = BASE_URL + "api/Report/GetStockDetail";
   static const String GETMATERIAL_SUBHAED_DROPDOWNLIST = BASE_URL + "api/CommonFile/GetMaterialHead";
   static const String GETMATERIALWISEDROPDOWNLIST = BASE_URL + "api/CommonFile/GetMaterialSubAll";
-  static const String GET_WORKORDER_ENTRY_LIST = BASE_URL + "api/SubContDirectBill/GetWorkOrderList";
+  static const String GET_WORKORDER_ENTRY_LIST = BASE_URL + "api/CommonFile/GetSubContWOBillList";
   static const String GETMATERIALWISE_SHOW_LIST = BASE_URL + "api/Report/GetStockAbstract";
   static const String GETSUBCONT_ENTRY_SHOW_CLICK = BASE_URL + "api/CommonFile/GetSubContCategory";
   static const String GETINVOICENOLIST = BASE_URL + "api/SubContDirectBill/GetinvoiceNo";

@@ -10,6 +10,7 @@ import '../../../../utilities/requestconstant.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../constants/ui_constant/icons_const.dart';
+import '../../controller/billgenerationdirect_controller.dart';
 import '../../controller/company_nmr_controller.dart';
 import '../../controller/dailywrk_done_dprlabour_controller.dart';
 import '../../controller/dailywrk_done_dprnew_controller.dart';
@@ -10007,8 +10008,8 @@ class _NMRBillVerificationState extends State<NMRBillVerification> {
   PendingListController pendingListController =
   Get.put(PendingListController());
   NMRWklyController nmrWklyController = Get.put(NMRWklyController());
+  BillGenerationDirectController billGenerationDirectController=Get.put(BillGenerationDirectController());
 
-  var selectedValues;
   @override
   void initState() {
     pendingListController.pendingmainlist.value.clear();
@@ -10116,7 +10117,17 @@ class _NMRBillVerificationState extends State<NMRBillVerification> {
                           itemBuilder: (context, index) {
                             return InkWell(
                               onTap: () async {
-                                await nmrWklyController.NmrEntryList_EditApi(pendingListController.mainlist.value[index].id, context,widget.heading=="SUBCONTRACTOR BILL VERIFICATION - NMR"?"Verify":"Approve");
+                                if(widget.heading =="SUBCONTRACTOR BILL VERIFICATION - DIRECT" || widget.heading =="SUBCONTRACTOR BILL APPROVAL - DIRECT") {
+                                  await billGenerationDirectController.directBillEntryList_EditApi(billGenerationDirectController.bill_entryList.value[index].workId,context,widget.heading =="SUBCONTRACTOR BILL VERIFICATION - DIRECT"?"Verify":"Approve");
+                                }else{
+                                  await nmrWklyController.NmrEntryList_EditApi(
+                                      pendingListController.mainlist
+                                          .value[index].id, context,
+                                      widget.heading ==
+                                          "SUBCONTRACTOR BILL VERIFICATION - NMR"
+                                          ? "Verify"
+                                          : "Approve");
+                                }
                               },
                               child: Container(
                                 margin: EdgeInsets.only(left: 3, right: 3),
@@ -10174,61 +10185,65 @@ class _NMRBillVerificationState extends State<NMRBillVerification> {
                                         ),
                                         SizedBox(height: 5),
 
-                                        Row(
-                                          children: <Widget>[
-                                            Container(
-                                              margin:
-                                              EdgeInsets.only(top: 8, left: 10),
-                                              child: Text(""),
+                                        if(widget.heading !="SUBCONTRACTOR BILL VERIFICATION - DIRECT" && widget.heading !="SUBCONTRACTOR BILL APPROVAL - DIRECT")Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: <Widget>[
+                                                Container(
+                                                  margin:
+                                                  EdgeInsets.only(top: 8, left: 10),
+                                                  child: Text(""),
+                                                ),
+                                                Expanded(
+                                                    flex: 3,
+                                                    child: Text(
+                                                      "From Date",
+                                                      style: TextStyle(
+                                                        fontWeight: FontWeight.bold,
+                                                        color: Colors.black,
+                                                      ),
+                                                    )),
+                                                Expanded(
+                                                    flex: 8,
+                                                    child: Text(
+                                                      pendingListController.mainlist[index].fromDate.toString(),
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                      ),
+                                                    )),
+                                              ],
                                             ),
-                                            Expanded(
-                                                flex: 3,
-                                                child: Text(
-                                                  "From Date",
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black,
-                                                  ),
-                                                )),
-                                            Expanded(
-                                                flex: 8,
-                                                child: Text(
-                                                  pendingListController.mainlist[index].fromDate.toString(),
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                  ),
-                                                )),
-                                          ],
-                                        ),
-                                        SizedBox(height: 5),
+                                            SizedBox(height: 5),
 
-                                        Row(
-                                          children: <Widget>[
-                                            Container(
-                                              margin:
-                                              EdgeInsets.only(top: 8, left: 10),
-                                              child: Text(""),
+                                            Row(
+                                              children: <Widget>[
+                                                Container(
+                                                  margin:
+                                                  EdgeInsets.only(top: 8, left: 10),
+                                                  child: Text(""),
+                                                ),
+                                                Expanded(
+                                                    flex: 3,
+                                                    child: Text(
+                                                      "To Date",
+                                                      style: TextStyle(
+                                                        fontWeight: FontWeight.bold,
+                                                        color: Colors.black,
+                                                      ),
+                                                    )),
+                                                Expanded(
+                                                    flex: 8,
+                                                    child: Text(
+                                                      pendingListController.mainlist[index].toDate.toString(),
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                      ),
+                                                    )),
+                                              ],
                                             ),
-                                            Expanded(
-                                                flex: 3,
-                                                child: Text(
-                                                  "To Date",
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black,
-                                                  ),
-                                                )),
-                                            Expanded(
-                                                flex: 8,
-                                                child: Text(
-                                                  pendingListController.mainlist[index].toDate.toString(),
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                  ),
-                                                )),
+                                            SizedBox(height: 5),
                                           ],
                                         ),
-                                        SizedBox(height: 5),
                                         // Row(
                                         //   children: <Widget>[
                                         //     Container(
@@ -10363,7 +10378,7 @@ class _NMRBillVerificationState extends State<NMRBillVerification> {
                                             Expanded(
                                                 flex: 8,
                                                 child: Text(
-                                                  pendingListController.mainlist[index].netAmt.toString(),
+                                                  "₹${pendingListController.mainlist[index].netAmt.toString()}",
                                                   style: TextStyle(
                                                     color: Colors.black,
                                                   ),

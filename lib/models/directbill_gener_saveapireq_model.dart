@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final billDirectGenSaveApiReq = billDirectGenSaveApiReqFromJson(jsonString);
+
 import 'dart:convert';
 
 BillDirectGenSaveApiReq billDirectGenSaveApiReqFromJson(String str) => BillDirectGenSaveApiReq.fromJson(json.decode(str));
@@ -5,6 +9,43 @@ BillDirectGenSaveApiReq billDirectGenSaveApiReqFromJson(String str) => BillDirec
 String billDirectGenSaveApiReqToJson(BillDirectGenSaveApiReq data) => json.encode(data.toJson());
 
 class BillDirectGenSaveApiReq {
+  int? workId;
+  String? workNo;
+  String? workDate;
+  int? projectId;
+  int? siteId;
+  int? subContId;
+  double? rndOff;
+  String? appstatus;
+  int? approvedby;
+  double? balAmt;
+  String? remarks;
+  int? preparedby;
+  String? fromDate;
+  String? toDate;
+  String? entryType;
+  int? workOrderid;
+  double? billAmt;
+  double? actAdvAmt;
+  double? advAmt;
+  double? netPayAmt;
+  double? debitAmt;
+  double? creditAmt;
+  double? billWhaAmount;
+  String? debitRemarks;
+  String? creditRemarks;
+  String? billNo;
+  String? verifySatus;
+  int? verifyby;
+  double? materialdebitAmt;
+  String? materiadebitremarks;
+  String? paymentDate;
+  String? entryMode;
+  int? userId;
+  String? deviceName;
+  List<BillDet>? billDet;
+  List<BillAddless>? billAddless;
+
   BillDirectGenSaveApiReq({
     this.workId,
     this.workNo,
@@ -12,10 +53,17 @@ class BillDirectGenSaveApiReq {
     this.projectId,
     this.siteId,
     this.subContId,
-    this.entryType,
+    this.rndOff,
+    this.appstatus,
+    this.approvedby,
+    this.balAmt,
+    this.billWhaAmount,
+    this.remarks,
+    this.preparedby,
     this.fromDate,
     this.toDate,
-    this.rndOff,
+    this.entryType,
+    this.workOrderid,
     this.billAmt,
     this.actAdvAmt,
     this.advAmt,
@@ -24,38 +72,18 @@ class BillDirectGenSaveApiReq {
     this.creditAmt,
     this.debitRemarks,
     this.creditRemarks,
-    this.remarks,
-    this.preparedby,
+    this.billNo,
+    this.verifySatus,
+    this.verifyby,
+    this.materialdebitAmt,
+    this.materiadebitremarks,
+    this.paymentDate,
+    this.entryMode,
     this.userId,
     this.deviceName,
-    this.entryMode,
     this.billDet,
+    this.billAddless,
   });
-
-  String? workId;
-  String? workNo;
-  String? workDate;
-  String? projectId;
-  String? siteId;
-  String? subContId;
-  String? entryType;
-  String? fromDate;
-  String? toDate;
-  String? rndOff;
-  String? billAmt;
-  String? actAdvAmt;
-  String? advAmt;
-  String? netPayAmt;
-  String? debitAmt;
-  String? creditAmt;
-  String? debitRemarks;
-  String? creditRemarks;
-  String? remarks;
-  String? preparedby;
-  String? userId;
-  String? deviceName;
-  String? entryMode;
-  List<BillDet>? billDet;
 
   factory BillDirectGenSaveApiReq.fromJson(Map<String, dynamic> json) => BillDirectGenSaveApiReq(
     workId: json["WorkId"],
@@ -64,10 +92,17 @@ class BillDirectGenSaveApiReq {
     projectId: json["ProjectId"],
     siteId: json["SiteId"],
     subContId: json["SubContId"],
-    entryType: json["EntryType"],
+    rndOff: json["RndOff"],
+    appstatus: json["Appstatus"],
+    approvedby: json["Approvedby"],
+    balAmt: json["BalAmt"],
+    billWhaAmount: json["BillWhaAmount"],
+    remarks: json["remarks"],
+    preparedby: json["Preparedby"],
     fromDate: json["FromDate"],
     toDate: json["ToDate"],
-    rndOff: json["RndOff"],
+    entryType: json["EntryType"],
+    workOrderid: json["WorkOrderid"],
     billAmt: json["BillAmt"],
     actAdvAmt: json["ActAdvAmt"],
     advAmt: json["AdvAmt"],
@@ -76,12 +111,17 @@ class BillDirectGenSaveApiReq {
     creditAmt: json["CreditAmt"],
     debitRemarks: json["DebitRemarks"],
     creditRemarks: json["CreditRemarks"],
-    remarks: json["remarks"],
-    preparedby: json["Preparedby"],
+    billNo: json["BillNo"],
+    verifySatus: json["verifySatus"],
+    verifyby: json["Verifyby"],
+    materialdebitAmt: json["MaterialdebitAmt"],
+    materiadebitremarks: json["Materiadebitremarks"],
+    paymentDate: json["PaymentDate"],
+    entryMode: json["EntryMode"],
     userId: json["UserId"],
     deviceName: json["DeviceName"],
-    entryMode: json["EntryMode"],
     billDet: List<BillDet>.from(json["BillDet"].map((x) => BillDet.fromJson(x))),
+    billAddless: List<BillAddless>.from(json["BillAddless"].map((x) => BillAddless.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -91,10 +131,17 @@ class BillDirectGenSaveApiReq {
     "ProjectId": projectId,
     "SiteId": siteId,
     "SubContId": subContId,
-    "EntryType": entryType,
+    "RndOff": rndOff,
+    "BillWhaAmount": billWhaAmount,
+    "Appstatus": appstatus,
+    "Approvedby": approvedby,
+    "BalAmt": balAmt,
+    "remarks": remarks,
+    "Preparedby": preparedby,
     "FromDate": fromDate,
     "ToDate": toDate,
-    "RndOff": rndOff,
+    "EntryType": entryType,
+    "WorkOrderid": workOrderid,
     "BillAmt": billAmt,
     "ActAdvAmt": actAdvAmt,
     "AdvAmt": advAmt,
@@ -103,47 +150,80 @@ class BillDirectGenSaveApiReq {
     "CreditAmt": creditAmt,
     "DebitRemarks": debitRemarks,
     "CreditRemarks": creditRemarks,
-    "remarks": remarks,
-    "Preparedby": preparedby,
+    "BillNo": billNo,
+    "verifySatus": verifySatus,
+    "Verifyby": verifyby,
+    "MaterialdebitAmt": materialdebitAmt,
+    "Materiadebitremarks": materiadebitremarks,
+    "PaymentDate": paymentDate,
+    "EntryMode": entryMode,
     "UserId": userId,
     "DeviceName": deviceName,
-    "EntryMode": entryMode,
     "BillDet": List<dynamic>.from(billDet!.map((x) => x.toJson())),
+    "BillAddless": List<dynamic>.from(billAddless!.map((x) => x.toJson())),
   };
 }
 
-class BillDet {
-  BillDet({
-    this.sno,
-    this.itemDes,
-    this.unit,
-    this.qty,
-    this.rate,
-    this.amount,
+class BillAddless {
+  int? alId;
+  double? percent;
+  double? amount;
+
+  BillAddless({
+   this.alId,
+   this.percent,
+   this.amount,
   });
 
-  String? sno;
-  String? itemDes;
-  String? unit;
-  String? qty;
-  String? rate;
-  String? amount;
-
-  factory BillDet.fromJson(Map<String, dynamic> json) => BillDet(
-    sno: json["Sno"],
-    itemDes: json["ItemDes"],
-    unit: json["Unit"],
-    qty: json["Qty"],
-    rate: json["Rate"],
+  factory BillAddless.fromJson(Map<String, dynamic> json) => BillAddless(
+    alId: json["ALId"],
+    percent: json["Percent"],
     amount: json["Amount"],
   );
 
   Map<String, dynamic> toJson() => {
-    "Sno": sno,
-    "ItemDes": itemDes,
-    "Unit": unit,
-    "Qty": qty,
-    "Rate": rate,
+    "ALId": alId,
+    "Percent": percent,
     "Amount": amount,
+  };
+}
+
+class BillDet {
+  String? unit;
+  double? rate;
+  double? amt;
+  double? actualQty;
+  int? workorderdetid;
+  String? wtype;
+  String? itemDes;
+
+  BillDet({
+  this.unit,
+  this.rate,
+  this.amt,
+  this.actualQty,
+  this.workorderdetid,
+  this.wtype,
+  this.itemDes,
+  });
+
+  factory BillDet.fromJson(Map<String, dynamic> json) => BillDet(
+    unit: json["Unit"],
+    rate: json["Rate"],
+    amt: json["Amt"],
+    actualQty: json["ActualQty"],
+    workorderdetid: json["Workorderdetid"],
+    wtype: json["Wtype"],
+    itemDes: json["ItemDes"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "Unit": unit,
+    "Rate": rate,
+    "Amt": amt,
+    "ActualQty": actualQty,
+    "Workorderdetid": workorderdetid,
+    "Wtype": wtype,
+    "ItemDes": itemDes,
   };
 }

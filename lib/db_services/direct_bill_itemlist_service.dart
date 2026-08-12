@@ -40,6 +40,10 @@ class DirectBillGen_ItemlistService {
     return await _dbManager.delete('directBillGenItemlistTable');
   }
 
+  billgen_DeleteApiRows() async {
+    return await _dbManager.deleteApiRows('directBillGenItemlistTable');
+  }
+
   DirectBillGen_ItemlistTable_OrderBy(
       List<DirectBillGenItemListTableModel> directBillGenItemListTableModel) async {
     directBillGenItemListTableModel.forEach((element) async {
