@@ -22,6 +22,7 @@ import '../home/menu/accounts/cash_book_staff/case_book_staff.dart';
 import '../home/menu/accounts/site_voucher/site_voucher_new/site_voucher_entrylist_new.dart';
 import '../home/menu/accounts/staff_voucher/staff_voucher_entrylist.dart';
 import '../home/menu/daily_entries/advancereques_voucher_new/advance_req_entrylist_new.dart';
+import '../home/menu/daily_entries/bill_generation/bill_generation_boq_entrylist.dart';
 import '../home/menu/daily_entries/bill_generation_direct/bill_generation_entrylist.dart';
 import '../home/menu/daily_entries/company_nmr_attendance/company_nmr_main.dart';
 import '../home/menu/daily_entries/daily_wrk_done_dpr(labour)/daily_wrkdone_dpr_labour.dart';
@@ -210,6 +211,11 @@ class Menu_Controller extends GetxController {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => Bill_Generation_direct_Entrylist()),
+      );
+    } else if (value == "Bill Generation") {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Bill_Generation_Boq_Entrylist()),
       );
     } else if (value == "Requisition Voucher") {
       advanceReqVoucherController_new.itemlistTable_Delete();

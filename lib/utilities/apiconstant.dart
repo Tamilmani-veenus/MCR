@@ -83,6 +83,8 @@ class ApiConstant{
   static const String GET_DPR_LABOUR_EDIT_API = BASE_URL + "api/SubContDPRNewLabour/GetDprById";
   static const String GET_DIRECTBILL_ADVANCE_BALANCE = BASE_URL + "api/Commonfile/GetSubContAdvBalance";
   static const String GET_DIRECTBILL_ENTRY_LIST = BASE_URL + "api/SubContDirectBill/GetDirectBillEntryList";
+  static const String GET_BILLBOQ_ENTRY_LIST = BASE_URL + "api/SubcontBillBOQ/GetBOQBillEntryList";
+
   static const String GET_WORKORD_DIRECT_ENTRY_LIST = BASE_URL + "api/SubcontractWorkOrderDirect/GetWorkOrderDirectList";
   static const String GET_DIRECTBILL_CALCULATION_LIST = BASE_URL + "api/CommonFile/GetAddlessList";
 
@@ -249,6 +251,7 @@ class ApiConstant{
   static const String DELETE_DPRLABOUR_ENTRYLIST_API = BASE_URL + "api/SubContDPRNewLabour/DeleteDPR";
   static const String DELETE_DIRECTBILL_API = BASE_URL + "api/SubContDirectBill/DeleteDirectBill";
   static const String DELETE_WORKORDER_DIRECT_API = BASE_URL + "api/SubcontractWorkOrderDirect/DeleteWorkorder";
+  static const String DELETE_BILLBOQ_API = BASE_URL + "api/SubcontBillBOQ/DeleteBOQBill";
 
   static const String DELETE_INWARDPENDINGLIST_API = BASE_URL + "api/MaterialInward/DeleteInward";
   static const String DELETE_TRANSFERBET_API = BASE_URL + "api/MaterialTransferProject/DeleteTransfer";

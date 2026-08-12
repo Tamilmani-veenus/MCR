@@ -932,6 +932,40 @@ class _MainManusListState extends State<MainManusList> {
                                                                               ],
                                                                             ),
                                                                           )
+                                                : menuController.dailyEntryList[index] ==
+                                                "Bill Generation"
+                                                ? Container(
+                                              width:
+                                              40,
+                                              height:
+                                              40,
+                                              decoration:
+                                              BoxDecoration(
+                                                color: Theme.of(context).primaryColor,
+                                                borderRadius: const BorderRadius.all(
+                                                  Radius.circular(10),
+                                                ),
+                                                gradient: LinearGradient(
+                                                  begin: Alignment.topLeft,
+                                                  end: Alignment.bottomRight,
+                                                  colors: [
+                                                    purple,
+                                                    blue,
+                                                  ],
+                                                ),
+                                              ),
+                                              child:
+                                              const Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  Icon(
+                                                    Icons.assignment,
+                                                    color: Colors.white,
+                                                    size: 25,
+                                                  )
+                                                ],
+                                              ),
+                                            )
                                                                         : menuController.dailyEntryList[index] ==
                                                                                 "Requisition Voucher"
                                                                             ? Container(
@@ -1091,6 +1125,9 @@ class _MainManusListState extends State<MainManusList> {
                                                                         : menuController.dailyEntryList[index] ==
                                                                                 "Bill Generation - Direct"
                                                                             ? "Bill Direct"
+                                                                          : menuController.dailyEntryList[index] ==
+                                                                          "Bill Generation"
+                                                                          ? "Bill Generation"
                                                                             : menuController.dailyEntryList[index] == "Requisition Voucher"
                                                                                 ? "Adv Req Voucher"
                                                                                 : menuController.dailyEntryList[index] == "Pre Approval"
