@@ -616,12 +616,12 @@ class _Bill_Generation_Boq_EntrylistState_Site
                                                                   ],
                                                                 ),
                                                                 onTap: () async {
-                                                                  // billGenerationBoqController.billgen_itemlistTable_Delete();
-                                                                  // billGenerationBoqController.ItemGetTableListdata.clear();
-                                                                  // billGenerationBoqController.bill_editListApiDatas.value.clear();
-                                                                  // FocusScope.of(context).unfocus();
-                                                                  // await billGenerationBoqController.directBillEntryList_EditApi(
-                                                                  //     billGenerationBoqController.bill_entryList.value[index].id,widget.heading,context,"ReSubmit",true);
+                                                                  billGenerationBoqController.billgen_itemlistTable_Delete();
+                                                                  billGenerationBoqController.ItemGetTableListdata.clear();
+                                                                  billGenerationBoqController.bill_editListApiDatas.value.clear();
+                                                                  FocusScope.of(context).unfocus();
+                                                                  await billGenerationBoqController.directBillEntryList_EditApi(
+                                                                      billGenerationBoqController.bill_entryList.value[index].workId,context,"Edit");
 
                                                                 }),
 

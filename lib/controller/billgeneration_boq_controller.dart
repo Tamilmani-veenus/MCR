@@ -407,8 +407,6 @@ class BillGenerationBoqController extends GetxController{
           bill_editListApiDatas.value = value;
           await billgen_EditTable_SaveTable("ItemListDet");
           await getItemlistTablesDatas();
-        } else {
-          BaseUtitiles.showToast(RequestConstant.NORECORD_FOUND);
         }
     });
 
@@ -951,43 +949,23 @@ class BillGenerationBoqController extends GetxController{
     }
   }
 
-  // Future directBillEntryList_EditApi(int workid, String MenuName,BuildContext context,Url,status) async {
-  //   bill_editListApiDatas.value=[];
-  //   final value = await BillGenerateBoqProvider.directBill_entryList_editAPI(workid,status);
-  //   if (value != null) {
-  //     if(value.success==true){
-  //       bill_editListApiDatas.value = [value.result];
-  //       if(bill_editListApiDatas.isNotEmpty){
-  //         if(Url=="Verify") {
-  //           saveButton.value = RequestConstant.VERIFY;
-  //         }
-  //         else if(Url=="Approve"){
-  //           saveButton.value = RequestConstant.APPROVAL;
-  //         }
-  //         else{
-  //           saveButton.value = RequestConstant.RESUBMIT;
-  //         }
-  //         await billgen_EditTable_SaveTable("");
-  //         await getItemlistTablesDatas();
-  //         return Navigator.pushReplacement(
-  //           context,
-  //           MaterialPageRoute(
-  //               builder: (context) => Bill_Generation_Boq_EntryScreen(heading: MenuName,)),
-  //         );
-  //
-  //       }
-  //       else {
-  //         BaseUtitiles.showToast(RequestConstant.NORECORD_FOUND);
-  //       }
-  //     }else {
-  //       BaseUtitiles.showToast(value.message ?? 'Something went wrong..');
-  //     }
-  //   } else {
-  //     BaseUtitiles.showToast("Something Went Wrong...");
-  //   }
-  // }
-
-
+  Future directBillEntryList_EditApi(int workid, BuildContext context,type) async {
+    await BillGenerationBoqProvider.directBill_entryList_editAPI(workid)
+        .then((value) async {
+      if (value != null && value.length > 0) {
+        saveButton.value= type=="Edit"?RequestConstant.RESUBMIT:type=="Verify"?RequestConstant.VERIFY:RequestConstant.APPROVAL;
+        bill_editListApiDatas.value = value;
+        billgen_EditTable_SaveTable("");
+        getItemlistTablesDatas();
+        Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Bill_Generation_Boq_EntryScreen()),
+        );
+      }
+    });
+  }
   billgen_EditTable_SaveTable(name) async {
     ItemListTableModelList=[];
     bill_editListApiDatas.asMap().forEach((index, element) {

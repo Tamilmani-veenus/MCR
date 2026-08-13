@@ -11,7 +11,7 @@ class ApiConstant{
 
   // static const String BASE_URL = LIVE_ENDPOINT + "MCRAPI/";
 
-  static const String Web_URL = LIVE_ENDPOINT + "MCR/";
+  static const String Web_URL = LIVE_ENDPOINT + "MCRNEW/";
 
 
   /// ---- Get API's ----
@@ -90,6 +90,7 @@ class ApiConstant{
 
 
   static const String EDIT_DIRECTBILL_API = BASE_URL + "api/SubContDirectBill/GetDirectBillById";
+  static const String EDIT_BOQBILL_API = BASE_URL + "api/SubcontBillBOQ/GetbyIdBOQBill";
   static const String EDIT_WORKORD_DIRECT_API = BASE_URL + "api/SubcontractWorkOrderDirect/GetDirectWorkOrder";
 
   static const String EDIT_INWARDPENDING_API = BASE_URL + "api/MaterialInward/GetInwardById";

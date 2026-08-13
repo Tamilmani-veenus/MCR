@@ -1605,13 +1605,13 @@ class _Bill_Generation_Boq_deductionState
                         onPressed:  () async {
 
                           if (_formKey.currentState!.validate()) {
-                            // if (await BaseUtitiles.checkNetworkAndShowLoader(context)) {
+                            if (await BaseUtitiles.checkNetworkAndShowLoader(context)) {
                               await billGenerationBoqController
                                   .SaveButton_DeductionScreen(
                                   context,
                                   billGenerationBoqController
                                       .workid);
-                            // }
+                            }
                           } else if (double.parse(billGenerationBoqController.netpayamt.text) < 0) {
                             BaseUtitiles.showToast(
                                 "Net pay amount must be greater than 0");

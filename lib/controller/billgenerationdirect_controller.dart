@@ -864,6 +864,7 @@ class BillGenerationDirectController extends GetxController {
   }
 
   Future directBillEntryList_EditApi(int workid, BuildContext context,type) async {
+    bill_editListApiDatas.value=[];
     await DirectBillGenerateProvider.directBill_entryList_editAPI(workid)
         .then((value) async {
       if (value != null && value.length > 0) {

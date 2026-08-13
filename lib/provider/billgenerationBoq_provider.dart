@@ -3,6 +3,7 @@ import 'dart:convert';
 import '../apimanager/apimanager.dart';
 import '../models/billBoqEntryListrespo_model.dart';
 import '../models/billDirectDetCalculation_model.dart';
+import '../models/directbill_editapi_res_model.dart';
 import '../utilities/apiconstant.dart';
 import '../utilities/baseutitiles.dart';
 import '../utilities/requestconstant.dart';
@@ -23,6 +24,21 @@ class BillGenerationBoqProvider{
     }, onError: (error) {
       print(error);
       BaseUtitiles.showToast('Something went wrong.. $error');
+    });
+    return data;
+  }
+
+  static Future<List<DirectbillEditApiResModel>> directBill_entryList_editAPI(int workId) async {
+    var data = null;
+    await ApiManager.getAPICall(ApiConstant.EDIT_BOQBILL_API + "?WorkId=$workId").then((value) {
+      final res = directbillEditApiResModelFromJson(value);
+      if (res != null) {
+        data = res;
+        return data;
+      }
+    }, onError: (error) {
+      print(error);
+      BaseUtitiles.showToast(RequestConstant.SOMETHINGWENT_WRONG+error);
     });
     return data;
   }

@@ -10185,7 +10185,7 @@ class _NMRBillVerificationState extends State<NMRBillVerification> {
                                         ),
                                         SizedBox(height: 5),
 
-                                        if(widget.heading !="SUBCONTRACTOR BILL VERIFICATION - DIRECT" && widget.heading !="SUBCONTRACTOR BILL APPROVAL - DIRECT")Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                        if(widget.heading =="SUBCONTRACTOR BILL VERIFICATION - NMR" || widget.heading =="SUBCONTRACTOR BILL APPROVAL - NMR")Column(crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Row(
                                               children: <Widget>[
