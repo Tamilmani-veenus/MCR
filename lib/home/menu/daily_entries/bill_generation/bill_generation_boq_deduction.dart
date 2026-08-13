@@ -40,22 +40,21 @@ class _Bill_Generation_Boq_deductionState
 
       if (billGenerationBoqController.saveButton.value == RequestConstant.RESUBMIT || billGenerationBoqController.saveButton.value == RequestConstant.VERIFY || billGenerationBoqController.saveButton.value == RequestConstant.APPROVAL) {
         for (var element in billGenerationBoqController.bill_editListApiDatas) {
-          billGenerationBoqController.workid = element.id;
-          billGenerationBoqController.billamount.text = element.billAmount.toString();
-          billGenerationBoqController.finalBillAmt.text = element.finalBillAmount.toString();
-          billGenerationBoqController.netBillAmt.text = element.netBillAmount.toString();
-          billGenerationBoqController.Creditamt.text = element.creditAmount.toString();
-          billGenerationBoqController.Debitamt.text = element.debitAmount.toString();
-          billGenerationBoqController.Advded.text = element.advanceAmount.toString();
-          billGenerationBoqController.materialDebitamt.text = element.materialDebitAmount.toString();
-          billGenerationBoqController.tobededadv.text = element.actualAdvanceAmount.toString();
-          billGenerationBoqController.Roundoff.text = element.roundOff.toString();
+          billGenerationBoqController.workid = element.workId;
+          billGenerationBoqController.billamount.text = element.billAmt.toString();
+          // billGenerationBoqControllerler.finalBillAmt.text = element.finalBillAmount.toString();
+          billGenerationBoqController.netBillAmt.text = element.netPayAmt.toString();
+          billGenerationBoqController.Creditamt.text = element.creditAmt.toString();
+          billGenerationBoqController.Debitamt.text = element.debitAmt.toString();
+          billGenerationBoqController.Advded.text = element.advAmt.toString();
+          billGenerationBoqController.materialDebitamt.text = element.materialDebit.toString();
+          billGenerationBoqController.Roundoff.text = element.rndOff.toString();
           billGenerationBoqController.CreditRemarksController.text = element.creditRemarks.toString();
           billGenerationBoqController.DebitRemarksController.text = element.debitRemarks.toString();
           billGenerationBoqController.materialDebitRemarks.text = element.materialDebitRemarks.toString();
-          billGenerationBoqController.tobededadv.text = element.actualAdvanceAmount.toString();
-          billGenerationBoqController.to_be_dection_advance = element.advanceAmount.toString();
-          billGenerationBoqController.netpayamt.text = element.netPayAmount.toString();
+          billGenerationBoqController.tobededadv.text = element.actAdvAmt.toString();
+          billGenerationBoqController.to_be_dection_advance = element.advAmt.toString();
+          billGenerationBoqController.netpayamt.text = element.netPayAmt.toString();
         }
         await billGenerationBoqController.deductionPaymentCalculation();
       }

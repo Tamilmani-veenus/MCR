@@ -910,22 +910,22 @@ class BillGenerationBoqController extends GetxController{
     for (var editItem in editAddLessList) {
 
       int index = directBillGen_ItemReadList.indexWhere(
-            (e) => e.addLessId == editItem.addLessId,
+            (e) => e.addLessId == editItem.addlessid,
       );
 
       if (index != -1) {
 
         directBillGen_ItemReadList[index].percentValue =
-            (editItem.percentValue ?? 0).toDouble();
+            (editItem.per ?? 0).toDouble();
 
         directBillGen_ItemReadList[index].amount =
             (editItem.amount ?? 0).toDouble();
 
         // Update controller text also
         percentControllers[index].text =
-        (editItem.percentValue ?? 0) == 0
+        (editItem.per ?? 0) == 0
             ? ''
-            : editItem.percentValue.toString();
+            : editItem.per.toString();
       }
     }
 
@@ -993,16 +993,16 @@ class BillGenerationBoqController extends GetxController{
         ItemListTableModelList.add(ItemListTableModel);
       }
       else {
-        element.subContractorWorkQtyDetS!.forEach((value) {
+        element.billEditDet!.forEach((value) {
           ItemListTableModel = BillGenBoqItemListTableModel();
-          ItemListTableModel.workDetId = value.dworkDet_id;
-          ItemListTableModel.Name = value.itemdesc.toString();
+          ItemListTableModel.workDetId = value.workorderDetId;
+          ItemListTableModel.Name = value.itemDesc.toString();
           ItemListTableModel.unit = value.unit.toString();
           ItemListTableModel.qty = value.qty;
           ItemListTableModel.rate = value.rate;
           ItemListTableModel.appQty = value.qty;
           ItemListTableModel.amount = value.amount;
-          ItemListTableModel.balbillqty = value.balbillqty;
+          ItemListTableModel.balbillqty = value.balBillQty;
           ItemListTableModel.CurBillQty = value.curBillQty;
           ItemListTableModel.level3ItemId = value.level3ItemId;
           ItemListTableModel.headItemid = value.headItemId;

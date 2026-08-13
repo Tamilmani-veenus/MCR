@@ -49,7 +49,7 @@ class _Bill_Generation_Boq_EntryScreenState_Site
 
       if (billGenerationBoqController.saveButton.value == RequestConstant.RESUBMIT || billGenerationBoqController.saveButton.value == RequestConstant.VERIFY || billGenerationBoqController.saveButton.value == RequestConstant.APPROVAL) {
         billGenerationBoqController.bill_editListApiDatas.forEach((element) {
-          billGenerationBoqController.workid = element.id!;
+          billGenerationBoqController.workid = element.workId!;
           billGenerationBoqController.autoYearWiseNoController.text = element.workNo.toString();
           billGenerationBoqController.billentryDateController.text = element.workDate.toString();
           projectController.projectname.text = element.projectName.toString();
@@ -63,13 +63,13 @@ class _Bill_Generation_Boq_EntryScreenState_Site
           billGenerationBoqController.billPaymentWkDateController.text = element.paymentDate;
           subcontractorController.selectedWorkOrderId.value =element.workOrderId;
           subcontractorController.WorkOrderNo.text =element.workOrderNo == null ? "--SELECT--":element.workOrderNo;
-          billGenerationBoqController.FromdateController.text = element.fromWorkDate.toString();
-          billGenerationBoqController.TodateController.text = element.toWorkDate.toString();
+          billGenerationBoqController.FromdateController.text = element.fromDate.toString();
+          billGenerationBoqController.TodateController.text = element.toDate.toString();
           billGenerationBoqController.RemarksController.text = element.remarks.toString();
-          billGenerationBoqController.createdById.value = element.createdBy;
+          // billGenerationBoqController.createdById.value = element.createdBy;
         });
       }
-      // await billGenerationBoqController.DirectBill_CalculationList();
+      await billGenerationBoqController.DirectBill_CalculationList();
 
       if (billGenerationBoqController.saveButton.value == RequestConstant.SUBMIT) {
         await autoYearWiseNoController.boqBill_AutoYearWise();
