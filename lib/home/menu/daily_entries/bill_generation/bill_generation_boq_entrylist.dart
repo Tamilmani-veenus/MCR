@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import '../../../../utilities/baseutitiles.dart';
 import 'bill_generation_boq_entry.dart';
-import 'bill_generation_boq_entryScreen.dart';
+// import 'bill_generation_boq_entryScreen.dart';
 
 class Bill_Generation_Boq_Entrylist extends StatefulWidget {
   const Bill_Generation_Boq_Entrylist({Key? key}) : super(key: key);

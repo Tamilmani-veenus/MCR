@@ -43,7 +43,7 @@ class DatabaseConnection {
     String directBillGenItemlistTable = "CREATE TABLE directBillGenItemlistTable (id INTEGER PRIMARY KEY UNIQUE,Name TEXT,unit TEXT,qty REAL,rate REAL,amount REAL,isApi INTEGER,workDetId INTEGER)";
     await database.execute(directBillGenItemlistTable);
 
-    String billGenBoqItemlistTable = "CREATE TABLE billGenBoqItemlistTable (id INTEGER PRIMARY KEY UNIQUE,Name TEXT,unit TEXT,qty REAL,rate REAL,amount REAL)";
+    String billGenBoqItemlistTable = "CREATE TABLE billGenBoqItemlistTable (id INTEGER PRIMARY KEY UNIQUE,Name TEXT,unit TEXT,qty REAL,rate REAL,amount REAL,reqDetId INTEGER, balbillqty REAL, CurBillQty REAL, appQty REAL,level3ItemId INTEGER, headItemid INTEGER, subItemid INTEGER,workDetId INTEGER)";
     await database.execute(billGenBoqItemlistTable);
 
     String workOrdDirectItemlistTable = "CREATE TABLE workOrdDirectItemlistTable (id INTEGER PRIMARY KEY UNIQUE,Name TEXT,unit TEXT,qty REAL,rate REAL,amount REAL,reqDetId INTEGER)";
@@ -54,6 +54,9 @@ class DatabaseConnection {
 
     String directBillGenGSTItemlistTable = "CREATE TABLE directBillGenGSTItemlistTable (id INTEGER PRIMARY KEY UNIQUE,reqDetId INTEGER,addLessId INTEGER,percentValue REAL,amount REAL,addLessName TEXT,addLessType TEXT)";
     await database.execute(directBillGenGSTItemlistTable);
+
+    String billBOQGenGSTItemlistTable = "CREATE TABLE billBOQGenGSTItemlistTable (id INTEGER PRIMARY KEY UNIQUE,reqDetId INTEGER,addLessId INTEGER,percentValue REAL,amount REAL,addLessName TEXT,addLessType TEXT)";
+    await database.execute(billBOQGenGSTItemlistTable);
 
     String inwardPendingItemlistTable = "CREATE TABLE inwardPendingItemlistTable (id INTEGER PRIMARY KEY UNIQUE,poDetId INTEGER,materialId INTEGER,materialName TEXT,unit TEXT,poQty REAL,balQty REAL,rate REAL,inwQty REAL,amdCheck INTEGER,addQty REAL,lessQty REAL)";
     await database.execute(inwardPendingItemlistTable);

@@ -73,6 +73,7 @@ class _Bill_Generation_direct_deductionState
         billGenerationDirectController.Advded.text = "0.0";
         billGenerationDirectController.Roundoff.text = "0.0";
         billGenerationDirectController.netBillAmt.text = "0.0";
+        billGenerationDirectController.balAmt.text = "0.0";
         // billGenerationDirectController.finalBillAmt.text = "0.0";
         billGenerationDirectController.tobededadv.text = billGenerationDirectController.to_be_dection_advance;
         billGenerationDirectController.CreditRemarksController.text = "-";

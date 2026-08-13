@@ -192,7 +192,7 @@ class BillGenerationDirectController extends GetxController {
     });
   }
 
-  Future getWorkOrderList() async {
+  Future getWorkOrderList(type) async {
     ItemGetTableListdata.value = [];
     bill_editListApiDatas.value = [];
     await DirectBillGenerateProvider.getWorkOrderList(
@@ -201,7 +201,7 @@ class BillGenerationDirectController extends GetxController {
             subcontractorController.selectedSubcontId.value,
             subcontractorController.selectedWorkOrderId.value,
             FromdateController.text,
-            TodateController.text)
+            TodateController.text,type)
         .then((value) async {
       if (value != null && value.length > 0) {
         await billgen_DeleteApiRows();
@@ -415,7 +415,7 @@ class BillGenerationDirectController extends GetxController {
         billAddless: getNmrBillDetAddLess()));
 
     final list = await DirectBillGenerateProvider.SaveBillDirectAPI(
-        body, saveButton.value, context);
+        body, saveButton.value, context,"D");
 
     if (list != null) {
       if (id != 0) {

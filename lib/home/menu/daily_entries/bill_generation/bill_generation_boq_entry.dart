@@ -56,12 +56,8 @@ class _Bill_Generation_Boq_EntryScreenState_Site
           projectController.selectedProjectId.value = element.projectId;
           siteController.Sitename.text = element.siteName.toString();
           siteController.selectedsiteId.value = element.siteId;
-          dailyWrkDone_DPR_Controller.TypeSubcontractorname.text = element.subContName.toString();
-          dailyWrkDone_DPR_Controller.TypeSubcontId.value = element.subContId;
-          billGenerationBoqController.DirectBillTypeText.text = element.billTypeDesc;
-          billGenerationBoqController.directBillTypeID.value = element.billType;
-          billGenerationBoqController.entryTypeController.text = element.entryType == "D" ? "DIRECT" : "BOQ";
-          billGenerationBoqController.entryType.value = element.entryType;
+          subcontractorController.Subcontractorname.text = element.subContName.toString();
+          subcontractorController.selectedSubcontId.value = element.subContId;
           subcontractorController.InvoiceNo.text = element.billNo.toString();
           billGenerationBoqController.billInvoiceDateController.text = element.workDate.toString();
           billGenerationBoqController.billPaymentWkDateController.text = element.paymentDate;
@@ -73,35 +69,29 @@ class _Bill_Generation_Boq_EntryScreenState_Site
           billGenerationBoqController.createdById.value = element.createdBy;
         });
       }
-      await billGenerationBoqController.DirectBill_CalculationList();
+      // await billGenerationBoqController.DirectBill_CalculationList();
 
       if (billGenerationBoqController.saveButton.value == RequestConstant.SUBMIT) {
-        await autoYearWiseNoController.AutoYearWiseNo("BILL BOQ");
-        billGenerationBoqController.autoYearWiseNoController.text =
-            autoYearWiseNoController.BillBoqautoYrsWise.value;
+        await autoYearWiseNoController.boqBill_AutoYearWise();
+        billGenerationBoqController.autoYearWiseNoController.text = autoYearWiseNoController.BOQBillautoYrsWise.value;
         billGenerationBoqController.billentryDateController.text = BaseUtitiles.initiateCurrentDateFormat();
+        await projectController.getProjectList(context, 0);
         billGenerationBoqController.workid = 0;
-        subcontractorController.selectedWorkOrderId.value = 0;
         projectController.projectname.text = "--SELECT--";
         projectController.selectedProjectId.value = 0;
         siteController.Sitename.text = "--SELECT--";
         siteController.selectedsiteId.value = 0;
-        dailyWrkDone_DPR_Controller.TypeSubcontractorname.text = "--SELECT--";
-        dailyWrkDone_DPR_Controller.TypeSubcontId.value=0;
-        billGenerationBoqController.DirectBillTypeText.text = "Company";
-        billGenerationBoqController.directBillTypeID.value = "C";
-        billGenerationBoqController.entryTypeController.text = "BOQ";
-        billGenerationBoqController.entryType.value = "B";
+        subcontractorController.Subcontractorname.text = "--SELECT--";
+        subcontractorController.selectedSubcontId.value=0;
         subcontractorController.WorkOrderNo.text = "--SELECT--";
+        subcontractorController.selectedWorkOrderId.value = 0;
         billGenerationBoqController.FromdateController.text = BaseUtitiles.initiateCurrentDateFormat();
         billGenerationBoqController.TodateController.text = BaseUtitiles.initiateCurrentDateFormat();
         billGenerationBoqController.billInvoiceDateController.text = BaseUtitiles.initiateCurrentDateFormat();
         subcontractorController.InvoiceNo.text="";
-        billGenerationBoqController.billPaymentWkDateController
-            .text = BaseUtitiles.initiateCurrentDateFormat();
+        billGenerationBoqController.billPaymentWkDateController.text = BaseUtitiles.initiateCurrentDateFormat();
         billGenerationBoqController.RemarksController.text = "";
         billGenerationBoqController.to_be_dection_advance = "0";
-        billGenerationBoqController.saveButton.value = RequestConstant.SUBMIT;
         billGenerationBoqController.billgen_itemlistTable_Delete();
         billGenerationBoqController.ItemGetTableListdata.value=[];
         billGenerationBoqController.billamount.text = "0.0";
@@ -298,7 +288,7 @@ class _Bill_Generation_Boq_EntryScreenState_Site
                             if(billGenerationBoqController.saveButton.value == RequestConstant.RESUBMIT){
                             }
                             else{
-                              await projectController.getProjectList();
+                              // await projectController.getProjectList();
                             if(mounted) {
                               bottomsheetControllers.ProjectName(context,
                                   projectController.getdropDownvalue.value);
@@ -377,7 +367,7 @@ class _Bill_Generation_Boq_EntryScreenState_Site
                         child: TextFormField(
                           autovalidateMode: AutovalidateMode.always,
                           readOnly: true,
-                          controller: dailyWrkDone_DPR_Controller.TypeSubcontractorname,
+                          controller: subcontractorController.Subcontractorname,
                           cursorColor: Colors.black,
                           style: TextStyle(color: Colors.black),
                           decoration: InputDecoration(
@@ -395,67 +385,12 @@ class _Bill_Generation_Boq_EntryScreenState_Site
                                 child: ConstIcons.subcontractorName),
                           ),
                           onTap: () async {
-                            if(billGenerationBoqController.saveButton.value == RequestConstant.RESUBMIT){
-                            }
-                            else {
-                              await dailyWrkDone_DPR_Controller.dpr_getSubcotType();
-                            dailyWrkDone_DPR_Controller.SubcontractorName(context, dailyWrkDone_DPR_Controller.dpr_subcontractorList.value);}
-
-                          },
-                          validator: (value) {
-                            if (value!.isEmpty || value == "--Select--" || value == "--SELECT--") {
-                              return '\u26A0 ${RequestConstant.VALIDATE}';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  Container(
-                    margin: EdgeInsets.only(top: 5, left: 10, right: 10),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(color: Colors.white70, width: 1),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      elevation: 3,
-                      child: Padding(
-                        padding:
-                        const EdgeInsets.only(top: 3, left: 10, bottom: 5),
-                        child: TextFormField(
-                          autovalidateMode: AutovalidateMode.always,
-                          readOnly: true,
-                          controller: billGenerationBoqController.entryTypeController,
-                          cursorColor: Colors.black,
-                          style: TextStyle(color: Colors.black),
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.zero,
-                            border: InputBorder.none,
-                            labelText: "Entry Type",
-                            labelStyle: TextStyle(
-                                color: Colors.grey,
-                                fontSize: RequestConstant.Lable_Font_SIZE),
-                            prefixIconConstraints:
-                            BoxConstraints(minWidth: 0, minHeight: 0),
-                            prefixIcon: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 8, horizontal: 8),
-                                child: ConstIcons.types),
-                          ),
-                          onTap: () {
-                            if(billGenerationBoqController.saveButton.value==RequestConstant.APPROVAL){
-
-                            }
+                            if(billGenerationBoqController.saveButton.value == RequestConstant.RESUBMIT || billGenerationBoqController.saveButton.value == RequestConstant.VERIFY || billGenerationBoqController.saveButton.value == RequestConstant.APPROVAL)
+                            {}
                             else{
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return  EntryTypeAlert(from: 'BILL BOQ',);
-                                  });
+                              await subcontractorController.getSubcontList(context, projectController.selectedProjectId.value, siteController.selectedsiteId.value,"billdirect");
+                              bottomsheetControllers.SubcontractorName(context, subcontractorController.getdropDownvalue.value);
                             }
-
                           },
                           validator: (value) {
                             if (value!.isEmpty || value == "--Select--" || value == "--SELECT--") {
@@ -611,14 +546,13 @@ class _Bill_Generation_Boq_EntryScreenState_Site
                         padding: const EdgeInsets.only(top: 3, left: 10, bottom: 5),
                         child: TextFormField(
                           autovalidateMode: AutovalidateMode.always,
-                          readOnly: true,
                           controller: subcontractorController.InvoiceNo,
                           cursorColor: Colors.black,
                           style: TextStyle(color: Colors.black),
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.zero,
                             border: InputBorder.none,
-                            labelText: 'Invoice No',
+                            labelText: 'Bill No',
                             labelStyle: TextStyle(
                                 color: Colors.grey,
                                 fontSize: RequestConstant.Lable_Font_SIZE),
@@ -629,14 +563,7 @@ class _Bill_Generation_Boq_EntryScreenState_Site
                                     vertical: 8, horizontal: 8),
                                 child: ConstIcons.dcNo),
                           ),
-                          onTap: ()  async {
-                          },
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return '\u26A0 ${RequestConstant.VALIDATE}';
-                            }
-                            return null;
-                          },
+
                         ),
                       ),
                     ),
@@ -848,15 +775,9 @@ class _Bill_Generation_Boq_EntryScreenState_Site
                                 child: ConstIcons.dcNo),
                           ),
                           onTap: ()  async {
-                            await subcontractorController.getWorkOrderNoList("BILL BOQ",
-                                projectController.selectedProjectId.value,
-                                siteController.selectedsiteId.value,
-                                dailyWrkDone_DPR_Controller.TypeSubcontId.value,
-                                fromDate: billGenerationBoqController.FromdateController.text,
-                                toDate: billGenerationBoqController.TodateController.text);
+                            await subcontractorController.getWorkOrderNoList( projectController.selectedProjectId.value,siteController.selectedsiteId.value,subcontractorController.selectedSubcontId.value,"B");
                             bottomsheetControllers.WorkOrderName(context,
-                                subcontractorController.getdpDnWrkOrderValue.value,type: "BILL BOQ",
-                                todate:  billGenerationBoqController.TodateController.text);
+                                subcontractorController.getdpDnWrkOrderValue.value,"B");
                           },
                           validator: (value)
                           {
@@ -941,12 +862,6 @@ class _Bill_Generation_Boq_EntryScreenState_Site
                       setState(() {
                         if(_formKey.currentState!.validate()){
                           _formKey.currentState!.save();
-                          // if(billGenerationBoqController.bill_itemList.isEmpty)
-                          // {
-                          //   BaseUtitiles.showToast("No BOQ data found for the selected criteria.");
-                          // }
-                          // else
-                          //   {
                           billGenerationBoqController.tobededadv.addListener(() {
                             billGenerationBoqController.updateAdvanceReadOnly();
                           });

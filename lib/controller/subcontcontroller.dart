@@ -34,8 +34,8 @@ class SubcontractorController extends GetxController {
     labourList.value = await CommonProvider.getLabour();
   }
 
-  Future getWorkOrderNoList(int pid, int sid, int subid) async {
-    getdpDnWrkOrderValue.value = await CommonProvider.getWorkOrderNoList(pid, sid,subid);
+  Future getWorkOrderNoList(int pid, int sid, int subid,type) async {
+    getdpDnWrkOrderValue.value = await CommonProvider.getWorkOrderNoList(pid, sid,subid,type);
   }
 
   setSelectedLabourID(String value) {

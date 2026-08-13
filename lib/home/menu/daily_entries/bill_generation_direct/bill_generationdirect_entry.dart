@@ -85,8 +85,7 @@ class _Subcont_Nmr_EntryScreenState_Site
         subcontractorController.WorkOrderNo.text = "--SELECT--";
         billGenerationDirectController.billInvoiceDateController.text = BaseUtitiles.initiateCurrentDateFormat();
         subcontractorController.InvoiceNo.text="";
-        billGenerationDirectController.billPaymentWkDateController
-            .text = BaseUtitiles.initiateCurrentDateFormat();
+        billGenerationDirectController.billPaymentWkDateController.text = BaseUtitiles.initiateCurrentDateFormat();
         billGenerationDirectController.FromdateController.text = BaseUtitiles.initiateCurrentDateFormat();
         billGenerationDirectController.TodateController.text = BaseUtitiles.initiateCurrentDateFormat();
         billGenerationDirectController.RemarksController.text = "";
@@ -486,9 +485,9 @@ class _Subcont_Nmr_EntryScreenState_Site
                                 child: ConstIcons.dcNo),
                           ),
                           onTap: ()  async {
-                            await subcontractorController.getWorkOrderNoList( projectController.selectedProjectId.value,siteController.selectedsiteId.value,subcontractorController.selectedSubcontId.value);
+                            await subcontractorController.getWorkOrderNoList( projectController.selectedProjectId.value,siteController.selectedsiteId.value,subcontractorController.selectedSubcontId.value,"D");
                             bottomsheetControllers.WorkOrderName(context,
-                                subcontractorController.getdpDnWrkOrderValue.value);
+                                subcontractorController.getdpDnWrkOrderValue.value,"D");
                           },
                           validator: (value) {
                             if (value!.isEmpty || value == "--Select--" || value == "--SELECT--") {

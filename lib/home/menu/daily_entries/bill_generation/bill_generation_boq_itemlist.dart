@@ -40,43 +40,46 @@ class _Bill_Generation_Boq_ItemlistState extends State<Bill_Generation_Boq_Iteml
       child: SafeArea(
         top: false,
         child: Scaffold(
-          body: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                const SizedBox(height: 40),
+          body: Column(
+            children: <Widget>[
+              const SizedBox(height: 40),
 
-                Container(
-                  margin: const EdgeInsets.only(left: 15, right: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Bill Generation BOQ Item Lists",
-                        style: TextStyle(
-                            fontSize: RequestConstant.Heading_Font_SIZE,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text(
-                            "Back",
-                            style: TextStyle(color: Colors.grey, fontSize: 18),
-                          ))
-                    ],
-                  ),
+              Container(
+                margin: const EdgeInsets.only(left: 15, right: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "Bill Generation BOQ Item Lists",
+                      style: TextStyle(
+                          fontSize: RequestConstant.Heading_Font_SIZE,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text(
+                          "Back",
+                          style: TextStyle(color: Colors.grey, fontSize: 18),
+                        ))
+                  ],
                 ),
+              ),
 
 
 
-                Obx(() => Visibility(
-                    visible: billGenerationBoqController.ItemGetTableListdata.value.isEmpty
-                        ? false
-                        : true,
-                    child: Listdetails())),
-              ],
-            ),
+              Obx(() {
+                if (billGenerationBoqController
+                    .ItemGetTableListdata.value.isEmpty) {
+                  return const SizedBox.shrink();
+                }
+
+                return Expanded(
+                  child: Listdetails(),
+                );
+              }),
+            ],
           ),
           bottomNavigationBar: Container(
             height: BaseUtitiles.getheightofPercentage(context, 4),
@@ -128,12 +131,12 @@ class _Bill_Generation_Boq_ItemlistState extends State<Bill_Generation_Boq_Iteml
         left: 5,
         right: 5,
       ),
-      height: MediaQuery.of(context).size.height,
       child: ListView.builder(
+        physics: const AlwaysScrollableScrollPhysics(),
+        shrinkWrap: true,
         itemCount: billGenerationBoqController.ItemGetTableListdata.value.length,
         padding: EdgeInsets.only(bottom:BaseUtitiles.getheightofPercentage(context, 10) ),
         itemBuilder: (BuildContext context, int index) {
-          billGenerationBoqController.ItemListTextInitiate();
           return Card(
             color: Colors.white,
             elevation: 3,
@@ -210,8 +213,8 @@ class _Bill_Generation_Boq_ItemlistState extends State<Bill_Generation_Boq_Iteml
                                                         .ItemGetTableListdata
                                                         .value
                                                         .removeAt(index);
-                                                    await billGenerationBoqController
-                                                        .getItemlistTablesDatas();
+                                                    // await billGenerationBoqController
+                                                        // .getItemlistTablesDatas();
                                                     Navigator.pop(context);
                                                   },
                                                   child: const Text("Delete",
@@ -284,16 +287,6 @@ class _Bill_Generation_Boq_ItemlistState extends State<Bill_Generation_Boq_Iteml
                             height: BaseUtitiles.getheightofPercentage(context, 4),
                             child: TextFormField(
                               readOnly: true,
-                                onTap: (){
-                                  if(billGenerationBoqController.itemlist_ListRateController[index].text != "" && billGenerationBoqController.itemlist_ListRateController[index].text != "0" && billGenerationBoqController.itemlist_ListRateController[index].text != "0.0"){
-                                    return;
-                                  } else {
-                                    setState(() {
-                                      billGenerationBoqController.itemlist_ListRateController[index].text = "";
-                                      billGenerationBoqController.itemListclickChanged();
-                                    });
-                                  }
-                                },
                                 controller: billGenerationBoqController.itemlist_ListRateController[index],
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(color: Colors.black),
@@ -316,11 +309,7 @@ class _Bill_Generation_Boq_ItemlistState extends State<Bill_Generation_Boq_Iteml
                                       borderSide: BorderSide(color: Theme.of(context).primaryColor),
                                       borderRadius: const BorderRadius.all(Radius.circular(10))),
                                 ),
-                                onChanged: (value) {
-                                  setState(() {
-                                    billGenerationBoqController.itemListclickChanged();
-                                  });
-                                }),
+                               ),
                           )),
                     ],
                   ),
@@ -342,16 +331,6 @@ class _Bill_Generation_Boq_ItemlistState extends State<Bill_Generation_Boq_Iteml
                             height: BaseUtitiles.getheightofPercentage(context, 4),
                             child: TextFormField(
                               readOnly: true,
-                                onTap: (){
-                                  if(billGenerationBoqController.itemlist_ListRateController[index].text != "" && billGenerationBoqController.itemlist_ListRateController[index].text != "0" && billGenerationBoqController.itemlist_ListRateController[index].text != "0.0"){
-                                    return;
-                                  } else {
-                                    setState(() {
-                                      billGenerationBoqController.itemlist_ListRateController[index].text = "";
-                                      billGenerationBoqController.itemListclickChanged();
-                                    });
-                                  }
-                                },
                                 controller: billGenerationBoqController.itemlist_ListBalQtyController[index],
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(color: Colors.black),
@@ -374,11 +353,7 @@ class _Bill_Generation_Boq_ItemlistState extends State<Bill_Generation_Boq_Iteml
                                       borderSide: BorderSide(color: Theme.of(context).primaryColor),
                                       borderRadius: const BorderRadius.all(Radius.circular(10))),
                                 ),
-                                onChanged: (value) {
-                                  setState(() {
-                                    billGenerationBoqController.itemListclickChanged();
-                                  });
-                                }),
+                                ),
                           )),
                       const Expanded(
                         flex: 6,
@@ -442,16 +417,6 @@ class _Bill_Generation_Boq_ItemlistState extends State<Bill_Generation_Boq_Iteml
                             height: BaseUtitiles.getheightofPercentage(context, 4),
                             child:  TextFormField(
                               readOnly: true,
-                                onTap: (){
-                                  if(billGenerationBoqController.itemlist_ListQtyController[index].text != "" && billGenerationBoqController.itemlist_ListQtyController[index].text != "0" && billGenerationBoqController.itemlist_ListQtyController[index].text != "0.0"){
-                                    return;
-                                  } else {
-                                    setState(() {
-                                      billGenerationBoqController.itemlist_ListQtyController[index].text = "";
-                                      billGenerationBoqController.itemListclickChanged();
-                                    });
-                                  }
-                                },
                                 controller: billGenerationBoqController.itemlist_ListQtyController[index],
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(color: Colors.black),
@@ -476,9 +441,7 @@ class _Bill_Generation_Boq_ItemlistState extends State<Bill_Generation_Boq_Iteml
                                           color: Theme.of(context).primaryColor),
                                       borderRadius: const BorderRadius.all(Radius.circular(10))),
                                 ),
-                                onChanged: (value) {
-
-                                }),
+                            ),
                           )),
                       const Expanded(
                         flex: 6,
@@ -528,8 +491,6 @@ class _Bill_Generation_Boq_ItemlistState extends State<Bill_Generation_Boq_Iteml
                                 onChanged: (value) async{
                                   await billGenerationBoqController.validateTotalQty(index);
                                   await billGenerationBoqController.itemListclickChanged();
-                                  setState(() {
-                                    });
                                 }),
                           )),
                     ],

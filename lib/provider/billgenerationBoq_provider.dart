@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import '../apimanager/apimanager.dart';
 import '../models/billBoqEntryListrespo_model.dart';
+import '../models/billDirectDetCalculation_model.dart';
 import '../utilities/apiconstant.dart';
 import '../utilities/baseutitiles.dart';
 import '../utilities/requestconstant.dart';
@@ -42,4 +43,22 @@ class BillGenerationBoqProvider{
     });
     return data;
   }
+
+  static Future<List<BillDirectDetCalculations>> getWorkOrderCalculation_List(
+      int subContId,WorkId) async {
+    var data = null;
+    await ApiManager.getAPICall(ApiConstant.GET_DIRECTBILL_CALCULATION_LIST + "?Subcontid=$subContId&WorkId=$WorkId")
+        .then((value) {
+      print("AddLessCals:" + value);
+      data = billDirectDetCalculationsFromJson(value);
+      if (data != null && data.length > 0) {
+        return data;
+      }
+    }, onError: (error) {
+      print(error);
+      BaseUtitiles.showToast('Something went wrong.. $error');
+    });
+    return data;
+  }
+
 }

@@ -64,8 +64,9 @@ class DBManager {
 
   delete(table) async {
     var connection =  _database;
-    return await connection?.rawDelete("delete from $table");
+    return await connection?.rawDelete( "DELETE FROM $table");
   }
+
   deleteApiRows(table) async {
     var connection = _database;
     return await connection?.rawDelete(
@@ -192,5 +193,10 @@ class DBManager {
   Update_BoqTable(table, data) async {
     var connection =  _database;
     return await connection?.update(table, data, where: 'Level3item_id=?', whereArgs: [data['Level3item_id']]);
+  }
+
+  Update_BillBoqTable(table, data) async {
+    var connection =  _database;
+    return await connection?.update(table, data, where: 'level3ItemId=?', whereArgs: [data['level3ItemId']]);
   }
 }

@@ -190,39 +190,71 @@ class BillAddless {
 
 class BillDet {
   String? unit;
+  int? hdNmeId;
+  int? sbNmeId;
   double? rate;
+  double? qty1;
   double? amt;
   double? actualQty;
+  double? balQty;
+  double? totalQty;
+  double? balBillQty;
+  double? curBillQty;
   int? workorderdetid;
+  int? level3ItemId;
   String? wtype;
   String? itemDes;
 
   BillDet({
   this.unit,
+  this.hdNmeId,
+  this.sbNmeId,
   this.rate,
   this.amt,
+  this.qty1,
+  this.balQty,
   this.actualQty,
+  this.balBillQty,
+  this.curBillQty,
+  this.totalQty,
   this.workorderdetid,
+  this.level3ItemId,
   this.wtype,
   this.itemDes,
   });
 
   factory BillDet.fromJson(Map<String, dynamic> json) => BillDet(
     unit: json["Unit"],
+    hdNmeId: json["HdNmeId"],
+    sbNmeId: json["SbNmeId"],
     rate: json["Rate"],
     amt: json["Amt"],
+    qty1: json["Qty1"],
+    balQty: json["BalQty"],
     actualQty: json["ActualQty"],
+    totalQty: json["TotalQty"],
+    curBillQty: json["CurBillQty"],
+    balBillQty: json["BalBillQty"],
     workorderdetid: json["Workorderdetid"],
+    level3ItemId: json["Level3ItemId"],
     wtype: json["Wtype"],
     itemDes: json["ItemDes"],
   );
 
   Map<String, dynamic> toJson() => {
     "Unit": unit,
+    "HdNmeId": hdNmeId,
+    "SbNmeId": sbNmeId,
     "Rate": rate,
     "Amt": amt,
+    "Qty1": qty1,
+    "BalQty": balQty,
     "ActualQty": actualQty,
+    "BalBillQty":balBillQty,
+    "CurBillQty": curBillQty,
+    "TotalQty": totalQty,
     "Workorderdetid": workorderdetid,
+    "Level3ItemId": level3ItemId,
     "Wtype": wtype,
     "ItemDes": itemDes,
   };
