@@ -44,7 +44,6 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
         await projectController.getProjectList(context, 0);
         await siteController.subcontEntry_siteDropdowntList(context,0);
         await subcontractorController.getSubcontList(context, projectController.selectedProjectId.value,siteController.selectedsiteId.value, 1);
-
         nmrWklyController.NmritemList.value=[];
         projectController.projectname.text="--SELECT--";
         projectController.selectedProjectId.value=0;
@@ -52,7 +51,6 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
         siteController.selectedsiteId.value=0;
         subcontractorController.Subcontractorname.text="--SELECT--";
         subcontractorController.selectedSubcontId.value=0;
-        // subcontractorController.InvoiceNo.text = "";
         nmrWklyController.BillNoController.text = "";
         nmrWklyController.createdById.value = 0;
         nmrWklyController.RemarksController.text = "";
@@ -280,7 +278,7 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
                               },
                               validator: (value) {
                                 if (value!.isEmpty || value == "--SELECT--" || value == "--Select--") {
-                                  return '\u26A0 Enter user Project name';
+                                  return '\u26A0 ${RequestConstant.VALIDATE}';
                                 }
                                 return null;
                               },
@@ -328,7 +326,7 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
                               },
                               validator: (value) {
                                 if (value!.isEmpty || value == "--Select--" || value == "--SELECT--") {
-                                  return '\u26A0 Enter user Site name';
+                                  return '\u26A0 ${RequestConstant.VALIDATE}';
                                 }
                                 return null;
                               },
@@ -377,7 +375,7 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
                               },
                               validator: (value) {
                                 if (value!.isEmpty || value == "--Select--" || value == "--SELECT--") {
-                                  return '\u26A0 Enter user Subcontractor name';
+                                  return '\u26A0 ${RequestConstant.VALIDATE}';
                                 }
                                 return null;
                               },

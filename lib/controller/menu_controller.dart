@@ -222,8 +222,6 @@ class Menu_Controller extends GetxController {
       advanceReqVoucherController_new.ItemGetTableListdata.value.clear();
       advanceReqVoucherController_new.delete_ListTable();
       advanceReqVoucherController_new. GetTableList.value.clear();
-      advanceReqVoucherController_new.entrycheck=0;
-      advanceReqVoucherController_new.editcheck=0;
       Navigator.push(context, MaterialPageRoute(builder: (context) => AdvReq_Voucher_EntryList_new()),
       );
     }

@@ -90,7 +90,6 @@ class DirectBillGenerateProvider {
       }
 
       final response = saveDeduction_SaveResponseFromJson(value);
-      print("eeeeee...${response}");
 
       if (response.RetString != null) {
         ratingRes = response.RetString;

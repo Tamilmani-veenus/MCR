@@ -77,8 +77,8 @@ class AutoYearWiseNoController extends GetxController {
   Future directBill_AutoYearWise() async {
     await CommonProvider.directBill_getAutoYearWise().then((value){
       if (value != null) {
-        BOQBillautoYrsWise.value = value;
-        return BOQBillautoYrsWise.value;
+        DirectBillautoYrsWise.value = value;
+        return DirectBillautoYrsWise.value;
       }
     });
   }
@@ -86,8 +86,8 @@ class AutoYearWiseNoController extends GetxController {
   Future boqBill_AutoYearWise() async {
     await CommonProvider.boqBill_getAutoYearWise().then((value){
       if (value != null) {
-        DirectBillautoYrsWise.value = value;
-        return DirectBillautoYrsWise.value;
+        BOQBillautoYrsWise.value = value;
+        return BOQBillautoYrsWise.value;
       }
     });
   }

@@ -10120,11 +10120,12 @@ class _NMRBillVerificationState extends State<NMRBillVerification> {
                             return InkWell(
                               onTap: () async {
                                 if(widget.heading =="SUBCONTRACTOR BILL VERIFICATION - DIRECT" || widget.heading =="SUBCONTRACTOR BILL APPROVAL - DIRECT") {
-                                  await billGenerationDirectController.directBillEntryList_EditApi(billGenerationDirectController.bill_entryList.value[index].workId,context,widget.heading =="SUBCONTRACTOR BILL VERIFICATION - DIRECT"?"Verify":"Approve");
+                                  await billGenerationDirectController.directBillEntryList_EditApi(pendingListController.mainlist
+                                      .value[index].id,context,widget.heading =="SUBCONTRACTOR BILL VERIFICATION - DIRECT"?"Verify":"Approve");
                                 }
                                 else if(widget.heading =="SUBCONTRACTOR BILL VERIFICATION - BOQ" || widget.heading =="SUBCONTRACTOR BILL APPROVAL - BOQ") {
-                                  await billGenerationBoqController.directBillEntryList_EditApi(
-                                      billGenerationBoqController.bill_entryList.value[index].workId,context,widget.heading =="SUBCONTRACTOR BILL VERIFICATION - BOQ"?"Verify":"Approve");
+                                  await billGenerationBoqController.directBillEntryList_EditApi(pendingListController.mainlist
+                                      .value[index].id,context,widget.heading =="SUBCONTRACTOR BILL VERIFICATION - BOQ"?"Verify":"Approve");
                                 }
                                 else{
                                   await nmrWklyController.NmrEntryList_EditApi(

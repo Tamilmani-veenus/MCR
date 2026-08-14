@@ -90,7 +90,6 @@ class _Subcont_Nmr_EntryScreenState_Site
         billGenerationDirectController.TodateController.text = BaseUtitiles.initiateCurrentDateFormat();
         billGenerationDirectController.RemarksController.text = "";
         billGenerationDirectController.to_be_dection_advance = "0";
-        billGenerationDirectController.saveButton.value = RequestConstant.SUBMIT;
         billGenerationDirectController.billgen_itemlistTable_Delete();
         billGenerationDirectController.ItemGetTableListdata.value.clear();
         billGenerationDirectController.billamount.text = "0.0";

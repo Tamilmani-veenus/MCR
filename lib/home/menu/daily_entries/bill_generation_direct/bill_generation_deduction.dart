@@ -1419,7 +1419,7 @@ class _Bill_Generation_direct_deductionState
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Expanded(
+                    if(billGenerationDirectController.saveButton.value == RequestConstant.SUBMIT) Expanded(
                       child: InkWell(
                         child: Container(
                           margin: const EdgeInsets.only(left: 20, right: 20),
@@ -1664,56 +1664,137 @@ class _Bill_Generation_direct_deductionState
                   Expanded(
                     child: TextButton(
                         onPressed: () async {
-                          billGenerationDirectController.to_be_dection_advance =
-                          "0";
+                          // Generate new Direct Bill number
+                          await autoYearWiseNoController.directBill_AutoYearWise();
+
+                          billGenerationDirectController.autoYearWiseNoController.text =
+                              autoYearWiseNoController.DirectBillautoYrsWise.value;
+
+                          final currentDate =
+                          BaseUtitiles.initiateCurrentDateFormat();
+
+                          // -----------------------------
+                          // Reset Bill Header
+                          // -----------------------------
+                          billGenerationDirectController.billentryDateController.text =
+                              currentDate;
+
+                          billGenerationDirectController.workid = 0;
+
+                          // -----------------------------
+                          // Reset Project
+                          // -----------------------------
                           projectController.projectname.text = "--SELECT--";
                           projectController.selectedProjectId.value = 0;
-                          subcontractorController.Subcontractorname.text =
-                          "--SELECT--";
+
+                          // -----------------------------
+                          // Reset Site
+                          // -----------------------------
+                          siteController.Sitename.text = "--SELECT--";
+                          siteController.selectedsiteId.value = 0;
+
+                          // -----------------------------
+                          // Reset Subcontractor
+                          // -----------------------------
+                          subcontractorController.Subcontractorname.text = "--SELECT--";
                           subcontractorController.selectedSubcontId.value = 0;
-                          billGenerationDirectController.RemarksController
-                              .clear();
-                          billGenerationDirectController.billentryDateController
-                              .text = BaseUtitiles.initiateCurrentDateFormat();
-                          billGenerationDirectController.FromdateController
-                              .text = BaseUtitiles.initiateCurrentDateFormat();
+
+                          // -----------------------------
+                          // Reset Work Order
+                          // -----------------------------
+                          subcontractorController.WorkOrderNo.text = "--SELECT--";
+                          subcontractorController.selectedWorkOrderId.value = 0;
+
+                          // -----------------------------
+                          // Reset Dates
+                          // -----------------------------
+                          billGenerationDirectController.billInvoiceDateController.text =
+                              currentDate;
+
+                          billGenerationDirectController.billPaymentWkDateController.text =
+                              currentDate;
+
+                          billGenerationDirectController.FromdateController.text =
+                              currentDate;
+
                           billGenerationDirectController.TodateController.text =
-                              BaseUtitiles.initiateCurrentDateFormat();
-                          billGenerationDirectController
-                              .autoYearWiseNoController.text =
-                              autoYearWiseNoController
-                                  .DirectBillautoYrsWise.value;
-                          siteController.selectedsiteId = 0.obs;
-                          siteController.selectedsitedropdownName =
-                              "--SELECT--".obs;
-                          siteController.getSiteDropdownvalue.value.clear();
-                          siteController.Sitename.text = RequestConstant.SELECT;
-                          siteController.siteDropdownName.clear();
+                              currentDate;
 
-                          billGenerationDirectController
-                              .billgen_itemlistTable_Delete();
-                          billGenerationDirectController
-                              .ItemGetTableListdata.value
-                              .clear();
+                          // -----------------------------
+                          // Reset Invoice / Remarks
+                          // -----------------------------
+                          subcontractorController.InvoiceNo.clear();
 
-                          billGenerationDirectController.billamount.text =
-                          "0.0";
+                          billGenerationDirectController.RemarksController.clear();
+
+                          // -----------------------------
+                          // Reset Advance
+                          // -----------------------------
+                          billGenerationDirectController.to_be_dection_advance = "0.0";
+
+                          billGenerationDirectController.tobededadv.text =
+                              billGenerationDirectController.to_be_dection_advance;
+
+                          billGenerationDirectController.Advded.text =
+                              billGenerationDirectController.to_be_dection_advance;
+
+                          // -----------------------------
+                          // Delete / Clear Items
+                          // -----------------------------
+                          await billGenerationDirectController.billgen_itemlistTable_Delete();
+
+                          billGenerationDirectController.ItemGetTableListdata.clear();
+
+                          // -----------------------------
+                          // Reset Amounts
+                          // -----------------------------
+                          billGenerationDirectController.billamount.text = "0.0";
                           billGenerationDirectController.Creditamt.text = "0.0";
                           billGenerationDirectController.Debitamt.text = "0.0";
-                          billGenerationDirectController
-                              .CreditRemarksController.text = "";
-                          billGenerationDirectController
-                              .DebitRemarksController.text = "";
-                          billGenerationDirectController.Advded.text =
-                              billGenerationDirectController.tobededadv.text;
-                          billGenerationDirectController.Roundoff.text = "0";
+                          billGenerationDirectController.materialDebitamt.text = "0.0";
                           billGenerationDirectController.netpayamt.text = "0.0";
-                          billGenerationDirectController.netBillAmt.text = "0.0";
-                          billGenerationDirectController.finalBillAmt.text = "0.0";
-                          billGenerationDirectController.tobededadv.text =
-                              billGenerationDirectController
-                                  .to_be_dection_advance;
-                          Navigator.pop(context);
+                          billGenerationDirectController.balAmt.text = "0.0";
+                          billGenerationDirectController.Roundoff.text = "0.0";
+
+                          // -----------------------------
+                          // Reset Remarks
+                          // -----------------------------
+                          billGenerationDirectController.materialDebitRemarks.text = "-";
+                          billGenerationDirectController.CreditRemarksController.text = "-";
+                          billGenerationDirectController.DebitRemarksController.text = "-";
+
+                          // -----------------------------
+                          // Clear Percentage Controllers
+                          // -----------------------------
+                          for (final controller
+                          in billGenerationDirectController.percentControllers) {
+                            controller.clear();
+                          }
+
+                          // -----------------------------
+                          // Reset Item Percentage & Amount
+                          // -----------------------------
+                          for (final item
+                          in billGenerationDirectController.directBillGen_ItemReadList) {
+                            item.percentValue = 0.0;
+                            item.amount = 0.0;
+                          }
+
+                          // IMPORTANT:
+                          // Notify GetX because properties inside list objects changed
+                          billGenerationDirectController.directBillGen_ItemReadList.refresh();
+
+                          // -----------------------------
+                          // Recalculate
+                          // -----------------------------
+                          await billGenerationDirectController
+                              .deductionPaymentCalculation();
+
+                          // Refresh again if calculation changes item values
+                          billGenerationDirectController.directBillGen_ItemReadList.refresh();
+                          if (context.mounted) {
+                            Navigator.pop(context);
+                          }
                         },
                         child: Text("Reset",
                             style: TextStyle(

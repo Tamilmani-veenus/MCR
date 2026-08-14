@@ -759,8 +759,9 @@ class NMRWklyController extends GetxController {
   }
 
 
-  Future NmrEntryList_EditApi(
-      int workid, BuildContext context, type) async {
+  Future NmrEntryList_EditApi(int workid, BuildContext context, type) async {
+    EditListSaveDatas.value.clear();
+    NmritemList.value.clear();
     await NMRWklyprovider.nmr_entryList_editAPI(workid).then((value) async {
       if (value != null && value.length > 0) {
         saveButton.value= type=="Edit"?RequestConstant.RESUBMIT:type=="Verify"?RequestConstant.VERIFY:RequestConstant.APPROVAL;
@@ -824,22 +825,6 @@ class NMRWklyController extends GetxController {
               ),
             ),
           ),
-
-          // ElevatedButton(
-          //   onPressed: () => Navigator.of(context).pop(),
-          //   child:Text('No'),
-          // ),
-          // ElevatedButton(
-          //   onPressed: () {
-          //     submitCheck=0;
-          //     editCheck=0;
-          //     NmritemList.value.clear();
-          //     Nmr_EntryList_DeleteApi(NmrEtyList[index].nmrWorkId,NmrEtyList[index].subcontid,NmrEtyList[index].workNo);
-          //     NmrEtyList.removeAt(index);
-          //     Navigator.of(context).pop();
-          //   },
-          //   child:Text('Yes'),
-          // ),
         ],
       ),
     );

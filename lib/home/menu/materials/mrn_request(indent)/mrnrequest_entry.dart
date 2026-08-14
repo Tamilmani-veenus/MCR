@@ -147,15 +147,13 @@ class _MRNRequest_Indent_EntryState extends State<MRNRequest_Indent_Entry> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                             Obx(()=>
-                                Text(
-                                mrn_request_controller.saveButton.value=="Submit"? "MRN Request (Indent)":mrn_request_controller.saveButton.value=="Verify"?"MRN Verification": "${mrn_request_controller.saveButton.value}",
-                                style: TextStyle(
-                                    fontSize: RequestConstant.Heading_Font_SIZE,
-                                    fontWeight: FontWeight.bold),
-                                                           ),
-                             ),
-                            TextButton(
+                            Text(
+                              "MRN Request (Indent)",
+                              style: TextStyle(
+                                  fontSize: RequestConstant.Heading_Font_SIZE,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                             TextButton(
                               onPressed: () {
                                 Navigator.pop(context);
                               },
@@ -163,6 +161,7 @@ class _MRNRequest_Indent_EntryState extends State<MRNRequest_Indent_Entry> {
                                 style: TextStyle(color: Colors.grey, fontSize: 18),
                               ),
                             ),
+
                           ],
                         ),
                       ),
@@ -341,8 +340,8 @@ class _MRNRequest_Indent_EntryState extends State<MRNRequest_Indent_Entry> {
                                 ),
                               ),
                               onTap: () async {
-                                if (mrn_request_controller.screenCheck ==
-                                    "PendingScreen") {
+                                if (mrn_request_controller.editCheck == 1 || mrn_request_controller.screenCheck == "Verify" ||
+                                     mrn_request_controller.screenCheck == "PreApprove" || mrn_request_controller.screenCheck == "GMApprove") {
                                 } else {
                                   showDialog(
                                       context: context,

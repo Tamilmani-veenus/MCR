@@ -91,7 +91,7 @@ class AdvanceReqVoucherProvider{
   //   return ratingRes;
   // }
 
-  static Future<String?> SaveApi(String body, int id, int buttonControl,context) async {
+  static Future<String?> SaveApi(String body, int id,context) async {
     String? ratingRes;
 
     try {
@@ -129,14 +129,12 @@ class AdvanceReqVoucherProvider{
       return null;
     }catch (error) {
       print('❌ Error in SaveApi: $error');
-      buttonControl = 0;
       Navigator.pop(context);
       Navigator.pop(context);
       BaseUtitiles.showToast(RequestConstant.NETWORKERROR);
       return null;
     }
 
-    buttonControl = 0;
     return ratingRes;
   }
 

@@ -27,8 +27,6 @@ class _AdvReq_Voucher_EntryList_newState extends State<AdvReq_Voucher_EntryList_
 
   @override
   void initState() {
-    advanceReqVoucherController_new.entrycheck=0;
-    advanceReqVoucherController_new.editcheck=0;
       advanceReqVoucherController_new.mainlist.value.clear();
       advanceReqVoucherController_new.entryList.value.clear();
     DateTime currentDate = DateTime.now();
@@ -49,8 +47,7 @@ class _AdvReq_Voucher_EntryList_newState extends State<AdvReq_Voucher_EntryList_
           visible: commanController.addMode.value == 1 ? true : false,
           child: FloatingActionButton.extended(
             onPressed: (){
-              advanceReqVoucherController_new.entrycheck =0;
-              advanceReqVoucherController_new.editcheck =0;
+              advanceReqVoucherController_new.saveButton.value =RequestConstant.SUBMIT;
               Navigator.push(context, MaterialPageRoute(builder: (context) => AdvReq_voucher_New()));
             },
             label: Text("Add", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: RequestConstant.Lable_Font_SIZE,),),
@@ -559,7 +556,6 @@ class _AdvReq_Voucher_EntryList_newState extends State<AdvReq_Voucher_EntryList_
                                                             ],
                                                           ),
                                                           onTap: () async {
-                                                              advanceReqVoucherController_new.editcheck=1;
                                                               advanceReqVoucherController_new.editListApiDatas.value.clear();
                                                               advanceReqVoucherController_new.delete_ListTable();
                                                               advanceReqVoucherController_new.GetTableList.value.clear();

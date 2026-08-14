@@ -16,6 +16,7 @@ import '../controller/transferbw_site_controller.dart';
 import '../app_theme/app_colors.dart';
 import '../utilities/baseutitiles.dart';
 import '../utilities/requestconstant.dart';
+import 'advance_reqvoucher_new_controller.dart';
 import 'billgeneration_boq_controller.dart';
 import 'billgenerationdirect_controller.dart';
 import 'boqrevised_controller.dart';
@@ -55,6 +56,8 @@ class BottomsheetControllers {
   DailyEntriesController dailyEntriesController =
       Get.put(DailyEntriesController());
   BillGenerationBoqController billGenerationBoqController=Get.put(BillGenerationBoqController());
+  AdvanceReqVoucherController_new advanceReqVoucherController_new =
+  Get.put(AdvanceReqVoucherController_new());
 
   Consumption_Controller consumption_controller =
       Get.put(Consumption_Controller());
@@ -80,6 +83,7 @@ class BottomsheetControllers {
   ProjectName(
     context,
     list,
+  {type}
   ) {
     showModalBottomSheet(
       context: context,
@@ -179,36 +183,44 @@ class BottomsheetControllers {
                               list[index].project.toString();
                           projectcontroller.selectedProjectId.value =
                               list[index].projectId;
-                          await siteController.subcontEntry_siteDropdowntList(
-                              context, 0);
-                          await fromsiteController.getsiteDropdowntList(
-                              context, 0);
-                          await transferBt_Site_Controller
-                              .from_siteDropdowntList(context);
-                          searchcontroller.text = "";
-                          siteController.Sitename.text = "--SELECT--";
-                          // siteController.selectedsiteId.value=0;
-                          dailyWrkDone_DPR_Controller
-                              .TypeSubcontractorname.text = "--SELECT--";
-                          await subcontractorController.getSubcontList(context, projectcontroller.selectedProjectId.value, siteController.selectedsiteId.value, subcontractorController.checkScreen);
-                          dailyWrkDone_DPRNEW_Controller
-                              .dprNew_DetTable_Delete();
-                          dailyWrkDone_DPRNEW_Controller
-                              .dprNew_EntryDetReadList.value
-                              .clear();
-                          await dailyWrkDone_DPRNEW_Controller
-                              .getDetTablesDatas();
-                          transferBt_Site_Controller.from_selectedsiteId.value =
-                              0;
-                          transferBt_Site_Controller.FromSitename.text =
-                              "--SELECT--";
+                          if (type != "AdvReq") {
+                            await siteController.subcontEntry_siteDropdowntList(
+                                context, 0);
+                            await fromsiteController.getsiteDropdowntList(
+                                context, 0);
+                            await transferBt_Site_Controller
+                                .from_siteDropdowntList(context);
+                            searchcontroller.text = "";
+                            siteController.Sitename.text = "--SELECT--";
+                            // siteController.selectedsiteId.value=0;
+                            dailyWrkDone_DPR_Controller
+                                .TypeSubcontractorname.text = "--SELECT--";
+                            await subcontractorController.getSubcontList(
+                                context,
+                                projectcontroller.selectedProjectId.value,
+                                siteController.selectedsiteId.value,
+                                subcontractorController.checkScreen);
+                            dailyWrkDone_DPRNEW_Controller
+                                .dprNew_DetTable_Delete();
+                            dailyWrkDone_DPRNEW_Controller
+                                .dprNew_EntryDetReadList.value
+                                .clear();
+                            await dailyWrkDone_DPRNEW_Controller
+                                .getDetTablesDatas();
+                            transferBt_Site_Controller.from_selectedsiteId
+                                .value =
+                            0;
+                            transferBt_Site_Controller.FromSitename.text =
+                            "--SELECT--";
 
-                          //----------DRR Det list------------
-                          dailyWrkDone_DPR_Controller
-                              .delete_dpr_itemlist_Table();
-                          dailyWrkDone_DPR_Controller.dpr_itemview_DbList.value
-                              .clear();
-                          dailyWrkDone_DPR_Controller.getDprTablesDatas();
+                            //----------DRR Det list------------
+                            dailyWrkDone_DPR_Controller
+                                .delete_dpr_itemlist_Table();
+                            dailyWrkDone_DPR_Controller.dpr_itemview_DbList
+                                .value
+                                .clear();
+                            dailyWrkDone_DPR_Controller.getDprTablesDatas();
+                          }
                           Navigator.pop(context);
                         },
                       ),
@@ -1615,13 +1627,23 @@ class BottomsheetControllers {
                               list[index].accTypeid;
                           commonVoucherController.AccountTypename.text =
                               list[index].accType.toString();
-                          await commonVoucherController.getAccountName(context);
+                          advanceReqVoucherController_new.listButton.value = "List";
                           searchcontroller.text = "";
                           commonVoucherController.selectedAccnameId.value = 0;
                           commonVoucherController.Accountname.text =
-                              "--Select--";
+                          "--SELECT--";
                           commonVoucherController.namethrough.text =
-                              "--Select--";
+                          "--SELECT--";
+                          if (commonVoucherController.selectedAccId.value ==
+                              4) {
+                            commonVoucherController.payforController.text =
+                            "Advance";
+                            commonVoucherController.payfor.value = "A";
+                          } else {
+                            commonVoucherController.payforController.text =
+                            "--SELECT--";
+                            commonVoucherController.payfor.value = "0";
+                          }
                           Navigator.pop(context);
                         },
                       ),

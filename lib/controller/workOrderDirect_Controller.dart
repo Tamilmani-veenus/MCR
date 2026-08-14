@@ -325,7 +325,7 @@ class WorkOrderDirectController extends GetxController{
         unit:element.unit.toString(),
         qty:element.qty.toString(),
         rate:element.rate.toString(),
-        amount:element.amount.toString(),
+        amount:element.amount.abs().toString(),
       );
       getDetList.value.add(list);
     });

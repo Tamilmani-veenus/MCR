@@ -950,6 +950,9 @@ class BillGenerationBoqController extends GetxController{
   }
 
   Future directBillEntryList_EditApi(int workid, BuildContext context,type) async {
+    await billgen_itemlistTable_Delete();
+    ItemGetTableListdata.clear();
+    bill_editListApiDatas.value.clear();
     await BillGenerationBoqProvider.directBill_entryList_editAPI(workid)
         .then((value) async {
       if (value != null && value.length > 0) {
