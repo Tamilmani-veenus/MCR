@@ -164,7 +164,7 @@ class VocEditDet {
     payType: json["PayType"],
     payTypeName: json["PayTypeName"],
     siteName: json["SiteName"],
-    amt: json["Amt"],
+    amt: json["Amount"],
     tdsPer: json["TdsPer"],
     tdsAmt: json["TdsAmt"],
     netAmt: json["NetAmt"],

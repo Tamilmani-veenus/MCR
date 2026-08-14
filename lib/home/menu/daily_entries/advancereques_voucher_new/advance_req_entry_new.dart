@@ -803,12 +803,7 @@ class _AdvReq_voucher_NewState extends State<AdvReq_voucher_New> {
                                 if (commonVoucherController.VocType.value == "A" && commonVoucherController.payfor.value=="A") {
                                   await advanceReqVoucherController_new.delete_ListTable();
                                   await advanceReqVoucherController_new.getAdvList();
-                                  setState(() {
-                                    for (final controller in advanceReqVoucherController_new.amount_ListControllers) {
-                                      final parsed = double.tryParse(controller.text) ?? 0;
-                                      advanceReqVoucherController_new.reduceAmount(parsed);
-                                    }
-                                  });
+
                                 } else {
                                   Navigator.push(
                                     context,
@@ -839,7 +834,7 @@ class _AdvReq_voucher_NewState extends State<AdvReq_voucher_New> {
                 ),
               ),
 
-              Obx(() => commonVoucherController.VocType.value == "A" && commonVoucherController.payfor.value=="AD"
+              Obx(() => commonVoucherController.VocType.value == "A" && commonVoucherController.selectedAccId.value == 5
                   ? Container(
                 child: Visibility(
                   visible: advanceReqVoucherController_new
@@ -1272,7 +1267,7 @@ class _AdvReq_voucher_NewState extends State<AdvReq_voucher_New> {
                           child: Column(
                             children: <Widget>[
                               Container(
-                                margin: EdgeInsets.only(left: 10, top: 5),
+                                margin: EdgeInsets.only(left: 4, top: 5),
                                 child: Row(
                                   mainAxisAlignment:
                                   MainAxisAlignment.spaceBetween,
@@ -1291,7 +1286,6 @@ class _AdvReq_voucher_NewState extends State<AdvReq_voucher_New> {
                                             fontSize: 15),
                                       ),
                                     ),
-                                    (advanceReqVoucherController_new.saveButton.value == RequestConstant.RESUBMIT || advanceReqVoucherController_new.saveButton.value == RequestConstant.APPROVAL)?SizedBox():
                                     Expanded(
                                       child: InkWell(
                                         child: Container(
@@ -1449,7 +1443,7 @@ class _AdvReq_voucher_NewState extends State<AdvReq_voucher_New> {
               height: MediaQuery.of(context).size.height * 0.79,
               child: Obx(() => ListView.builder(
                 shrinkWrap: true,
-                padding: EdgeInsets.only(bottom: BaseUtitiles.getheightofPercentage(context, 10)),
+                padding: EdgeInsets.zero,
                 physics: BouncingScrollPhysics(),
                 itemCount:
                 advanceReqVoucherController_new.GetTableList.length,
@@ -1468,7 +1462,7 @@ class _AdvReq_voucher_NewState extends State<AdvReq_voucher_New> {
                           child: Column(
                             children: <Widget>[
                               Container(
-                                margin: EdgeInsets.only(left: 10, top: 3),
+                                margin: EdgeInsets.only(left: 4, top: 3),
                                 child: Row(
                                   mainAxisAlignment:
                                   MainAxisAlignment.spaceBetween,
@@ -1488,7 +1482,6 @@ class _AdvReq_voucher_NewState extends State<AdvReq_voucher_New> {
                                             fontSize: 15),
                                       ),
                                     ),
-                                    (advanceReqVoucherController_new.saveButton.value == RequestConstant.RESUBMIT || advanceReqVoucherController_new.saveButton.value == RequestConstant.APPROVAL)?SizedBox():
                                     Expanded(
                                       child: InkWell(
                                         child: Container(
@@ -1687,15 +1680,7 @@ class _AdvReq_voucher_NewState extends State<AdvReq_voucher_New> {
                                         advanceReqVoucherController_new
                                             .amount_ListControllers[
                                         index],
-                                        keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
-
-                                        inputFormatters: [
-                                          TextInputFormatter.withFunction((oldValue, newValue) {
-                                            return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
-                                                ? newValue
-                                                : oldValue;
-                                          }),
-                                        ],
+                                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                                         decoration: InputDecoration(
                                           contentPadding:
                                           EdgeInsets.fromLTRB(
@@ -1745,6 +1730,28 @@ class _AdvReq_voucher_NewState extends State<AdvReq_voucher_New> {
                                   ],
                                 ),
                               ),
+
+                              // Container(
+                              //   margin: EdgeInsets.only(
+                              //       left: 10, right: 10, bottom: 5, top: 5),
+                              //   child: Row(
+                              //     mainAxisAlignment:
+                              //         MainAxisAlignment.spaceAround,
+                              //     children: <Widget>[
+                              //       Expanded(
+                              //           child: Text(
+                              //         "Amt",
+                              //         style: TextStyle(color: Colors.black),
+                              //       )),
+                              //       Expanded(
+                              //           child: Text(
+                              //         advanceReqVoucherController_new.GetTableList[index].Amount.toString(),
+                              //         style: TextStyle(color: Colors.black),
+                              //       )),
+                              //       //   Text(inward_controller.inwardItemListdatas[index].inwQty.toString(),style: TextStyle(color: Colors.white),)),
+                              //     ],
+                              //   ),
+                              // ),
                             ],
                           ),
                         ),

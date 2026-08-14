@@ -193,7 +193,12 @@ class AdvanceReqVoucherController_new extends GetxController {
         .then((value) async {
       if (value != null && value.length > 0) {
         AdvanceList.value = value;
-        return AdvanceList.value;
+        await saveListTable();
+        await getTableListDatas();
+        for (final controller in amount_ListControllers) {
+          final parsed = double.tryParse(controller.text) ?? 0;
+          reduceAmount(parsed);
+        }
       } else {
         BaseUtitiles.showToast(RequestConstant.NORECORD_FOUND);
       }
@@ -202,21 +207,20 @@ class AdvanceReqVoucherController_new extends GetxController {
   delete_ListTable() async {
     await advReqVou_sitewisePayService.AdvreqVoucher_SiteWisePaymentTable_delete();
   }
-
   saveListTable() async {
     DBTableModelList.clear();
     AdvanceList.forEach((element) {
       advreqvouModel = new AdvReqVoucher_SiteWisePayment_TableModel();
-      // advreqvouModel.reqDetId = 0;
       advreqvouModel.purOrdMasId = element.purOrdMasId;
-      advreqvouModel.orderNo = element.poNo;
-      advreqvouModel.project = element.projectName;
-      advreqvouModel.projectId = element.projectId;
+      advreqvouModel.orderNo = element.orderNo;
+      advreqvouModel.project = element.project;
+      advreqvouModel.projectId = element.projectid;
       advreqvouModel.siteName = element.siteName;
-      advreqvouModel.siteId = element.siteId;
+      advreqvouModel.siteId = element.siteid;
       advreqvouModel.dprAmt = element.netamt;
       advreqvouModel.advanceAmt = element.advanceAmt;
-      advreqvouModel.bAmount = element.balanceAmount;
+      advreqvouModel.bAmount = element.bAmount;
+      advreqvouModel.amount = element.amount;
       advreqvouModel.amount = double.parse("0");
       DBTableModelList.add(advreqvouModel);
     });
@@ -329,14 +333,14 @@ class AdvanceReqVoucherController_new extends GetxController {
             : saveButton.value == "Approve"
             ? "APPROVE"
             : "",
-        vocDet : commonVoucherController.VocType.value == "A" && commonVoucherController.selectedAccId.value==4
-            ? (getDetList_Advance.value.isEmpty
+        vocDet : commonVoucherController.VocType.value == "A" && commonVoucherController.payfor.value == "A"
             ? getDetPayforAdvDetails()
-            : getDetList_Advance.value):commonVoucherController.VocType.value == "A" && commonVoucherController.selectedAccId.value==5
-            ? (getDetList_NMR.value.isEmpty
+            : commonVoucherController.VocType.value == "A" && commonVoucherController.payfor.value == "AD"
             ? getDetDetails()
-            : getDetList_NMR.value): []
+            : []
     ));
+
+
     final list = await AdvanceReqVoucherProvider.SaveApi(body, id ,context);
     if (list != null && id != 0) {
       Navigator.pop(context);
