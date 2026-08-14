@@ -864,7 +864,9 @@ class BillGenerationDirectController extends GetxController {
   }
 
   Future directBillEntryList_EditApi(int workid, BuildContext context,type) async {
-    bill_editListApiDatas.value=[];
+   await billgen_itemlistTable_Delete();
+   ItemGetTableListdata.clear();
+   bill_editListApiDatas.value.clear();
     await DirectBillGenerateProvider.directBill_entryList_editAPI(workid)
         .then((value) async {
       if (value != null && value.length > 0) {
@@ -898,7 +900,7 @@ class BillGenerationDirectController extends GetxController {
       if (name == "ItemListDet") {
       ItemListTableModel = DirectBillGenItemListTableModel();
       ItemListTableModel.workDetId = element.dworkDet_id;
-      ItemListTableModel.Name = element.itemDesc.toString();
+      ItemListTableModel.Name = element.itemdesc.toString();
       ItemListTableModel.unit = element.unit.toString();
       ItemListTableModel.qty = element.qty;
       ItemListTableModel.rate = element.rate;

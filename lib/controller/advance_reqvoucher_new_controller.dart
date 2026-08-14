@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:mcr/controller/pendinglistcontroller.dart';
 
 import '../controller/commonvoucher_controller.dart';
 import '../controller/logincontroller.dart';
@@ -51,10 +54,8 @@ class AdvanceReqVoucherController_new extends GetxController {
   RxList entryList = [].obs;
   RxList mainlist = [].obs;
   RxList editListApiDatas = [].obs;
-  RxString radioType = "".obs;
   int vocId = 0;
-  int checkColor = 0;
-  int buttonControl = 0;
+  RxInt createdById = 0.obs;
 
   RxString saveButton = RequestConstant.SUBMIT.obs;
   RxString listButton = "List".obs;
@@ -66,8 +67,8 @@ class AdvanceReqVoucherController_new extends GetxController {
   late List<AdvReqVoucherItemListTableModel> itemListUpdateModelList = <AdvReqVoucherItemListTableModel>[];
   RxList ItemGetTableListdata = [].obs;
   List<AdvReqVoucherItemListTableModel> deleteTableModelList = <AdvReqVoucherItemListTableModel>[];
-  int entrycheck = 0;
-  int editcheck = 0;
+  PendingListController pendingListController = Get.put(PendingListController());
+
 
   calculation(double? amt, double? tds) {
     itemlistTdsamount.text = (amt! * tds! / 100).toString();
@@ -93,26 +94,25 @@ class AdvanceReqVoucherController_new extends GetxController {
     });
   }
 
+
   itemlistTable_Delete() async {
     await advreqVoucher_ItemlistService.AdvreqVoucher_ItemlistTable_delete();
   }
 
   itemlistPopup_saveLabTableDatas(BuildContext context) async {
     int j = 0;
-    int amt = 0;
-    int netAmount = 0;
-    ItemListTableModelList.clear();
+    ItemListTableModelList=[];
     if(itemlistNetAmount.text == "0.0" || itemlistNetAmount.text == "0.00" || itemlistNetAmount.text == "0") {
     } else {
       ItemListTableModel =  AdvReqVoucherItemListTableModel();
+      // ItemListTableModel.reqDetId = 0;
       ItemListTableModel.siteId = siteController.selectedsiteId.value;
       ItemListTableModel.siteName = siteController.Sitename.text;
       ItemListTableModel.paymentType = commonVoucherController.detVocType;
-      ItemListTableModel.amount = double.parse(itemlistDetAmount.value.text);
-      ItemListTableModel.tds_percent =
-          double.parse(itemlistTds_Percent.value.text);
-      ItemListTableModel.tds_amount = double.parse(itemlistTdsamount.value.text);
-      ItemListTableModel.netAmount = double.parse(itemlistNetAmount.value.text);
+      ItemListTableModel.amount = double.tryParse(itemlistDetAmount.value.text) ?? 0.0;
+      ItemListTableModel.tds_percent = double.tryParse(itemlistTds_Percent.value.text)?? 0.0;
+      ItemListTableModel.tds_amount = double.tryParse(itemlistTdsamount.value.text)?? 0.0;
+      ItemListTableModel.netAmount = double.tryParse(itemlistNetAmount.value.text)?? 0.0;
       ItemGetTableListdata.value.forEach((element) {
         if (element.siteId == ItemListTableModel.siteId) {
           j = 1;
@@ -138,6 +138,7 @@ class AdvanceReqVoucherController_new extends GetxController {
     datas.forEach((value) {
       var ItemListTableModel =  AdvReqVoucherItemListTableModel();
       ItemListTableModel.id = value['id'];
+      // ItemListTableModel.reqDetId = value['reqDetId'];
       ItemListTableModel.siteId = value['siteId'];
       ItemListTableModel.siteName = value['siteName'];
       ItemListTableModel.paymentType = value['paymentType'];
@@ -198,7 +199,6 @@ class AdvanceReqVoucherController_new extends GetxController {
       }
     });
   }
-
   delete_ListTable() async {
     await advReqVou_sitewisePayService.AdvreqVoucher_SiteWisePaymentTable_delete();
   }
@@ -207,16 +207,16 @@ class AdvanceReqVoucherController_new extends GetxController {
     DBTableModelList.clear();
     AdvanceList.forEach((element) {
       advreqvouModel = new AdvReqVoucher_SiteWisePayment_TableModel();
+      // advreqvouModel.reqDetId = 0;
       advreqvouModel.purOrdMasId = element.purOrdMasId;
-      advreqvouModel.orderNo = element.orderNo;
-      advreqvouModel.project = element.project;
-      advreqvouModel.projectId = element.projectid;
+      advreqvouModel.orderNo = element.poNo;
+      advreqvouModel.project = element.projectName;
+      advreqvouModel.projectId = element.projectId;
       advreqvouModel.siteName = element.siteName;
-      advreqvouModel.siteId = element.siteid;
+      advreqvouModel.siteId = element.siteId;
       advreqvouModel.dprAmt = element.netamt;
       advreqvouModel.advanceAmt = element.advanceAmt;
-      advreqvouModel.bAmount = element.bAmount;
-      advreqvouModel.amount = element.amount;
+      advreqvouModel.bAmount = element.balanceAmount;
       advreqvouModel.amount = double.parse("0");
       DBTableModelList.add(advreqvouModel);
     });
@@ -248,7 +248,6 @@ class AdvanceReqVoucherController_new extends GetxController {
     });
     setTextControllersValue();
   }
-
   //Set Value
   setTextControllersValue() async {
     for (var index = 0; index < GetTableList.value.length; index++) {
@@ -267,6 +266,7 @@ class AdvanceReqVoucherController_new extends GetxController {
     update_DBTableModelList.clear();
     GetTableList.forEach((element) {
       advreqvouModel = new AdvReqVoucher_SiteWisePayment_TableModel();
+      // advreqvouModel.reqDetId = element.reqDetId;
       advreqvouModel.purOrdMasId = element.purOrdMasId;
       advreqvouModel.orderNo = element.orderNo;
       advreqvouModel.project = element.project;
@@ -293,9 +293,7 @@ class AdvanceReqVoucherController_new extends GetxController {
   }
 
 
-
   Future SaveApi_ItemlistScreen(BuildContext context, int id) async {
-    buttonControl=1;
     getDetList_NMR.value.clear();
     getDetList_Advance.value.clear();
     await Future.delayed(const Duration(seconds: 0));
@@ -339,7 +337,7 @@ class AdvanceReqVoucherController_new extends GetxController {
             ? getDetDetails()
             : getDetList_NMR.value): []
     ));
-    final list = await AdvanceReqVoucherProvider.SaveApi(body, id, buttonControl ,context);
+    final list = await AdvanceReqVoucherProvider.SaveApi(body, id ,context);
     if (list != null && id != 0) {
       Navigator.pop(context);
       Navigator.pop(context);
@@ -348,8 +346,6 @@ class AdvanceReqVoucherController_new extends GetxController {
           new MaterialPageRoute(
               builder: (BuildContext context) =>
               new AdvReq_Voucher_EntryList_new()));
-      buttonControl=0;
-      editcheck=0;
       BaseUtitiles.showToast(list);
       getEntryList();
       return Navigator.pop(context);
@@ -358,7 +354,6 @@ class AdvanceReqVoucherController_new extends GetxController {
       if (list == RequestConstant.DUPLICATE_OCCURED) {
         Navigator.pop(context);
         Navigator.pop(context);
-        buttonControl=0;
         return BaseUtitiles.showToast(list!);
       } else {
         Navigator.pop(context);
@@ -368,8 +363,6 @@ class AdvanceReqVoucherController_new extends GetxController {
             new MaterialPageRoute(
                 builder: (BuildContext context) =>
                 new AdvReq_Voucher_EntryList_new()));
-        buttonControl=0;
-        editcheck=0;
         BaseUtitiles.showToast(list!);
         getEntryList();
         return Navigator.pop(context);
@@ -418,15 +411,6 @@ class AdvanceReqVoucherController_new extends GetxController {
     return getDetList_Advance.value;
   }
 
-  // Future EntryList_DeleteApi(int InwId, String InwNo) async {
-  //   await AdvanceReqVoucherProvider.entryList_deleteAPI(InwId, InwNo, loginController.UserId(), BaseUtitiles.deviceName)
-  //       .then((value) async {
-  //     if (value != null && value.length > 0) {
-  //       BaseUtitiles.showToast("Record deleted successfully");
-  //       return value;
-  //     }
-  //   });
-  // }
 
   Future<dynamic> EntryList_DeleteApi(List<int> InwId, List<String> InwNo) async {
     String body = advanceReqDeleteModelToJson(
@@ -451,9 +435,8 @@ class AdvanceReqVoucherController_new extends GetxController {
   Future EntryList_EditApi(int vocId,int acctypId,int accnameId, int prjId, BuildContext context) async {
     await AdvanceReqVoucherProvider.entryList_editAPI(vocId, acctypId,accnameId,prjId).then((value) async {
       if (value != null && value.length > 0) {
-        editcheck = 1;
-        entrycheck = 1;
         editListApiDatas.value = value;
+        saveButton.value =RequestConstant.RESUBMIT;
         for (var element in editListApiDatas.value) {
           if (element.accTypeName == "SUPPLIER") {
             await EditAdvTable_SaveTable();
@@ -474,21 +457,21 @@ class AdvanceReqVoucherController_new extends GetxController {
     ItemListTableModelList.clear();
     editListApiDatas.value.forEach((element) {
       element.vocEditDet.forEach((value) {
-        ItemListTableModel = AdvReqVoucherItemListTableModel();
+        ItemListTableModel = new AdvReqVoucherItemListTableModel();
         ItemListTableModel.siteId = value.siteId;
-        ItemListTableModel.siteName = value.siteName;
-        ItemListTableModel.paymentType = value.payType;
-        ItemListTableModel.amount = value.amount;
-        ItemListTableModel.tds_percent = value.tdsPer;
+        ItemListTableModel.siteName = value.siteName.toString();
+        ItemListTableModel.paymentType = value.payType.toString();
+        ItemListTableModel.amount = value.amt;
+        ItemListTableModel.tds_percent =value.tdsPer;
         ItemListTableModel.tds_amount = value.tdsAmt;
         ItemListTableModel.netAmount = value.netAmt;
         ItemListTableModelList.add(ItemListTableModel);
       });
     });
-    var savedatas =
-    await advreqVoucher_ItemlistService.AdvreqVoucher_ItemlistTable_Save(ItemListTableModelList);
+    var savedatas = await advreqVoucher_ItemlistService.AdvreqVoucher_ItemlistTable_Save(ItemListTableModelList);
     return savedatas;
   }
+
   ///------Advance----
   EditAdvTable_SaveTable() async {
     DBTableModelList.clear();
@@ -514,12 +497,6 @@ class AdvanceReqVoucherController_new extends GetxController {
     return savedatas;
   }
 
-  String ButtonChanges(int id) {
-    if (id != 0)
-      return saveButton.value = RequestConstant.RESUBMIT;
-    else
-      return saveButton.value = RequestConstant.SUBMIT;
-  }
 
   AmtItemlist_clickEdit() {
     for (var index = 0; index < GetTableList.value.length; index++) {
@@ -567,7 +544,7 @@ class AdvanceReqVoucherController_new extends GetxController {
     entry_amount.text = (current - amount).toString();
   }
 
-  Future DeleteAlert(BuildContext context,int index) async {
+    Future DeleteAlert(BuildContext context,int index) async {
     return await showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -594,9 +571,7 @@ class AdvanceReqVoucherController_new extends GetxController {
                   ),
                   Expanded(
                     child: TextButton(
-                        onPressed: () {
-                          entrycheck = 0;
-                          editcheck = 0;
+                        onPressed: () async {
                           List<int> IdList=[entryList[index].vocId];
                           List<String> NoList=[ entryList[index].vocNo];
                           EntryList_DeleteApi(IdList,NoList);

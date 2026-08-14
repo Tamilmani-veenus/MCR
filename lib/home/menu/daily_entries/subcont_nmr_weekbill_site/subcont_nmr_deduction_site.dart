@@ -5,6 +5,7 @@ import 'package:mcr/utilities/apiconstant.dart';
 
 import '../../../../app_theme/app_colors.dart';
 import '../../../../constants/ui_constant/icons_const.dart';
+import '../../../../controller/auto_yrwise_no_controller.dart';
 import '../../../../controller/billgenerationdirect_controller.dart';
 import '../../../../controller/projectcontroller.dart';
 import '../../../../controller/sitecontroller.dart';
@@ -31,7 +32,7 @@ class _Subcont_NMR_DeductionState_Site
   ProjectController projectController = Get.put(ProjectController());
   SubcontractorController subcontractorController = Get.put(SubcontractorController());
   SiteController siteController = Get.put(SiteController());
-  BillGenerationDirectController billGenerationDirectController = Get.put(BillGenerationDirectController());
+  AutoYearWiseNoController autoYearWiseNoController=Get.put(AutoYearWiseNoController());
 
   @override
   void initState() {
@@ -62,10 +63,10 @@ class _Subcont_NMR_DeductionState_Site
 
       if (nmrWklyController.saveButton.value == RequestConstant.SUBMIT) {
         nmrWklyController.workid = 0;
-        for (final controller in billGenerationDirectController.percentControllers) {
+        for (final controller in nmrWklyController.percentControllers) {
           controller.clear();
         }
-        for (final item in billGenerationDirectController.directBillGen_ItemReadList) {
+        for (final item in nmrWklyController.directBillGen_ItemReadList) {
           item.percentValue = 0.0;
           item.amount = 0.0;
         }
@@ -78,7 +79,7 @@ class _Subcont_NMR_DeductionState_Site
         nmrWklyController.netBillAmt.text = "0.0";
         nmrWklyController.netpayamt.text = "0.0";
         nmrWklyController.tobededadv.text =
-            billGenerationDirectController.to_be_dection_advance;
+            nmrWklyController.to_be_dection_advance;
         nmrWklyController.CreditRemarksController.text = "-";
         nmrWklyController.DebitRemarksController.text = "-";
         await nmrWklyController.deduction_paymentCalculation();
@@ -1114,7 +1115,8 @@ class _Subcont_NMR_DeductionState_Site
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Expanded(
+                    if(nmrWklyController.saveButton.value == RequestConstant.SUBMIT)
+                      Expanded(
                       child: InkWell(
                         child: Container(
                           margin: EdgeInsets.only(left: 20, right: 20),
@@ -1313,34 +1315,106 @@ class _Subcont_NMR_DeductionState_Site
                   Expanded(
                     child: TextButton(
                         onPressed: () async {
-                          nmrWklyController.workid = 0;
-                          nmrWklyController.Creditamt.text = "0.0";
-                          nmrWklyController.Debitamt.text = "0.0";
-                          nmrWklyController.Advded.text = "0.0";
-                          nmrWklyController.Roundoff.text = "0.0";
-                          nmrWklyController.deduction_paymentCalculation();
-                          nmrWklyController.CreditRemarksController.text = "-";
-                          nmrWklyController.DebitRemarksController.text = "-";
+                          // Generate new NMR number
+                          await autoYearWiseNoController.NMR_AutoYearWise();
 
-                          nmrWklyController.tobededadv.text = "0.0";
+                          // -----------------------------
+                          // Reset Item List
+                          // -----------------------------
+                          nmrWklyController.NmritemList.clear();
 
-                          nmrWklyController.NmritemList.value.clear();
-                          nmrWklyController.EditListSaveDatas.value.clear();
-                          nmrWklyController.saveButton.value =
-                              RequestConstant.SUBMIT;
+                          // -----------------------------
+                          // Reset Project
+                          // -----------------------------
+                          projectController.projectname.text = "--SELECT--";
+                          projectController.selectedProjectId.value = 0;
+
+                          // -----------------------------
+                          // Reset Site
+                          // -----------------------------
+                          siteController.Sitename.text = "--SELECT--";
+                          siteController.selectedsiteId.value = 0;
+
+                          // -----------------------------
+                          // Reset Subcontractor
+                          // -----------------------------
+                          subcontractorController.Subcontractorname.text = "--SELECT--";
+                          subcontractorController.selectedSubcontId.value = 0;
+
+                          // -----------------------------
+                          // Reset Bill Details
+                          // -----------------------------
+                          nmrWklyController.BillNoController.clear();
+                          nmrWklyController.RemarksController.clear();
+
+                          final currentDate =
+                          BaseUtitiles.initiateCurrentDateFormat();
+
+                          nmrWklyController.NmrentryDateController.text =
+                              currentDate;
+
+                          nmrWklyController.FromdateController.text =
+                              currentDate;
+
+                          nmrWklyController.TodateController.text =
+                              currentDate;
+
+                          nmrWklyController.autoYearWiseNoController.text =
+                              autoYearWiseNoController.NMR_autoYrsWise.value;
+
                           nmrWklyController.workid = 0;
+
+                          // -----------------------------
+                          // Reset Amounts
+                          // -----------------------------
                           nmrWklyController.billamount.text = "0.0";
                           nmrWklyController.foodDeduction.text = "0.0";
                           nmrWklyController.Creditamt.text = "0.0";
                           nmrWklyController.Debitamt.text = "0.0";
-                          nmrWklyController.CreditRemarksController.text = "-";
-                          nmrWklyController.DebitRemarksController.text = "-";
                           nmrWklyController.Advded.text = "0.0";
                           nmrWklyController.Roundoff.text = "0.0";
                           nmrWklyController.netBillAmt.text = "0.0";
                           nmrWklyController.netpayamt.text = "0.0";
 
-                          Navigator.pop(context);
+                          // -----------------------------
+                          // Reset Remarks
+                          // -----------------------------
+                          nmrWklyController.CreditRemarksController.text = "-";
+                          nmrWklyController.DebitRemarksController.text = "-";
+
+                          // -----------------------------
+                          // Clear Percentage Controllers
+                          // -----------------------------
+                          for (final controller
+                          in nmrWklyController.percentControllers) {
+                            controller.clear();
+                          }
+
+                          // -----------------------------
+                          // Reset Item Percentage & Amount
+                          // -----------------------------
+                          for (final item
+                          in nmrWklyController.directBillGen_ItemReadList) {
+                            item.percentValue = 0.0;
+                            item.amount = 0.0;
+                          }
+
+                          // IMPORTANT:
+                          // Notify GetX that item properties have changed
+                          nmrWklyController.directBillGen_ItemReadList.refresh();
+
+                          // -----------------------------
+                          // Recalculate
+                          // -----------------------------
+                          await nmrWklyController.deduction_paymentCalculation();
+
+                          // Refresh UI after calculation
+                          nmrWklyController.directBillGen_ItemReadList.refresh();
+
+                          // Close page/dialog
+                          if (context.mounted) {
+                            Navigator.pop(context);
+                          }
                         },
                         child: Text("Reset",
                             style: TextStyle(

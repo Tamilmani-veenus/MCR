@@ -766,15 +766,6 @@ class _Subcont_NMR_EntryListScreenState_Site
                                                                 ),
                                                                 onTap:
                                                                     () async {
-                                                                  billGenerationDirectController
-                                                                      .billgen_itemlistTable_Delete();
-                                                                  billGenerationDirectController
-                                                                          .ItemGetTableListdata
-                                                                      .clear();
-                                                                  billGenerationDirectController
-                                                                      .bill_editListApiDatas
-                                                                      .value
-                                                                      .clear();
                                                                   await billGenerationDirectController.directBillEntryList_EditApi(
                                                                       billGenerationDirectController
                                                                           .bill_entryList
