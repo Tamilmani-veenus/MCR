@@ -108,7 +108,7 @@ class WorkOrderDirectController extends GetxController{
   Future WorkOrder_CalculationList() async {
     workOrderDet_Calculation.value.clear();
     await WorkOrderDirectProvider.getWorkOrderCalculation_List(
-        0,0).then((value) async {
+        subcontractorController.selectedSubcontId.value,0).then((value) async {
       if (value != null && value.length > 0) {
         workOrderDet_Calculation.value = value;
         await workOrderCal_itemlistTable_Delete();
