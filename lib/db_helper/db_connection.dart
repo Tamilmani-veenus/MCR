@@ -95,7 +95,7 @@ class DatabaseConnection {
     String companyNMRDetTable = "CREATE TABLE companyNMRDetTable (id INTEGER PRIMARY KEY UNIQUE,labourId INTEGER,labourName Text,Labour_No TEXT,categaryName TEXT,wages REAL,shift TEXT,status TEXT,busfare REAL,othrs REAL,advance REAL,detRemarks TEXT)";
     await database.execute(companyNMRDetTable);
 
-    String advReqVoucherSitewisePayTable = "CREATE TABLE advReqVoucherSitewisePayTable (id INTEGER PRIMARY KEY UNIQUE,PurOrdMasId  INTEGER,OrderNo Text,Project TEXT,ProjectId INTEGER,SiteName TEXT,SiteId INTEGER,DPRAmt REAL,AdvanceAmt REAL,BAmount REAL,Amount REAL)";
+    String advReqVoucherSitewisePayTable = "CREATE TABLE advReqVoucherSitewisePayTable (id INTEGER PRIMARY KEY UNIQUE,PurOrdMasId INTEGER,OrderNo Text,Project TEXT,ProjectId INTEGER,SiteName TEXT,SiteId INTEGER,DPRAmt REAL,AdvanceAmt REAL,BAmount REAL,Amount REAL,paymentType TEXT)";
     await database.execute(advReqVoucherSitewisePayTable);
 
     String loginDetailsTable = "CREATE TABLE loginDetailsTable (id INTEGER PRIMARY KEY UNIQUE,userId INTEGER,userName Text,userType TEXT,userActive TEXT,userAppActive INTEGER,empId INTEGER,empName TEXT)";
