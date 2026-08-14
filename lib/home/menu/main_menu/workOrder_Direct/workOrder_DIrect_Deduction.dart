@@ -43,14 +43,10 @@ class _WorkOrderDirectDeductionState extends State<WorkOrderDirectDeduction> {
           workOrderDirectController.deductionPaymentCalculation();
         });
         await workOrderDirectController.deductionPaymentCalculation();
-        workOrderDirectController.setBaseNetPay(
-            workOrderDirectController.workOrdamount.text);
       }
-      await workOrderDirectController.WorkOrder_CalculationList();
 
       if (workOrderDirectController.saveButton.value == RequestConstant.SUBMIT) {
         workOrderDirectController.workid = 0;
-        workOrderDirectController.termsConditionController.text = "";
         workOrderDirectController.workOrdamount.text = "0.0";
         workOrderDirectController.rebateAmount.text = "0.0";
         workOrderDirectController.Roundoff.text = "0.0";
@@ -568,7 +564,6 @@ class _WorkOrderDirectDeductionState extends State<WorkOrderDirectDeduction> {
 
                                         percent,
 
-                                        workOrderDirectController.baseNetPayAmt,
                                       );
 
                                       // RESTORE ONLY CURRENT FIELD
@@ -608,11 +603,23 @@ class _WorkOrderDirectDeductionState extends State<WorkOrderDirectDeduction> {
                                     },
                                   ),
                                 ),
+                                // Obx(() {
+                                //   final updated = workOrderDirectController.workOrder_ItemReadList
+                                //       .firstWhereOrNull((e) => e.addLessId == item.addLessId);
+                                //   return tableCellText(
+                                //     (updated?.amount ?? 0.0).toStringAsFixed(2),
+                                //     align: TextAlign.right,
+                                //   );
+                                // }),
                                 Obx(() {
                                   final updated = workOrderDirectController.workOrder_ItemReadList
                                       .firstWhereOrNull((e) => e.addLessId == item.addLessId);
+
+                                  final amount = (updated?.amount ?? 0.0);
+                                  final displayAmount = amount == 0 || amount.abs() < 0.005 ? 0.0 : amount;
+
                                   return tableCellText(
-                                    (updated?.amount ?? 0.0).toStringAsFixed(2),
+                                    displayAmount.toStringAsFixed(2),
                                     align: TextAlign.right,
                                   );
                                 }),
@@ -647,7 +654,7 @@ class _WorkOrderDirectDeductionState extends State<WorkOrderDirectDeduction> {
                                 height: 50,
                                 alignment: Alignment.center,
                                 child: Text(
-                                  workOrderDirectController.totalAddLess.toStringAsFixed(2), // ← getter from controller
+                                  workOrderDirectController.getTotalAddLess().toStringAsFixed(2), // ← getter from controller
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 15,
