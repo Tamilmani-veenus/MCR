@@ -424,7 +424,7 @@ class _WorkOrderDirectEntryScreenState extends State<WorkOrderDirectEntryScreen>
                             return null;
                           },
                           onTap: () async {
-                            if(workOrderDirectController.saveButton.value == RequestConstant.RESUBMIT || workOrderDirectController.saveButton.value == RequestConstant.VERIFY || workOrderDirectController.saveButton.value == RequestConstant.APPROVAL)
+                            if(workOrderDirectController.saveButton.value == RequestConstant.VERIFY || workOrderDirectController.saveButton.value == RequestConstant.APPROVAL)
                             {}
                             else{
                               showDialog(
@@ -478,7 +478,7 @@ class _WorkOrderDirectEntryScreenState extends State<WorkOrderDirectEntryScreen>
                             return null;
                           },
                           onTap: () async {
-                            if(workOrderDirectController.saveButton.value == RequestConstant.RESUBMIT || workOrderDirectController.saveButton.value == RequestConstant.VERIFY || workOrderDirectController.saveButton.value == RequestConstant.APPROVAL)
+                            if(workOrderDirectController.saveButton.value == RequestConstant.VERIFY || workOrderDirectController.saveButton.value == RequestConstant.APPROVAL)
                             {}
                             else{
                               showDialog(
