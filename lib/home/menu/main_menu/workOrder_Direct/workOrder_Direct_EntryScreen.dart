@@ -56,6 +56,8 @@ class _WorkOrderDirectEntryScreenState extends State<WorkOrderDirectEntryScreen>
           workOrderDirectController.RemarksController.text = element.remarks.toString();
         });
       }
+      await workOrderDirectController.WorkOrder_CalculationList();
+
       if (workOrderDirectController.saveButton.value == RequestConstant.SUBMIT) {
         await autoYearWiseNoController.workOrderdirect_AutoYearWise();
         workOrderDirectController.autoYearWiseNoController.text = autoYearWiseNoController.WorkOrdDirect_autoYrWise.value;
@@ -74,11 +76,13 @@ class _WorkOrderDirectEntryScreenState extends State<WorkOrderDirectEntryScreen>
         workOrderDirectController.PreparedByController.text = loginController.EmpName();
         workOrderDirectController.RemarksController.text = "";
         // workOrderDirectController.createdById.value=0;
-        // workOrderDirectController.workOrder_itemlistTable_Delete();
-        // workOrderDirectController.ItemGetTableListdata.value.clear();
-        // workOrderDirectController.workOrdamount.text = "0.0";
-        // workOrderDirectController.Roundoff.text = "0";
-        // workOrderDirectController.netpayamt.text = "0.0";
+        workOrderDirectController.workOrder_itemlistTable_Delete();
+        workOrderDirectController.ItemGetTableListdata.value.clear();
+        workOrderDirectController.workOrdamount.text = "0.0";
+        workOrderDirectController.Roundoff.text = "0";
+        workOrderDirectController.netpayamt.text = "0.0";
+        workOrderDirectController.termsConditionController.text = "";
+
       }
     });
     super.initState();

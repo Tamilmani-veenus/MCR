@@ -117,7 +117,7 @@ class WorkOrderDirectController extends GetxController{
         if (saveButton.value == RequestConstant.RESUBMIT ||
             saveButton.value == RequestConstant.VERIFY ||
             saveButton.value == RequestConstant.APPROVAL) {
-          setBaseNetPay(workOrdamount.text);
+          setBaseNetPay();
           await preloadEditAddLessData(
               workOrderAddLessList);
           return workOrderDet_Calculation.value;
@@ -375,72 +375,34 @@ class WorkOrderDirectController extends GetxController{
   }
 
   Future<bool> deductionPaymentCalculation() async {
-    await getItemlistTablesDatas();
-
 
     if (ItemGetTableListdata.value.isEmpty) return false;
 
+    // Calculate Bill Amount
     double totalNetAmount = 0.0;
 
     for (var item in ItemGetTableListdata.value) {
-      totalNetAmount += (saveButton.value == RequestConstant.RESUBMIT ||
-          saveButton.value == RequestConstant.VERIFY ||
-          saveButton.value == RequestConstant.APPROVAL)
-          ? (item.amount ?? 0)
-          : (item.amount ?? 0);
+      totalNetAmount += item.amount ?? 0;
     }
 
-    workOrdamount.text = totalNetAmount.toStringAsFixed(0);
+    workOrdamount.text = totalNetAmount.toStringAsFixed(2);
 
     double bill = double.tryParse(workOrdamount.text) ?? 0;
+    String roundText = Roundoff.text.trim();
 
-    double round = double.tryParse(Roundoff.text) ?? 0;
-
-    // IMPORTANT
-    setBaseNetPay(workOrdamount.text);
-
-    // RECALCULATE ADD/LESS FIRST
-    for (var item in workOrder_ItemReadList) {
-      double percent = item.percentValue ?? 0.0;
-
-      double amt = (bill * percent) / 100;
-
-      if (amt == 0) {
-        item.amount = 0;
-      } else {
-        item.amount = item.addLessType == "-" ? -amt : amt;
-      }
-    }
-
-    // NOW GET UPDATED TOTAL
-    double addLessTotal = totalAddLess;
-
-    double retentionAmount = 0.0;
-
-    final retention = workOrder_ItemReadList.firstWhereOrNull(
-          (e) => e.addLessName?.toUpperCase() == "RETENTION",
+    double round = (roundText.isEmpty || roundText == "-")
+        ? 0
+        : double.tryParse(roundText) ?? 0;
+    // Recalculate all Add/Less, NetBill and NetPay
+    recalculateAddLessAmounts(
+      bill: bill,
+      round: round,
     );
 
-    if (retention != null) {
-      retentionAmount = (retention.amount ?? 0).abs();
-    }
-
-    double rebate = bill - retentionAmount;
-
-    if (rebate < 0) rebate = 0;
-
-    rebateAmount.text = rebate.toStringAsFixed(0);
-
-    // FINAL NET
-    double netAmount =
-        bill + round + addLessTotal;
-
-    // VALIDATION
-    if (netAmount < 0) {
+    // Optional validation
+    if ((double.tryParse(netpayamt.text) ?? 0) < 0) {
       return false;
     }
-
-    netpayamt.text = netAmount.toStringAsFixed(0);
 
     workOrder_ItemReadList.refresh();
 
@@ -449,17 +411,97 @@ class WorkOrderDirectController extends GetxController{
     return true;
   }
 
-  void setBaseNetPay(String value) {
-    baseNetPayAmt = double.tryParse(value) ?? 0.0;
-    netpayamt.text = baseNetPayAmt.toStringAsFixed(0);
-    print("=== setBaseNetPay called: $baseNetPayAmt ==="); // 👈 add this
+  void recalculateAddLessAmounts({
+    required double bill,
+    required double round,
+  }) {
+    // ============================================================
+    // BILL AMOUNT IS THE BASE FOR ALL PERCENTAGES
+    // ============================================================
+
+    final double baseAmount = bill;
+
+    double retentionAmount = 0.0;
+
+    // ============================================================
+    // STEP 1
+    // CALCULATE EVERY PERCENTAGE ROW
+    // ============================================================
+
+    for (var item in workOrder_ItemReadList) {
+      final name = (item.addLessName ?? "").trim().toUpperCase();
+
+      final percent = item.percentValue ?? 0.0;
+
+      // Only percentage based rows
+      if (name == "S-GST" ||
+          name == "C-GST" ||
+          name == "I-GST" ||
+          name == "RETENTION" ||
+          name == "TDS" ||
+          name == "HOLD") {
+        final double amount = baseAmount * percent / 100;
+
+        if (item.addLessType == "-") {
+          item.amount = -amount;
+        } else {
+          item.amount = amount;
+        }
+        if (name == "RETENTION") {
+          retentionAmount = amount;
+        }
+      }
+    }
+
+    double rebate = baseAmount;
+
+    if (retentionAmount > 0) {
+      rebate = baseAmount - retentionAmount;
+    }
+
+    rebateAmount.text = rebate.toStringAsFixed(2);
+
+    double finalAmount = baseAmount;
+
+    for (var item in workOrder_ItemReadList) {
+      final name = (item.addLessName ?? "").trim().toUpperCase();
+
+      if (name == "S-GST" ||
+          name == "C-GST" ||
+          name == "I-GST" ||
+          name == "RETENTION" ||
+          name == "TDS" ||
+          name == "HOLD") {
+        finalAmount += item.amount ?? 0.0;
+      }
+    }
+
+
+    finalAmount += round;
+
+
+    netpayamt.text = finalAmount.toStringAsFixed(2);
+
+
+    workOrder_ItemReadList.refresh();
+    update();
   }
 
-  double get totalAddLess {
-    return workOrder_ItemReadList.fold(
-      0.0,
-          (sum, item) => sum + (item.amount ?? 0.0),
-    );
+  void setBaseNetPay() {
+    double bill = double.tryParse(workOrdamount.text) ?? 0;
+    double netBill = bill;
+    baseNetPayAmt = netBill;
+    print("=== Base Net Bill : $baseNetPayAmt ===");
+  }
+
+  double getTotalAddLess() {
+    double total = 0;
+
+    for (final item in workOrder_ItemReadList) {
+      total += item.amount ?? 0;
+    }
+
+    return total;
   }
 
   Future<void> saveUpdatedCalcData() async {
@@ -484,107 +526,83 @@ class WorkOrderDirectController extends GetxController{
         updateBillGen_ItemReadList);
   }
 
-  bool calculateAndUpdate(
-      int addLessId,
-      double percent,
-      double baseAmount,
-      ) {
+  bool calculateAndUpdate(int addLessId, double percent) {
     final item = workOrder_ItemReadList.firstWhereOrNull(
           (e) => e.addLessId == addLessId,
     );
 
     if (item == null) return false;
 
-    // OLD VALUES
-    double oldPercent = item.percentValue ?? 0.0;
+    // Save old percentage
+    final oldPercent = item.percentValue ?? 0.0;
 
-    double oldAmount = item.amount ?? 0.0;
+    // Update current percentage
+    item.percentValue = percent;
 
-    // NEW AMOUNT
-    double amt = (baseAmount * percent) / 100;
+    final roundText = Roundoff.text.trim();
 
-    double newAmount;
+    final double round = (roundText.isEmpty || roundText == "-")
+        ? 0
+        : double.tryParse(roundText) ?? 0;
 
-    if (amt == 0) {
-      newAmount = 0.0;
-    } else {
-      newAmount = item.addLessType == "-" ? -amt : amt;
-    }
 
-    // TEMP TOTAL
-    double tempTotal = totalAddLess - oldAmount + newAmount;
+    final double bill = double.tryParse(workOrdamount.text) ?? 0;
 
-    double bill = double.tryParse(workOrdamount.text) ?? 0;
+    recalculateAddLessAmounts(
+      bill: bill,
+      round: round,
+    );
 
-    double round = double.tryParse(Roundoff.text) ?? 0;
 
-    double netAmount = bill + round + tempTotal;
+    final double netPay = double.tryParse(netpayamt.text) ?? 0;
 
-    // NEGATIVE VALIDATION
-    if (netAmount < 0) {
+    if (netPay < 0) {
       BaseUtitiles.showToast(
-        "Net Bill Amount cannot be negative. "
-            "Please reduce the deductions "
-            "or add-less percentages.",
+        "Net Pay Amount cannot be negative.",
       );
 
-      // RESTORE OLD VALUES
+      // Restore only current percentage
       item.percentValue = oldPercent;
-      item.amount = oldAmount;
+
+      // Recalculate using restored value
+      recalculateAddLessAmounts(
+        bill: bill,
+        round: round,
+      );
 
       workOrder_ItemReadList.refresh();
+      update();
 
       return false;
     }
 
-    item.percentValue = percent;
-    item.amount = newAmount;
-
-    // FIND RETENTION AGAIN
-    double retentionAmount = 0.0;
-
-    final retention = workOrder_ItemReadList.firstWhereOrNull(
-          (e) => e.addLessName?.toUpperCase() == "RETENTION",
-    );
-
-    if (retention != null) {
-      retentionAmount = (retention.amount ?? 0).abs();
-    }
-
-    double rebate = bill - retentionAmount;
-
-    if (rebate < 0) rebate = 0;
-
-    rebateAmount.text = rebate.toStringAsFixed(0);
-
-    netpayamt.text = netAmount.toStringAsFixed(0);
-
     workOrder_ItemReadList.refresh();
-
     update();
 
     return true;
   }
 
-  workOrderCalculationSave() async {
-    int i = 0;
+  Future<void> workOrderCalculationSave() async {
     workOrderTableModelList = [];
-    workOrderDet_Calculation.value.forEach((element) {
-      workOrderTable = new WorkOrderGSTCalTable();
-      workOrderTable.reqDetId = 0;
-      workOrderTable.addLessId = element.id;
-      workOrderTable.percentValue = 0.0;
-      workOrderTable.amount = 0.0;
-      workOrderTable.addLessName = element.addLessName;
-      workOrderTable.addLessType = element.addLessType;
-      workOrderTableModelList.add(workOrderTable);
-      i++;
-    });
-    var savedatas =
+
+    for (final element in workOrderDet_Calculation.value) {
+      final directBillTable = WorkOrderGSTCalTable();
+
+      directBillTable.reqDetId = 0;
+      directBillTable.addLessId = element.id;
+      directBillTable.percentValue = element.per;
+      directBillTable.amount = 0.0;
+      directBillTable.addLessName = element.addLessName;
+      directBillTable.addLessType = element.addLessType;
+
+      workOrderTableModelList.add(directBillTable);
+    }
+
     await workOrder_ItemlistService.workOrderGST_ItemTable_Save(
         workOrderTableModelList);
-    return savedatas;
   }
+
+
 
   Future getWorkorderCalDatas() async {
     var datas = await workOrder_ItemlistService
@@ -693,11 +711,6 @@ class WorkOrderDirectController extends GetxController{
     // First load local DB rows
     await getWorkorderCalDatas();
 
-    for (var editItem in editAddLessList) {
-      print("ID: ${editItem.addLessId}");
-      print("Percent: ${editItem.percentValue}");
-      print("Amount: ${editItem.amount}");
-    }
 
     // Update local rows with edit API values
     for (var editItem in editAddLessList) {
@@ -729,15 +742,27 @@ class WorkOrderDirectController extends GetxController{
   }
 
   void updateNetPay() {
-    double bill = double.tryParse(workOrdamount.text) ?? 0;
-    double round = double.tryParse(Roundoff.text) ?? 0;
+    String roundText = Roundoff.text.trim();
 
-    double addLessTotal = totalAddLess;
-
-    double netAmount = bill + round + addLessTotal;
-
-    netpayamt.text = netAmount.toStringAsFixed(2);
+    double round = (roundText.isEmpty || roundText == "-")
+        ? 0
+        : double.tryParse(roundText) ?? 0;
+    recalculateAddLessAmounts(
+      bill: double.tryParse(workOrdamount.text) ?? 0,
+      round: round,
+    );
   }
+
+  // void updateNetPay() {
+  //   double bill = double.tryParse(workOrdamount.text) ?? 0;
+  //   double round = double.tryParse(Roundoff.text) ?? 0;
+  //
+  //   double addLessTotal = totalAddLess;
+  //
+  //   double netAmount = bill + round + addLessTotal;
+  //
+  //   netpayamt.text = netAmount.toStringAsFixed(2);
+  // }
 
   workOrderCal_itemlistTable_Delete() async {
     await workOrder_ItemlistService.workOrderGST_ItemlistTable_delete();
