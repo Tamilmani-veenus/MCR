@@ -581,6 +581,39 @@ class _Subcont_NMR_EntryListScreenState_Site
                                         )),
                                   ],
                                 ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    Container(
+                                      margin:
+                                      EdgeInsets.only(top: 5, left: 10),
+                                      child: Text(""),
+                                    ),
+                                    Expanded(
+                                        flex: 4,
+                                        child: Text(
+                                          "NetPayAmt",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
+                                        )),
+                                    Expanded(
+                                        flex: 8,
+                                        child: Text(
+                                          "₹${billGenerationDirectController
+                                              .bill_entryList
+                                              .value[index]
+                                              .netPayAmt
+                                              .toString()}",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                          ),
+                                        )),
+                                  ],
+                                ),
                                 SizedBox(height: 5),
                                 Row(
                                   children: <Widget>[

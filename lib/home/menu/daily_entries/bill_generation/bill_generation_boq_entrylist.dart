@@ -573,6 +573,33 @@ class _Bill_Generation_Boq_EntrylistState_Site
                                     Expanded(
                                         flex: 4,
                                         child: Text(
+                                          "NetPayAmt",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black),
+                                        )),
+                                    Expanded(
+                                        flex: 8,
+                                        child: Text(
+                                          "₹${billGenerationBoqController
+                                              .bill_entryList
+                                              .value[index]
+                                              .netPayAmt
+                                              .toString()}",
+                                          style: TextStyle(color: Colors.black),
+                                        )),
+                                  ],
+                                ),
+                                SizedBox(height: 10),
+                                Row(
+                                  children: <Widget>[
+                                    Container(
+                                      margin: EdgeInsets.only(left: 10),
+                                      child: Text(""),
+                                    ),
+                                    Expanded(
+                                        flex: 4,
+                                        child: Text(
                                           "Preparedby",
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
