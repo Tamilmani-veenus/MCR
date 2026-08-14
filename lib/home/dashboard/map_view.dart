@@ -404,12 +404,22 @@ class _DrawMapViewState extends State<DrawMapView> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      _initialLatLng = LatLng(
-        double.tryParse(widget.latitude!)!,
-        double.tryParse(widget.longitude!)!,
-      );
 
+    // API latitude / longitude
+    final lat = double.tryParse(widget.latitude ?? '');
+    final lng = double.tryParse(widget.longitude ?? '');
+
+    if (lat == null || lng == null) {
+      debugPrint(
+        "Invalid API location: ${widget.latitude}, ${widget.longitude}",
+      );
+      return;
+    }
+
+    // Initial map focus will be on API location
+    _initialLatLng = LatLng(lat, lng);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       initValue();
     });
   }
