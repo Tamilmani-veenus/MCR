@@ -42,9 +42,9 @@ class CommonProvider{
     return responseData;
   }
 
-  static Future<List> getWorkOrderNoList(int pId, int sId,int subId) async {
+  static Future<List> getWorkOrderNoList(int pId, int sId,int subId,type) async {
     List responseData = [];
-    await ApiManager.getAPICall(ApiConstant.GETWRKORDERNOLIST + "?projectId=$pId&siteId=$sId&Subcontid=$subId&Type=D")
+    await ApiManager.getAPICall(ApiConstant.GETWRKORDERNOLIST + "?projectId=$pId&siteId=$sId&Subcontid=$subId&Type=$type")
         .then((value) {
       responseData = workOrderNoResponseFromJson(value);
       if (responseData != null && responseData.length > 0) {
@@ -442,6 +442,22 @@ class CommonProvider{
   static  directBill_getAutoYearWise() async {
     var datasave;
     await ApiManager.getAPICall(ApiConstant.GETAUTONO_YEAR_WISE+"?FieldName=Work_No&TableName=SubCont_WorkQty_Mas&FormName=SubContBillDirect").then((value) {
+      var decodedJson = json.decode(value);
+      datasave=decodedJson;
+      if (datasave!=null) {
+        return datasave;
+      }
+    },onError: (error) {
+      print(error);
+      print("Error == $error");
+      BaseUtitiles.showToast('Something went wrong.. $error');
+    });
+    return datasave;
+  }
+
+  static  boqBill_getAutoYearWise() async {
+    var datasave;
+    await ApiManager.getAPICall(ApiConstant.GETAUTONO_YEAR_WISE+"?FieldName=Work_No&TableName=SubCont_WorkQty_Mas&FormName=SubContBillBOQ").then((value) {
       var decodedJson = json.decode(value);
       datasave=decodedJson;
       if (datasave!=null) {

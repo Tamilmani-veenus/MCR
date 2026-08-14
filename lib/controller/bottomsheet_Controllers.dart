@@ -16,6 +16,7 @@ import '../controller/transferbw_site_controller.dart';
 import '../app_theme/app_colors.dart';
 import '../utilities/baseutitiles.dart';
 import '../utilities/requestconstant.dart';
+import 'billgeneration_boq_controller.dart';
 import 'billgenerationdirect_controller.dart';
 import 'boqrevised_controller.dart';
 import 'cashbookstaff_controller.dart';
@@ -53,6 +54,7 @@ class BottomsheetControllers {
       Get.put(BillGenerationDirectController());
   DailyEntriesController dailyEntriesController =
       Get.put(DailyEntriesController());
+  BillGenerationBoqController billGenerationBoqController=Get.put(BillGenerationBoqController());
 
   Consumption_Controller consumption_controller =
       Get.put(Consumption_Controller());
@@ -341,7 +343,7 @@ class BottomsheetControllers {
     );
   }
 
-  WorkOrderName(context, list){
+  WorkOrderName(context, list, type){
     showModalBottomSheet(context: context,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),),
@@ -423,8 +425,13 @@ class BottomsheetControllers {
                             subcontractorController.WorkOrderNo.text = list[index].workOrderNo.toString();
                             subcontractorController.selectedWorkOrderId.value = list[index].workOrderId;
                             searchcontroller.text = "";
-                            await billGenerationDirectController.getWorkOrderList();
-                            await billGenerationDirectController.DirectBill_CalculationList(type: "WorkOrd");
+                            if(type=="B"){
+                              await billGenerationBoqController.getWorkOrderList(type);
+                              await billGenerationBoqController.DirectBill_CalculationList(type: "WorkOrd");
+                            }else {
+                              await billGenerationDirectController.getWorkOrderList(type);
+                              await billGenerationDirectController.DirectBill_CalculationList(type: "WorkOrd");
+                            }
                             Navigator.pop(context);
                           },
                         ),
@@ -1258,17 +1265,10 @@ class BottomsheetControllers {
                           searchcontroller.text = "";
                           await nmrWklyController.getNmrAdvance();
                           await billGenerationDirectController.getNmrAdvance();
-
+                          await billGenerationBoqController.getNmrAdvance();
                           await dailyEntriesController.deleteSubcontDetTableDatas();
                           dailyEntriesController.readListdata.clear();
                           await nmrWklyController.DirectBill_CalculationList(type: "Subcont");
-
-                          // await subcontractorController.getSubcontList(context, projectcontroller.selectedProjectId.value);
-
-                          //--Subcontractor attendence-----------
-                          // await dailyEntriesController.deleteSubcontDetTableDatas();
-                          // dailyEntriesController.readListdata.value.clear();
-                          // await dailyEntriesController.getDetTablesDatas();
                           Navigator.pop(context);
                         },
                       ),

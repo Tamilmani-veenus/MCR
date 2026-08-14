@@ -34,10 +34,10 @@ class DirectBillGenerateProvider {
   }
 
   static Future getWorkOrderList(
-      int pId, int siteId, int subId, int workOrderNo,fromDate,toDate) async {
+      int pId, int siteId, int subId, int workOrderNo,fromDate,toDate,type) async {
     try {
       final response = await ApiManager.getAPICall(
-        "${ApiConstant.GET_WORKORDER_ENTRY_LIST}?PID=$pId&SID=$siteId&SUBID=$subId&WorkOrderId=$workOrderNo&Type=D&WorkFromdate=$fromDate&WorkTodate=$toDate",
+        "${ApiConstant.GET_WORKORDER_ENTRY_LIST}?PID=$pId&SID=$siteId&SUBID=$subId&WorkOrderId=$workOrderNo&Type=$type&WorkFromdate=$fromDate&WorkTodate=$toDate",
       );
 
       final data = billDirectWorkOrdDetFromJson(response);
@@ -71,23 +71,31 @@ class DirectBillGenerateProvider {
     return datasave;
   }
 
-  static Future<String?> SaveBillDirectAPI(String body, saveButton,context) async {
+  static Future<String?> SaveBillDirectAPI(String body, saveButton,context,entryType) async {
     String? ratingRes;
 
     try {
+      String value;
+
       if (saveButton == RequestConstant.SUBMIT) {
-        final value = await ApiManager.postAPICall(ApiConstant.DIRECTBILL_SAVE_API, body);
-        var response = saveDeduction_SaveResponseFromJson(value);
-        if (response.RetString != null) {
-          ratingRes = response.RetString;
-        }
+        value = await ApiManager.postAPICall(
+          entryType=="D"?ApiConstant.DIRECTBILL_SAVE_API:ApiConstant.BOQBILL_SAVE_API,
+          body,
+        );
       } else {
-        final value = await ApiManager.putUpdateAPIButton(ApiConstant.PUT_DIRECTBILL_UPDATE_API, body);
-        var response = saveDeduction_SaveResponseFromJson(value);
-        if (response.RetString != null) {
-          ratingRes = response.RetString;
-        }
+        value = await ApiManager.putUpdateAPIButton(
+          entryType=="D"?ApiConstant.PUT_DIRECTBILL_UPDATE_API:ApiConstant.PUT_BOQBILL_UPDATE_API,
+          body,
+        );
       }
+
+      final response = saveDeduction_SaveResponseFromJson(value);
+      print("eeeeee...${response}");
+
+      if (response.RetString != null) {
+        ratingRes = response.RetString;
+      }
+
     } catch (error) {
       print('❌ Error in SaveSubContScreenEntryAPI: $error');
       Navigator.pop(context);

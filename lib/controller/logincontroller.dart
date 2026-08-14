@@ -150,7 +150,7 @@ class LoginController extends GetxController {
         await getDeviceTokenToSendNotification();
         await Savetoken(context);
         if (user.value.userType == "A") {
-          Navigator.pop(context);
+          // Navigator.pop(context);
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) => Dashboard_screen()));
           // if(punchStatus == "False"){

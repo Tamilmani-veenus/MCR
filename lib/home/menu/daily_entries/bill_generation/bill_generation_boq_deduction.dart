@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../../../constants/ui_constant/icons_const.dart';
 import '../../../../controller/auto_yrwise_no_controller.dart';
-import '../../../../controller/billgenerationdirect_controller.dart';
+import '../../../../controller/billgeneration_boq_controller.dart';
 import '../../../../controller/projectcontroller.dart';
 import '../../../../controller/sitecontroller.dart';
 import '../../../../controller/subcontcontroller.dart';
@@ -13,18 +13,18 @@ import 'package:get/get.dart';
 import '../../../../utilities/baseutitiles.dart';
 import '../../../../utilities/requestconstant.dart';
 
-class Bill_Generation_direct_deduction extends StatefulWidget {
-  const Bill_Generation_direct_deduction({Key? key}) : super(key: key);
+class Bill_Generation_Boq_deduction extends StatefulWidget {
+  const Bill_Generation_Boq_deduction({Key? key}) : super(key: key);
 
   @override
-  State<Bill_Generation_direct_deduction> createState() =>
-      _Bill_Generation_direct_deductionState();
+  State<Bill_Generation_Boq_deduction> createState() =>
+      _Bill_Generation_Boq_deductionState();
 }
 
-class _Bill_Generation_direct_deductionState
-    extends State<Bill_Generation_direct_deduction> {
-  BillGenerationDirectController billGenerationDirectController =
-  Get.put(BillGenerationDirectController());
+class _Bill_Generation_Boq_deductionState
+    extends State<Bill_Generation_Boq_deduction> {
+  BillGenerationBoqController billGenerationBoqController=Get.put(BillGenerationBoqController());
+
   ProjectController projectController = Get.put(ProjectController());
   SubcontractorController subcontractorController =
   Get.put(SubcontractorController());
@@ -34,55 +34,56 @@ class _Bill_Generation_direct_deductionState
 
   @override
   void initState() {
+    super.initState();
     var duration = const Duration(seconds: 0);
     Future.delayed(duration, () async {
 
-      if (billGenerationDirectController.saveButton.value == RequestConstant.RESUBMIT || billGenerationDirectController.saveButton.value == RequestConstant.VERIFY || billGenerationDirectController.saveButton.value == RequestConstant.APPROVAL) {
-        for (var element in billGenerationDirectController.bill_editListApiDatas) {
-          billGenerationDirectController.workid = element.workId;
-          billGenerationDirectController.billamount.text = element.billAmt.toString();
-          // billGenerationDirectController.finalBillAmt.text = element.finalBillAmount.toString();
-          billGenerationDirectController.netBillAmt.text = element.netPayAmt.toString();
-          billGenerationDirectController.Creditamt.text = element.creditAmt.toString();
-          billGenerationDirectController.Debitamt.text = element.debitAmt.toString();
-          billGenerationDirectController.Advded.text = element.advAmt.toString();
-          billGenerationDirectController.materialDebitamt.text = element.materialDebit.toString();
-          billGenerationDirectController.Roundoff.text = element.rndOff.toString();
-          billGenerationDirectController.CreditRemarksController.text = element.creditRemarks.toString();
-          billGenerationDirectController.DebitRemarksController.text = element.debitRemarks.toString();
-          billGenerationDirectController.materialDebitRemarks.text = element.materialDebitRemarks.toString();
-          billGenerationDirectController.tobededadv.text = element.actAdvAmt.toString();
-          billGenerationDirectController.to_be_dection_advance = element.advAmt.toString();
-          billGenerationDirectController.netpayamt.text = element.netPayAmt.toString();
+      if (billGenerationBoqController.saveButton.value == RequestConstant.RESUBMIT || billGenerationBoqController.saveButton.value == RequestConstant.VERIFY || billGenerationBoqController.saveButton.value == RequestConstant.APPROVAL) {
+        for (var element in billGenerationBoqController.bill_editListApiDatas) {
+          billGenerationBoqController.workid = element.workId;
+          billGenerationBoqController.billamount.text = element.billAmt.toString();
+          // billGenerationBoqControllerler.finalBillAmt.text = element.finalBillAmount.toString();
+          billGenerationBoqController.netBillAmt.text = element.netPayAmt.toString();
+          billGenerationBoqController.Creditamt.text = element.creditAmt.toString();
+          billGenerationBoqController.Debitamt.text = element.debitAmt.toString();
+          billGenerationBoqController.Advded.text = element.advAmt.toString();
+          billGenerationBoqController.materialDebitamt.text = element.materialDebit.toString();
+          billGenerationBoqController.Roundoff.text = element.rndOff.toString();
+          billGenerationBoqController.CreditRemarksController.text = element.creditRemarks.toString();
+          billGenerationBoqController.DebitRemarksController.text = element.debitRemarks.toString();
+          billGenerationBoqController.materialDebitRemarks.text = element.materialDebitRemarks.toString();
+          billGenerationBoqController.tobededadv.text = element.actAdvAmt.toString();
+          billGenerationBoqController.to_be_dection_advance = element.advAmt.toString();
+          billGenerationBoqController.netpayamt.text = element.netPayAmt.toString();
         }
-        await billGenerationDirectController.deductionPaymentCalculation();
+        await billGenerationBoqController.deductionPaymentCalculation();
       }
 
-      if (billGenerationDirectController.saveButton.value == RequestConstant.SUBMIT) {
-        billGenerationDirectController.workid = 0;
-        for (final controller in billGenerationDirectController.percentControllers) {
+      if (billGenerationBoqController.saveButton.value == RequestConstant.SUBMIT) {
+        billGenerationBoqController.workid = 0;
+        for (final controller in billGenerationBoqController.percentControllers) {
           controller.clear();
         }
-        for (final item in billGenerationDirectController.directBillGen_ItemReadList) {
+        for (final item in billGenerationBoqController.directBillGen_ItemReadList) {
           item.percentValue = 0.0;
           item.amount = 0.0;
         }
-        billGenerationDirectController.materialDebitamt.text = "0.0";
-        billGenerationDirectController.Creditamt.text = "0.0";
-        billGenerationDirectController.Debitamt.text = "0.0";
-        billGenerationDirectController.Advded.text = "0.0";
-        billGenerationDirectController.Roundoff.text = "0.0";
-        billGenerationDirectController.netBillAmt.text = "0.0";
-        billGenerationDirectController.balAmt.text = "0.0";
-        // billGenerationDirectController.finalBillAmt.text = "0.0";
-        billGenerationDirectController.tobededadv.text = billGenerationDirectController.to_be_dection_advance;
-        billGenerationDirectController.CreditRemarksController.text = "-";
-        billGenerationDirectController.DebitRemarksController.text = "-";
-        billGenerationDirectController.materialDebitRemarks.text = "-";
-        await billGenerationDirectController.deductionPaymentCalculation();
+        billGenerationBoqController.materialDebitamt.text = "0.0";
+        billGenerationBoqController.Creditamt.text = "0.0";
+        billGenerationBoqController.Debitamt.text = "0.0";
+        billGenerationBoqController.Advded.text = "0.0";
+        billGenerationBoqController.Roundoff.text = "0.0";
+        billGenerationBoqController.netBillAmt.text = "0.0";
+        billGenerationBoqController.finalBillAmt.text = "0.0";
+        billGenerationBoqController.netpayamt.text = "0.0";
+        billGenerationBoqController.balAmt.text = "0.0";
+        billGenerationBoqController.tobededadv.text = billGenerationBoqController.to_be_dection_advance;
+        billGenerationBoqController.CreditRemarksController.text = "-";
+        billGenerationBoqController.DebitRemarksController.text = "-";
+        billGenerationBoqController.materialDebitRemarks.text = "-";
+        await billGenerationBoqController.deductionPaymentCalculation();
       }
     });
-    super.initState();
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -112,7 +113,7 @@ class _Bill_Generation_direct_deductionState
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          "Bill Generation Direct Deduction",
+                          "Bill Generation BOQ Deduction",
                           style: TextStyle(
                               fontSize: RequestConstant.Heading_Font_SIZE,
                               fontWeight: FontWeight.bold),
@@ -142,7 +143,7 @@ class _Bill_Generation_direct_deductionState
                         child: TextFormField(
                           autovalidateMode: AutovalidateMode.always,
                           readOnly: true,
-                          controller: billGenerationDirectController.billamount,
+                          controller: billGenerationBoqController.billamount,
                           cursorColor: Colors.black,
                           style: const TextStyle(color: Colors.black),
                           decoration: const InputDecoration(
@@ -193,6 +194,7 @@ class _Bill_Generation_direct_deductionState
                               child: TextFormField(
                                 autovalidateMode:
                                 AutovalidateMode.always,
+
                                 keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
 
                                 inputFormatters: [
@@ -203,7 +205,7 @@ class _Bill_Generation_direct_deductionState
                                   }),
                                 ],
                                 controller:
-                                billGenerationDirectController.materialDebitamt,
+                                billGenerationBoqController.materialDebitamt,
                                 cursorColor: Colors.black,
                                 style: const TextStyle(color: Colors.black),
                                 decoration: const InputDecoration(
@@ -225,55 +227,56 @@ class _Bill_Generation_direct_deductionState
                                 onChanged: (value) async {
 
                                   // PREVENT LOOP
-                                  if (billGenerationDirectController.isRestoring) {
+                                  if (billGenerationBoqController.isRestoring) {
                                     return;
                                   }
 
                                   // STORE OLD VALUE
                                   String oldValue =
-                                      billGenerationDirectController.oldmatDebitValue;
+                                      billGenerationBoqController.oldmatDebitValue;
 
                                   // CALCULATE
                                   bool success =
-                                  await billGenerationDirectController
+                                  await billGenerationBoqController
                                       .deductionPaymentCalculation();
 
                                   // INVALID
                                   if (!success) {
 
                                     // PREVENT onChanged LOOP
-                                    billGenerationDirectController.isRestoring = true;
+                                    billGenerationBoqController.isRestoring = true;
 
                                     // RESTORE OLD VALUE
-                                    billGenerationDirectController.materialDebitamt.text =
+                                    billGenerationBoqController.materialDebitamt.text =
                                         oldValue;
 
                                     // CURSOR POSITION
-                                    billGenerationDirectController.materialDebitamt.selection =
+                                    billGenerationBoqController.materialDebitamt.selection =
                                         TextSelection.fromPosition(
                                           TextPosition(
                                             offset: oldValue.length,
                                           ),
                                         );
 
-                                    billGenerationDirectController.isRestoring = false;
+                                    billGenerationBoqController.isRestoring = false;
 
                                     // RECALCULATE
-                                    await billGenerationDirectController
+                                    await billGenerationBoqController
                                         .deductionPaymentCalculation();
 
                                   } else {
 
                                     // SAVE VALID VALUE
-                                    billGenerationDirectController.oldmatDebitValue =
+                                    billGenerationBoqController.oldmatDebitValue =
                                         value;
                                   }
                                 },
                                 onTap: (){
-                                  if(billGenerationDirectController.materialDebitamt.text=="0.0"||billGenerationDirectController.materialDebitamt.text=="0"){
-                                    billGenerationDirectController.materialDebitamt.text="";
+                                  if(billGenerationBoqController.materialDebitamt.text=="0.0"||billGenerationBoqController.materialDebitamt.text=="0"){
+                                    billGenerationBoqController.materialDebitamt.text="";
                                   }
                                 },
+
                               ),
                             ),
                           ),
@@ -295,7 +298,7 @@ class _Bill_Generation_direct_deductionState
                               padding: const EdgeInsets.only(
                                   top: 3, left: 10, bottom: 5),
                               child: TextFormField(
-                                controller: billGenerationDirectController
+                                controller: billGenerationBoqController
                                     .materialDebitRemarks,
                                 cursorColor: Colors.black,
                                 style: const TextStyle(color: Colors.black),
@@ -342,21 +345,21 @@ class _Bill_Generation_direct_deductionState
                                 autovalidateMode:
                                 AutovalidateMode.always,
                                 onTap: () {
-                                  if (billGenerationDirectController
+                                  if (billGenerationBoqController
                                       .Creditamt.text !=
                                       "" &&
-                                      billGenerationDirectController
+                                      billGenerationBoqController
                                           .Creditamt.text !=
                                           "0" &&
-                                      billGenerationDirectController
+                                      billGenerationBoqController
                                           .Creditamt.text !=
                                           "0.0") {
                                     return;
                                   } else {
                                     setState(() {
-                                      billGenerationDirectController
+                                      billGenerationBoqController
                                           .Creditamt.text = "";
-                                      billGenerationDirectController
+                                      billGenerationBoqController
                                           .deductionPaymentCalculation();
                                     });
                                   }
@@ -370,7 +373,8 @@ class _Bill_Generation_direct_deductionState
                                         : oldValue;
                                   }),
                                 ],
-                                controller: billGenerationDirectController.Creditamt,
+                                controller:
+                                billGenerationBoqController.Creditamt,
                                 cursorColor: Colors.black,
                                 style: const TextStyle(color: Colors.black),
                                 decoration: const InputDecoration(
@@ -392,47 +396,47 @@ class _Bill_Generation_direct_deductionState
                                 onChanged: (value) async {
 
                                   // PREVENT LOOP
-                                  if (billGenerationDirectController.isRestoring) {
+                                  if (billGenerationBoqController.isRestoring) {
                                     return;
                                   }
 
                                   // STORE OLD VALUE
                                   String oldValue =
-                                      billGenerationDirectController.oldCreditValue;
+                                      billGenerationBoqController.oldCreditValue;
 
                                   // CALCULATE FIRST
                                   bool success =
-                                  await billGenerationDirectController
+                                  await billGenerationBoqController
                                       .deductionPaymentCalculation();
 
                                   // INVALID
                                   if (!success) {
 
                                     // PREVENT onChanged LOOP
-                                    billGenerationDirectController.isRestoring = true;
+                                    billGenerationBoqController.isRestoring = true;
 
                                     // RESTORE OLD VALUE
-                                    billGenerationDirectController.Creditamt.text =
+                                    billGenerationBoqController.Creditamt.text =
                                         oldValue;
 
                                     // CURSOR POSITION
-                                    billGenerationDirectController.Creditamt.selection =
+                                    billGenerationBoqController.Creditamt.selection =
                                         TextSelection.fromPosition(
                                           TextPosition(
                                             offset: oldValue.length,
                                           ),
                                         );
 
-                                    billGenerationDirectController.isRestoring = false;
+                                    billGenerationBoqController.isRestoring = false;
 
                                     // RECALCULATE
-                                    await billGenerationDirectController
+                                    await billGenerationBoqController
                                         .deductionPaymentCalculation();
 
                                   } else {
 
                                     // SAVE VALID VALUE
-                                    billGenerationDirectController.oldCreditValue =
+                                    billGenerationBoqController.oldCreditValue =
                                         value;
                                   }
                                 },
@@ -458,7 +462,7 @@ class _Bill_Generation_direct_deductionState
                               padding: const EdgeInsets.only(
                                   top: 3, left: 10, bottom: 5),
                               child: TextFormField(
-                                controller: billGenerationDirectController
+                                controller: billGenerationBoqController
                                     .CreditRemarksController,
                                 cursorColor: Colors.black,
                                 style: const TextStyle(color: Colors.black),
@@ -505,21 +509,21 @@ class _Bill_Generation_direct_deductionState
                                 autovalidateMode:
                                 AutovalidateMode.always,
                                 onTap: () {
-                                  if (billGenerationDirectController
+                                  if (billGenerationBoqController
                                       .Debitamt.text !=
                                       "" &&
-                                      billGenerationDirectController
+                                      billGenerationBoqController
                                           .Debitamt.text !=
                                           "0" &&
-                                      billGenerationDirectController
+                                      billGenerationBoqController
                                           .Debitamt.text !=
                                           "0.0") {
                                     return;
                                   } else {
                                     setState(() {
-                                      billGenerationDirectController
+                                      billGenerationBoqController
                                           .Debitamt.text = "";
-                                      billGenerationDirectController
+                                      billGenerationBoqController
                                           .deductionPaymentCalculation();
                                     });
                                   }
@@ -534,7 +538,7 @@ class _Bill_Generation_direct_deductionState
                                   }),
                                 ],
                                 controller:
-                                billGenerationDirectController.Debitamt,
+                                billGenerationBoqController.Debitamt,
                                 cursorColor: Colors.black,
                                 style: const TextStyle(color: Colors.black),
                                 decoration: const InputDecoration(
@@ -555,30 +559,31 @@ class _Bill_Generation_direct_deductionState
                                 onChanged: (value) async {
 
                                   // PREVENT LOOP
-                                  if (billGenerationDirectController.isRestoring) {
+                                  if (billGenerationBoqController.isRestoring) {
                                     return;
                                   }
 
                                   // STORE OLD VALUE
                                   String oldValue =
-                                      billGenerationDirectController.oldDebitValue;
+                                      billGenerationBoqController.oldDebitValue;
 
                                   // CALCULATE
                                   bool success =
-                                  await billGenerationDirectController
+                                  await billGenerationBoqController
                                       .deductionPaymentCalculation();
 
                                   // INVALID
                                   if (!success) {
+
                                     // PREVENT RE-TRIGGER
-                                    billGenerationDirectController.isRestoring = true;
+                                    billGenerationBoqController.isRestoring = true;
 
                                     // RESTORE OLD VALUE
-                                    billGenerationDirectController.Debitamt.text =
+                                    billGenerationBoqController.Debitamt.text =
                                         oldValue;
 
                                     // CURSOR
-                                    billGenerationDirectController.Debitamt.selection =
+                                    billGenerationBoqController.Debitamt.selection =
                                         TextSelection.fromPosition(
                                           TextPosition(
                                             offset: oldValue.length,
@@ -586,18 +591,19 @@ class _Bill_Generation_direct_deductionState
                                         );
 
                                     // ALLOW AGAIN
-                                    billGenerationDirectController.isRestoring = false;
+                                    billGenerationBoqController.isRestoring = false;
 
-                                    await billGenerationDirectController
+                                    await billGenerationBoqController
                                         .deductionPaymentCalculation();
 
                                   } else {
 
                                     // SAVE VALID VALUE
-                                    billGenerationDirectController.oldDebitValue =
+                                    billGenerationBoqController.oldDebitValue =
                                         value;
                                   }
                                 },
+
                               ),
                             ),
                           ),
@@ -619,7 +625,7 @@ class _Bill_Generation_direct_deductionState
                               padding: const EdgeInsets.only(
                                   top: 3, left: 10, bottom: 5),
                               child: TextFormField(
-                                controller: billGenerationDirectController
+                                controller: billGenerationBoqController
                                     .DebitRemarksController,
                                 cursorColor: Colors.black,
                                 style: const TextStyle(color: Colors.black),
@@ -664,7 +670,7 @@ class _Bill_Generation_direct_deductionState
                                   top: 3, left: 10, bottom: 5),
                               child:  TextFormField(
                                 readOnly: true,
-                                controller: billGenerationDirectController.tobededadv,
+                                controller: billGenerationBoqController.tobededadv,
                                 cursorColor: Colors.black,
                                 style: const TextStyle(color: Colors.black),
                                 decoration: const InputDecoration(
@@ -705,75 +711,75 @@ class _Bill_Generation_direct_deductionState
                               padding: const EdgeInsets.only(
                                   top: 3, left: 10, bottom: 5),
                               child: Obx(()=>
-                                  TextFormField(
-                                    keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
+                                TextFormField(
+                                  readOnly: billGenerationBoqController.isAdvanceReadOnly.value,
+                                  keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
 
-                                    inputFormatters: [
-                                      TextInputFormatter.withFunction((oldValue, newValue) {
-                                        return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
-                                            ? newValue
-                                            : oldValue;
-                                      }),
-                                    ],
-                                    readOnly: billGenerationDirectController.isAdvanceReadOnly.value,
-                                    controller: billGenerationDirectController.Advded,
-                                    cursorColor: Colors.black,
-                                    style: const TextStyle(color: Colors.black),
-                                    decoration: const InputDecoration(
-                                      contentPadding: EdgeInsets.zero,
-                                      border: InputBorder.none,
-                                      labelText: "Advance Deduction Amt",
-                                      labelStyle: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: RequestConstant.Lable_Font_SIZE,
-                                      ),
-                                      prefixIconConstraints:
-                                      BoxConstraints(minWidth: 0, minHeight: 0),
-                                      prefixIcon: Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: 8, horizontal: 8),
-                                        child: ConstIcons.advancededuction,
-                                      ),
+                                  inputFormatters: [
+                                    TextInputFormatter.withFunction((oldValue, newValue) {
+                                      return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
+                                          ? newValue
+                                          : oldValue;
+                                    }),
+                                  ],
+                                  controller: billGenerationBoqController.Advded,
+                                  cursorColor: Colors.black,
+                                  style: const TextStyle(color: Colors.black),
+                                  decoration: const InputDecoration(
+                                    contentPadding: EdgeInsets.zero,
+                                    border: InputBorder.none,
+                                    labelText: "Advance Deduction Amt",
+                                    labelStyle: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: RequestConstant.Lable_Font_SIZE,
                                     ),
-                                    onChanged: (value) async {
-                                      double advDed = double.tryParse(value) ?? 0;
-                                      double advLimit =
-                                          double.tryParse(billGenerationDirectController.tobededadv.text) ?? 0;
-
-                                      if (advDed > advLimit) {
-                                        BaseUtitiles.showToast(
-                                            "Advance deduction should not exceed advance limit.");
-
-                                        billGenerationDirectController.Advded.text = "0.0";
-                                        billGenerationDirectController.Advded.selection = TextSelection.fromPosition(
-                                          TextPosition(offset: billGenerationDirectController.Advded.text.length),
-                                        );
-
-                                        await billGenerationDirectController.deductionPaymentCalculation();
-                                        return;
-                                      }
-
-                                      bool success =
-                                      await billGenerationDirectController.deductionPaymentCalculation();
-
-                                      if (!success) {
-                                        billGenerationDirectController.Advded.text = "0.0";
-                                        billGenerationDirectController.Advded.selection = TextSelection.fromPosition(
-                                          TextPosition(offset: billGenerationDirectController.Advded.text.length),
-                                        );
-
-                                        await billGenerationDirectController.deductionPaymentCalculation();
-                                      }
-                                    },
-                                    onTap: (){
-                                      if(billGenerationDirectController.isAdvanceReadOnly.value==false) {
-                                        if (billGenerationDirectController.Advded.text == "0.0" ||
-                                            billGenerationDirectController.Advded.text == "0") {
-                                          billGenerationDirectController.Advded.text = "";
-                                        }
-                                      }
-                                    },
+                                    prefixIconConstraints:
+                                    BoxConstraints(minWidth: 0, minHeight: 0),
+                                    prefixIcon: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 8, horizontal: 8),
+                                      child: ConstIcons.advancededuction,
+                                    ),
                                   ),
+                                  onChanged: (value) async {
+                                    double advDed = double.tryParse(value) ?? 0;
+                                    double advLimit =
+                                        double.tryParse(billGenerationBoqController.tobededadv.text) ?? 0;
+
+                                    if (advDed > advLimit) {
+                                    BaseUtitiles.showToast(
+                                          "Advance deduction should not exceed advance limit.");
+
+                                      billGenerationBoqController.Advded.text = "0.0";
+                                      billGenerationBoqController.Advded.selection = TextSelection.fromPosition(
+                                        TextPosition(offset: billGenerationBoqController.Advded.text.length),
+                                      );
+
+                                      await billGenerationBoqController.deductionPaymentCalculation();
+                                      return;
+                                    }
+
+                                    bool success =
+                                    await billGenerationBoqController.deductionPaymentCalculation();
+
+                                    if (!success) {
+                                      billGenerationBoqController.Advded.text = "0.0";
+                                      billGenerationBoqController.Advded.selection = TextSelection.fromPosition(
+                                        TextPosition(offset: billGenerationBoqController.Advded.text.length),
+                                      );
+
+                                      await billGenerationBoqController.deductionPaymentCalculation();
+                                    }
+                                  },
+                                  onTap: (){
+                                    if(billGenerationBoqController.isAdvanceReadOnly.value==false) {
+                                      if (billGenerationBoqController.Advded.text == "0.0" ||
+                                          billGenerationBoqController.Advded.text == "0") {
+                                        billGenerationBoqController.Advded.text = "";
+                                      }
+                                    }
+                                  },
+                                ),
                               ),
                             ),
                           ),
@@ -781,6 +787,7 @@ class _Bill_Generation_direct_deductionState
                       ),
                     ],
                   ),
+
                   Row(
                     children: [
 
@@ -877,7 +884,7 @@ class _Bill_Generation_direct_deductionState
                                 autovalidateMode:
                                 AutovalidateMode.always,
                                 controller:
-                                billGenerationDirectController.balAmt,
+                                billGenerationBoqController.balAmt,
                                 cursorColor: Colors.black,
                                 style: const TextStyle(color: Colors.black),
                                 decoration: const InputDecoration(
@@ -921,21 +928,21 @@ class _Bill_Generation_direct_deductionState
                                 autovalidateMode:
                                 AutovalidateMode.always,
                                 onTap: () {
-                                  if (billGenerationDirectController
+                                  if (billGenerationBoqController
                                       .Roundoff.text !=
                                       "" &&
-                                      billGenerationDirectController
+                                      billGenerationBoqController
                                           .Roundoff.text !=
                                           "0" &&
-                                      billGenerationDirectController
+                                      billGenerationBoqController
                                           .Roundoff.text !=
                                           "0.0") {
                                     return;
                                   } else {
                                     setState(() {
-                                      billGenerationDirectController
+                                      billGenerationBoqController
                                           .Roundoff.text = "";
-                                      billGenerationDirectController
+                                      billGenerationBoqController
                                           .deductionPaymentCalculation();
                                     });
                                   }
@@ -950,7 +957,7 @@ class _Bill_Generation_direct_deductionState
                                   }),
                                 ],
                                 controller:
-                                billGenerationDirectController.Roundoff,
+                                billGenerationBoqController.Roundoff,
                                 cursorColor: Colors.black,
                                 style: const TextStyle(color: Colors.black),
                                 decoration: const InputDecoration(
@@ -971,47 +978,47 @@ class _Bill_Generation_direct_deductionState
                                 ),
                                 onChanged: (value) async {
                                   // PREVENT LOOP
-                                  if (billGenerationDirectController.isRestoring) {
+                                  if (billGenerationBoqController.isRestoring) {
                                     return;
                                   }
 
                                   // STORE OLD VALUE
                                   String oldValue =
-                                      billGenerationDirectController.oldRoundOffValue;
+                                      billGenerationBoqController.oldRoundOffValue;
 
                                   // CALCULATE
                                   bool success =
-                                  await billGenerationDirectController
+                                  await billGenerationBoqController
                                       .deductionPaymentCalculation();
 
                                   // INVALID
                                   if (!success) {
 
                                     // PREVENT onChanged LOOP
-                                    billGenerationDirectController.isRestoring = true;
+                                    billGenerationBoqController.isRestoring = true;
 
                                     // RESTORE OLD VALUE
-                                    billGenerationDirectController.Roundoff.text =
+                                    billGenerationBoqController.Roundoff.text =
                                         oldValue;
 
                                     // CURSOR POSITION
-                                    billGenerationDirectController.Roundoff.selection =
+                                    billGenerationBoqController.Roundoff.selection =
                                         TextSelection.fromPosition(
                                           TextPosition(
                                             offset: oldValue.length,
                                           ),
                                         );
 
-                                    billGenerationDirectController.isRestoring = false;
+                                    billGenerationBoqController.isRestoring = false;
 
                                     // RECALCULATE
-                                    await billGenerationDirectController
+                                    await billGenerationBoqController
                                         .deductionPaymentCalculation();
 
                                   } else {
 
                                     // SAVE VALID VALUE
-                                    billGenerationDirectController.oldRoundOffValue =
+                                    billGenerationBoqController.oldRoundOffValue =
                                         value;
                                   }
                                 },
@@ -1045,21 +1052,21 @@ class _Bill_Generation_direct_deductionState
                                 autovalidateMode:
                                 AutovalidateMode.always,
                                 onTap: () {
-                                  if (billGenerationDirectController
+                                  if (billGenerationBoqController
                                       .netBillAmt.text !=
                                       "" &&
-                                      billGenerationDirectController
+                                      billGenerationBoqController
                                           .netBillAmt.text !=
                                           "0" &&
-                                      billGenerationDirectController
+                                      billGenerationBoqController
                                           .netBillAmt.text !=
                                           "0.0") {
                                     return;
                                   } else {
                                     setState(() {
-                                      billGenerationDirectController
+                                      billGenerationBoqController
                                           .netBillAmt.text = "";
-                                      billGenerationDirectController
+                                      billGenerationBoqController
                                           .deductionPaymentCalculation();
                                     });
                                   }
@@ -1074,7 +1081,7 @@ class _Bill_Generation_direct_deductionState
                                   }),
                                 ],
                                 controller:
-                                billGenerationDirectController.netBillAmt,
+                                billGenerationBoqController.netBillAmt,
                                 cursorColor: Colors.black,
                                 style: const TextStyle(color: Colors.black),
                                 decoration:  InputDecoration(
@@ -1126,7 +1133,7 @@ class _Bill_Generation_direct_deductionState
                                 autovalidateMode:
                                 AutovalidateMode.always,
                                 controller:
-                                billGenerationDirectController.netpayamt,
+                                billGenerationBoqController.netpayamt,
                                 cursorColor: Colors.black,
                                 readOnly: true,
                                 style: const TextStyle(color: Colors.black),
@@ -1200,8 +1207,8 @@ class _Bill_Generation_direct_deductionState
                           ),
 
                           /// ROWS
-                          ...List.generate(billGenerationDirectController.directBillGen_ItemReadList.length ,(index) {
-                            final item = billGenerationDirectController.directBillGen_ItemReadList[index];
+                          ...List.generate(billGenerationBoqController.directBillGen_ItemReadList.length ,(index) {
+                            final item = billGenerationBoqController.directBillGen_ItemReadList[index];
 
                             return TableRow(
                               children: [
@@ -1237,7 +1244,7 @@ class _Bill_Generation_direct_deductionState
                                   height: 45,
                                   padding: const EdgeInsets.all(8),
                                   child: TextFormField(
-                                    controller: billGenerationDirectController.percentControllers[index],
+                                    controller: billGenerationBoqController.percentControllers[index],
                                     keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
 
                                     inputFormatters: [
@@ -1271,7 +1278,7 @@ class _Bill_Generation_direct_deductionState
                                     ),
                                     onChanged: (val) {
                                       final item =
-                                      billGenerationDirectController
+                                      billGenerationBoqController
                                           .directBillGen_ItemReadList[index];
 
                                       double oldPercent =
@@ -1284,30 +1291,31 @@ class _Bill_Generation_direct_deductionState
                                           double.tryParse(val) ?? 0.0;
 
                                       bool success =
-                                      billGenerationDirectController.calculateAndUpdate(
+                                      billGenerationBoqController.calculateAndUpdate(
 
                                         item.addLessId!,
 
                                         percent,
+
                                       );
 
                                       // RESTORE ONLY CURRENT FIELD
                                       if (!success) {
 
-                                        billGenerationDirectController
+                                        billGenerationBoqController
                                             .percentControllers[index]
                                             .text =
                                         oldPercent == 0
                                             ? ''
                                             : oldPercent.toString();
 
-                                        billGenerationDirectController
+                                        billGenerationBoqController
                                             .percentControllers[index]
                                             .selection =
                                             TextSelection.fromPosition(
                                               TextPosition(
                                                 offset:
-                                                billGenerationDirectController
+                                                billGenerationBoqController
                                                     .percentControllers[index]
                                                     .text
                                                     .length,
@@ -1317,19 +1325,19 @@ class _Bill_Generation_direct_deductionState
                                         item.percentValue = oldPercent;
                                         item.amount = oldAmount;
 
-                                        billGenerationDirectController
+                                        billGenerationBoqController
                                             .directBillGen_ItemReadList
                                             .refresh();
                                       }
                                     },
                                     onEditingComplete: () async {
                                       FocusScope.of(context).unfocus();   // closes keyboard
-                                      await billGenerationDirectController.saveUpdatedCalcData();
+                                      await billGenerationBoqController.saveUpdatedCalcData();
                                     },
                                   ),
                                 ),
                                 Obx(() {
-                                  final updated = billGenerationDirectController.directBillGen_ItemReadList
+                                  final updated = billGenerationBoqController.directBillGen_ItemReadList
                                       .firstWhereOrNull((e) => e.addLessId == item.addLessId);
 
                                   final amount = (updated?.amount ?? 0.0);
@@ -1371,7 +1379,7 @@ class _Bill_Generation_direct_deductionState
                                 height: 50,
                                 alignment: Alignment.center,
                                 child: Text(
-                                  billGenerationDirectController
+                                  billGenerationBoqController
                                       .getTotalAddLess()
                                       .toStringAsFixed(2),
                                   style: const TextStyle(
@@ -1457,7 +1465,7 @@ class _Bill_Generation_direct_deductionState
                           ),
                           alignment: Alignment.center,
                           child: Text(
-                            billGenerationDirectController.saveButton.value,
+                            billGenerationBoqController.saveButton.value,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: RequestConstant.Lable_Font_SIZE,
@@ -1469,25 +1477,32 @@ class _Bill_Generation_direct_deductionState
                           setState(() {
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState!.save();
-                              if( ((billGenerationDirectController.Creditamt.text != "0" &&
-                                  billGenerationDirectController.Creditamt.text != "0.0" &&
-                                  billGenerationDirectController.Creditamt.text != "0.00") &&
-                                  billGenerationDirectController.CreditRemarksController.text.isEmpty) &&  ((billGenerationDirectController.Debitamt.text != "0" &&
-                                  billGenerationDirectController.Debitamt.text != "0.0" &&
-                                  billGenerationDirectController.Debitamt.text != "0.00") &&
-                                  billGenerationDirectController.DebitRemarksController.text.isEmpty)){
+                              if( ((billGenerationBoqController.Creditamt.text != "0" &&
+                                  billGenerationBoqController.Creditamt.text != "0.0" &&
+                                  billGenerationBoqController.Creditamt.text != "0.00") &&
+                                  billGenerationBoqController.CreditRemarksController.text.isEmpty) &&  ((billGenerationBoqController.Debitamt.text != "0" &&
+                                  billGenerationBoqController.Debitamt.text != "0.0" &&
+                                  billGenerationBoqController.Debitamt.text != "0.00") &&
+                                  billGenerationBoqController.DebitRemarksController.text.isEmpty)){
                                 Fluttertoast.showToast(msg: "Please enter credit and debit remarks");
-                              } else if ((billGenerationDirectController.Creditamt.text != "0" &&
-                                  billGenerationDirectController.Creditamt.text != "0.0" &&
-                                  billGenerationDirectController.Creditamt.text != "0.00") &&
-                                  billGenerationDirectController.CreditRemarksController.text.isEmpty) {
+                              } else if ((billGenerationBoqController.Creditamt.text != "0" &&
+                                  billGenerationBoqController.Creditamt.text != "0.0" &&
+                                  billGenerationBoqController.Creditamt.text != "0.00") &&
+                                  billGenerationBoqController.CreditRemarksController.text.isEmpty) {
                                 Fluttertoast.showToast(msg: "Please enter credit remarks");
                               }
-                              else if ((billGenerationDirectController.Debitamt.text != "0" &&
-                                  billGenerationDirectController.Debitamt.text != "0.0" &&
-                                  billGenerationDirectController.Debitamt.text != "0.00") &&
-                                  billGenerationDirectController.DebitRemarksController.text.isEmpty) {
+                              else if ((billGenerationBoqController.Debitamt.text != "0" &&
+                                  billGenerationBoqController.Debitamt.text != "0.0" &&
+                                  billGenerationBoqController.Debitamt.text != "0.00") &&
+                                  billGenerationBoqController.DebitRemarksController.text.isEmpty) {
                                 Fluttertoast.showToast(msg: "Please enter debit remarks");
+                              }
+                              else if ((billGenerationBoqController.materialDebitamt.text != "0" &&
+                                  billGenerationBoqController.materialDebitamt.text != "0.0" &&
+                                  billGenerationBoqController.materialDebitamt.text != "0.00" &&
+                                  billGenerationBoqController.materialDebitamt.text != "") &&
+                                  billGenerationBoqController.materialDebitamt.text.isEmpty) {
+                                Fluttertoast.showToast(msg: "Please enter Material Debit remarks");
                               }
 
                               else {
@@ -1552,7 +1567,7 @@ class _Bill_Generation_direct_deductionState
       builder: (context) => AlertDialog(
         title: const Text('Alert!'),
         content: Text(
-          'Are you sure to ${billGenerationDirectController.saveButton.value}?',
+               'Are you sure to ${billGenerationBoqController.saveButton.value}?',
         ),
         actions: [
           Container(
@@ -1590,13 +1605,13 @@ class _Bill_Generation_direct_deductionState
 
                           if (_formKey.currentState!.validate()) {
                             if (await BaseUtitiles.checkNetworkAndShowLoader(context)) {
-                              await billGenerationDirectController
+                              await billGenerationBoqController
                                   .SaveButton_DeductionScreen(
                                   context,
-                                  billGenerationDirectController
+                                  billGenerationBoqController
                                       .workid);
                             }
-                          } else if (double.parse(billGenerationDirectController.netpayamt.text) < 0) {
+                          } else if (double.parse(billGenerationBoqController.netpayamt.text) < 0) {
                             BaseUtitiles.showToast(
                                 "Net pay amount must be greater than 0");
                           } else {
@@ -1605,7 +1620,7 @@ class _Bill_Generation_direct_deductionState
                           }
                         },
                         child: Text(
-                          billGenerationDirectController.saveButton.value,
+                          billGenerationBoqController.saveButton.value,
                           style: TextStyle(
                             color:
                             Theme.of(context).primaryColor,
@@ -1664,22 +1679,25 @@ class _Bill_Generation_direct_deductionState
                   Expanded(
                     child: TextButton(
                         onPressed: () async {
-                          billGenerationDirectController.to_be_dection_advance =
+                          billGenerationBoqController.to_be_dection_advance =
                           "0";
+                          billGenerationBoqController.saveButton.value =
+                              RequestConstant.SUBMIT;
+                          billGenerationBoqController.workid = 0;
                           projectController.projectname.text = "--SELECT--";
                           projectController.selectedProjectId.value = 0;
                           subcontractorController.Subcontractorname.text =
                           "--SELECT--";
                           subcontractorController.selectedSubcontId.value = 0;
-                          billGenerationDirectController.RemarksController
+                          billGenerationBoqController.RemarksController
                               .clear();
-                          billGenerationDirectController.billentryDateController
+                          billGenerationBoqController.billentryDateController
                               .text = BaseUtitiles.initiateCurrentDateFormat();
-                          billGenerationDirectController.FromdateController
+                          billGenerationBoqController.FromdateController
                               .text = BaseUtitiles.initiateCurrentDateFormat();
-                          billGenerationDirectController.TodateController.text =
+                          billGenerationBoqController.TodateController.text =
                               BaseUtitiles.initiateCurrentDateFormat();
-                          billGenerationDirectController
+                          billGenerationBoqController
                               .autoYearWiseNoController.text =
                               autoYearWiseNoController
                                   .DirectBillautoYrsWise.value;
@@ -1690,28 +1708,28 @@ class _Bill_Generation_direct_deductionState
                           siteController.Sitename.text = RequestConstant.SELECT;
                           siteController.siteDropdownName.clear();
 
-                          billGenerationDirectController
+                          billGenerationBoqController
                               .billgen_itemlistTable_Delete();
-                          billGenerationDirectController
+                          billGenerationBoqController
                               .ItemGetTableListdata.value
                               .clear();
 
-                          billGenerationDirectController.billamount.text =
+                          billGenerationBoqController.billamount.text =
                           "0.0";
-                          billGenerationDirectController.Creditamt.text = "0.0";
-                          billGenerationDirectController.Debitamt.text = "0.0";
-                          billGenerationDirectController
+                          billGenerationBoqController.Creditamt.text = "0.0";
+                          billGenerationBoqController.Debitamt.text = "0.0";
+                          billGenerationBoqController
                               .CreditRemarksController.text = "";
-                          billGenerationDirectController
+                          billGenerationBoqController
                               .DebitRemarksController.text = "";
-                          billGenerationDirectController.Advded.text =
-                              billGenerationDirectController.tobededadv.text;
-                          billGenerationDirectController.Roundoff.text = "0";
-                          billGenerationDirectController.netpayamt.text = "0.0";
-                          billGenerationDirectController.netBillAmt.text = "0.0";
-                          billGenerationDirectController.finalBillAmt.text = "0.0";
-                          billGenerationDirectController.tobededadv.text =
-                              billGenerationDirectController
+                          billGenerationBoqController.Advded.text =
+                              billGenerationBoqController.tobededadv.text;
+                          billGenerationBoqController.Roundoff.text = "0";
+                          billGenerationBoqController.netBillAmt.text = "0.0";
+                          billGenerationBoqController.finalBillAmt.text = "0.0";
+                          billGenerationBoqController.netpayamt.text = "0.0";
+                          billGenerationBoqController.tobededadv.text =
+                              billGenerationBoqController
                                   .to_be_dection_advance;
                           Navigator.pop(context);
                         },

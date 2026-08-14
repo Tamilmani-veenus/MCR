@@ -10,39 +10,54 @@ class BillGenBoq_ItemlistService {
   }
 
   DirectBillGen_ItemlistTable_Save(
-      List<BillGenBoqItemListTableModel> directBillGenItemListTableModel) async {
-    directBillGenItemListTableModel.forEach((element) async {
+      List<BillGenBoqItemListTableModel> billGenBoqItemListTableModel) async {
+    billGenBoqItemListTableModel.forEach((element) async {
       return await _dbManager.insertData('billGenBoqItemlistTable', element.BillGenBoqItemListTableMap());
     });
   }
 
   DirectBillGen_ItemlistTable_readAll() async {
     return _dbManager.readData('billGenBoqItemlistTable');
+
   }
 
 
-  DirectBillGen_ItemlistTable_Update(
-      List<BillGenBoqItemListTableModel> directBillGenItemListTableModel) async {
-    directBillGenItemListTableModel.forEach((element) async {
-      return await _dbManager.UpdateTableIdwise('billGenBoqItemlistTable', element.BillGenBoqItemListTableMap());
-    });
+  Future<void> DirectBillGen_ItemlistTable_Update(
+      List<BillGenBoqItemListTableModel> list) async {
+
+    for (var element in list) {
+      await _dbManager.Update_BillBoqTable(
+        'billGenBoqItemlistTable',
+        element.BillGenBoqItemListTableMap(),
+      );
+    }
+
+    // Verify updated data
+    var data = await _dbManager.readData('billGenBoqItemlistTable');
+
+    print("===== UPDATED TABLE DATA =====");
+    for (var row in data) {
+      print(row);
+    }
   }
 
   DirectBillGen_ItemlistTable_deleteById(
-      List<BillGenBoqItemListTableModel> directBillGenItemListTableModel) async {
-    directBillGenItemListTableModel.forEach((element) async {
+      List<BillGenBoqItemListTableModel> billGenBoqItemListTableModel) async {
+    billGenBoqItemListTableModel.forEach((element) async {
       return await _dbManager.directBill_deleteDataById(
           'billGenBoqItemlistTable', element.BillGenBoqItemListTableMap());
     });
   }
 
-  DirectBillGen_ItemlistTable_delete() async {
-    return await _dbManager.delete('billGenBoqItemlistTable');
+  Future<int> DirectBillGen_ItemlistTable_delete() async {
+    return await _dbManager.delete(
+      'billGenBoqItemlistTable',
+    );
   }
 
   DirectBillGen_ItemlistTable_OrderBy(
-      List<BillGenBoqItemListTableModel> directBillGenItemListTableModel) async {
-    directBillGenItemListTableModel.forEach((element) async {
+      List<BillGenBoqItemListTableModel> billGenBoqItemListTableModel) async {
+    billGenBoqItemListTableModel.forEach((element) async {
       return await _dbManager.orderBy(
           'billGenBoqItemlistTable', element.BillGenBoqItemListTableMap());
     });
@@ -53,23 +68,23 @@ class BillGenBoq_ItemlistService {
   DirectBillGST_ItemTable_Save(
       List<DirectBillGSTCalTable> directBillGenGSTItemListTableModel) async {
     directBillGenGSTItemListTableModel.forEach((element) async {
-      return await _dbManager.insertData('directBillGenGSTItemlistTable', element.DirectBillGSTCalTableMap());
+      return await _dbManager.insertData('billBOQGenGSTItemlistTable', element.DirectBillGSTCalTableMap());
     });
   }
 
   DirectBillGST_ItemlistTable_readAll() async {
-    return _dbManager.readData('directBillGenGSTItemlistTable');
+    return _dbManager.readData('billBOQGenGSTItemlistTable');
   }
 
   DirectBillGST_ItemlistTable_Update(
       List<DirectBillGSTCalTable> directBillGenGSTItemListTableModel) async {
     directBillGenGSTItemListTableModel.forEach((element) async {
-      return await _dbManager.UpdateTableIdwise('directBillGenGSTItemlistTable', element.DirectBillGSTCalTableMap());
+      return await _dbManager.UpdateTableIdwise('billBOQGenGSTItemlistTable', element.DirectBillGSTCalTableMap());
     });
   }
 
   DirectBillGST_ItemlistTable_delete() async {
-    return await _dbManager.delete('directBillGenGSTItemlistTable');
+    return await _dbManager.delete('billBOQGenGSTItemlistTable');
   }
 
 }

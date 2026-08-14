@@ -10,6 +10,7 @@ import '../../../../utilities/requestconstant.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../constants/ui_constant/icons_const.dart';
+import '../../controller/billgeneration_boq_controller.dart';
 import '../../controller/billgenerationdirect_controller.dart';
 import '../../controller/company_nmr_controller.dart';
 import '../../controller/dailywrk_done_dprlabour_controller.dart';
@@ -10009,6 +10010,7 @@ class _NMRBillVerificationState extends State<NMRBillVerification> {
   Get.put(PendingListController());
   NMRWklyController nmrWklyController = Get.put(NMRWklyController());
   BillGenerationDirectController billGenerationDirectController=Get.put(BillGenerationDirectController());
+  BillGenerationBoqController billGenerationBoqController=Get.put(BillGenerationBoqController());
 
   @override
   void initState() {
@@ -10119,7 +10121,12 @@ class _NMRBillVerificationState extends State<NMRBillVerification> {
                               onTap: () async {
                                 if(widget.heading =="SUBCONTRACTOR BILL VERIFICATION - DIRECT" || widget.heading =="SUBCONTRACTOR BILL APPROVAL - DIRECT") {
                                   await billGenerationDirectController.directBillEntryList_EditApi(billGenerationDirectController.bill_entryList.value[index].workId,context,widget.heading =="SUBCONTRACTOR BILL VERIFICATION - DIRECT"?"Verify":"Approve");
-                                }else{
+                                }
+                                else if(widget.heading =="SUBCONTRACTOR BILL VERIFICATION - BOQ" || widget.heading =="SUBCONTRACTOR BILL APPROVAL - BOQ") {
+                                  await billGenerationBoqController.directBillEntryList_EditApi(
+                                      billGenerationBoqController.bill_entryList.value[index].workId,context,widget.heading =="SUBCONTRACTOR BILL VERIFICATION - BOQ"?"Verify":"Approve");
+                                }
+                                else{
                                   await nmrWklyController.NmrEntryList_EditApi(
                                       pendingListController.mainlist
                                           .value[index].id, context,
@@ -10185,7 +10192,7 @@ class _NMRBillVerificationState extends State<NMRBillVerification> {
                                         ),
                                         SizedBox(height: 5),
 
-                                        if(widget.heading !="SUBCONTRACTOR BILL VERIFICATION - DIRECT" && widget.heading !="SUBCONTRACTOR BILL APPROVAL - DIRECT")Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                        if(widget.heading =="SUBCONTRACTOR BILL VERIFICATION - NMR" || widget.heading =="SUBCONTRACTOR BILL APPROVAL - NMR")Column(crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Row(
                                               children: <Widget>[

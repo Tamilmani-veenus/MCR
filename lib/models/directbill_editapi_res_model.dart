@@ -30,6 +30,9 @@ class DirectbillEditApiResModel {
   double? netPayAmt;
   double? debitAmt;
   double? creditAmt;
+  double? dndAmt;
+  double? totAmt;
+  double? balAmt;
   String? debitRemarks;
   String? creditRemarks;
   String? remarks;
@@ -99,7 +102,7 @@ class DirectbillEditApiResModel {
     fromDate: json["FromDate"],
     toDate: json["ToDate"],
     rndOff: json["RndOff"],
-    billAmt: json["BillAmt"],
+    billAmt: json["BillAmt"] ?? json["BillWhaAmt"],
     actAdvAmt: json["ActAdvAmt"],
     advAmt: json["AdvAmt"],
     netPayAmt: json["NetPayAmt"],
@@ -194,32 +197,88 @@ class BillEditDet {
   double? qty;
   double? rate;
   double? amount;
+  int? headItemId;
+  int? subItemId;
+  int? level3ItemId;
   int? workorderDetId;
+  String? boqCode;
+  String? itemCode;
+  double? actualQty;
+  double? curBillQty;
+  double? balBillQty;
+  double? totalQty;
+  double? flat;
+  int? qtyIsClosed;
+  int? wHeadItemId;
+  int? wSubItemId;
+  String? status;
+
 
   BillEditDet({
    this.itemDesc,
+   this.headItemId,
+   this.subItemId,
    this.unit,
    this.qty,
    this.rate,
    this.amount,
+   this.level3ItemId,
    this.workorderDetId,
+   this.boqCode,
+   this.itemCode,
+   this.actualQty,
+   this.curBillQty,
+   this.balBillQty,
+   this.totalQty,
+   this.flat,
+   this.qtyIsClosed,
+   this.wHeadItemId,
+   this.wSubItemId,
+   this.status,
   });
 
   factory BillEditDet.fromJson(Map<String, dynamic> json) => BillEditDet(
     itemDesc: json["ItemDesc"],
     unit: json["Unit"],
+    headItemId: json["HeadItemId"],
+    subItemId: json["SubItemId"],
     qty: json["Qty"],
     rate: json["Rate"],
     amount: json["Amount"],
+    level3ItemId: json["Level3ItemId"],
+    boqCode: json["BoqCode"],
+    itemCode: json["ItemCode"],
+    actualQty: json["ActualQty"],
+    curBillQty: json["CurBillQty"],
+    balBillQty: json["BalBillQty"],
+    totalQty: json["TotalQty"],
+    flat: json["Flat"],
+    qtyIsClosed: json["QtyIsClosed"],
+    wHeadItemId: json["WHeadItemId"],
+    wSubItemId: json["WSubItemId"],
+    status: json["Status"],
     workorderDetId: json["WorkorderDetId"],
   );
 
   Map<String, dynamic> toJson() => {
     "ItemDesc": itemDesc,
+    "HeadItemId": headItemId,
+    "SubItemId": subItemId,
     "Unit": unit,
     "Qty": qty,
     "Rate": rate,
     "Amount": amount,
+    "Level3ItemId": level3ItemId,
+    "BoqCode": boqCode,
+    "ItemCode": itemCode,
+    "ActualQty": actualQty,
+    "CurBillQty": curBillQty,
+    "BalBillQty": balBillQty,
+    "TotalQty": totalQty,
+    "Flat": flat,
+    "QtyIsClosed": qtyIsClosed,
+    "WHeadItemId": wHeadItemId,
+    "WSubItemId": wSubItemId,
     "WorkorderDetId": workorderDetId,
   };
 }
