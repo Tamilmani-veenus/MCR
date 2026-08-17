@@ -61,13 +61,6 @@ class _Bill_Generation_Boq_deductionState
 
       if (billGenerationBoqController.saveButton.value == RequestConstant.SUBMIT) {
         billGenerationBoqController.workid = 0;
-        for (final controller in billGenerationBoqController.percentControllers) {
-          controller.clear();
-        }
-        for (final item in billGenerationBoqController.directBillGen_ItemReadList) {
-          item.percentValue = 0.0;
-          item.amount = 0.0;
-        }
         billGenerationBoqController.materialDebitamt.text = "0.0";
         billGenerationBoqController.Creditamt.text = "0.0";
         billGenerationBoqController.Debitamt.text = "0.0";

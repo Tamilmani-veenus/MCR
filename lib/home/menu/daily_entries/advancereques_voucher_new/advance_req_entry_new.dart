@@ -834,7 +834,7 @@ class _AdvReq_voucher_NewState extends State<AdvReq_voucher_New> {
                 ),
               ),
 
-              Obx(() => commonVoucherController.VocType.value == "A" && commonVoucherController.selectedAccId.value == 5
+              Obx(() => commonVoucherController.VocType.value == "A" && commonVoucherController.payfor.value=="AD"
                   ? Container(
                 child: Visibility(
                   visible: advanceReqVoucherController_new

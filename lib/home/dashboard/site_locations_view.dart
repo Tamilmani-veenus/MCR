@@ -1,9 +1,6 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:mcr/home/dashboard/radius_view.dart';
 import 'package:mcr/home/dashboard/search_field.dart';
@@ -18,7 +15,8 @@ import '../../splash/splash.dart';
 import '../../utilities/baseutitiles.dart';
 import '../punch_in_out/punch_in.dart';
 import '../punch_in_out/punch_out.dart';
-import 'map_view.dart';
+
+
 
 class SiteLocationView extends StatefulWidget {
   const SiteLocationView({super.key});
@@ -33,20 +31,16 @@ class _SiteLocationViewState extends State<SiteLocationView> {
   LoginController loginController = Get.put(LoginController());
   static const IconData fingerprintOutlined = IconData(0xf075, fontFamily: 'MaterialIcons');
   PunchInController punchInController = Get.put(PunchInController());
-  Timer? _debounce;
-  Position? position;
 
   @override
   void initState() {
-    super.initState();
-    siteLocationController.getProjectName();
-    siteLocationController.projectNameSearch.text = "";
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high,
-        );
-        setState(() {});
-      });
+    if(netWorkStatus == true) {
+      siteLocationController.getProjectName();
+    }
+    punchInController.getOndutyPunchInSts();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      siteLocationController.projectNameSearch.text = "";
+    });    super.initState();
   }
 
 
@@ -241,17 +235,8 @@ class _SiteLocationViewState extends State<SiteLocationView> {
                                   siteLocationController.projectNameSearch.text = "";
                                   if (loginController.user.value.userType == "A") {
                                     siteLocationController.projectId = siteLocationController.projectNameList![i].projectId.toString();
-                                    if (position != null) {
-                                      Get.to(() => DrawMapView(
-                                        latitude:
-                                        position!.latitude.toString(),
-                                        longitude: position!.longitude
-                                            .toString(),
-                                        ProjectId: siteLocationController
-                                            .projectId,
-                                      ));
-                                    }
-                                    // Get.to(() => RadiusView(ProjectId: siteLocationController.projectId));
+
+                                    Get.to(() => RadiusView(ProjectId: siteLocationController.projectId));
                                   }
                                   else {
                                     if(netWorkStatus == true){
@@ -282,6 +267,7 @@ class _SiteLocationViewState extends State<SiteLocationView> {
                                       {
                                         siteLocationController.projectId = siteLocationController.projectNameList![i].projectId.toString();
                                         siteLocationController.locId = siteLocationController.projectNameList![i].locid.toString();
+                                        print("sssss...${siteLocationController.locId}");
                                         // punchInController.punchInID.value = siteLocationController.projectNameList![i].punchID.toString();
                                         punchInController.update();
                                         Get.to(() => PunchOut(

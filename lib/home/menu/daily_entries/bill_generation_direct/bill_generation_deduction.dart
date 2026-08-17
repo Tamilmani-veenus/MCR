@@ -60,13 +60,6 @@ class _Bill_Generation_direct_deductionState
 
       if (billGenerationDirectController.saveButton.value == RequestConstant.SUBMIT) {
         billGenerationDirectController.workid = 0;
-        for (final controller in billGenerationDirectController.percentControllers) {
-          controller.clear();
-        }
-        for (final item in billGenerationDirectController.directBillGen_ItemReadList) {
-          item.percentValue = 0.0;
-          item.amount = 0.0;
-        }
         billGenerationDirectController.materialDebitamt.text = "0.0";
         billGenerationDirectController.Creditamt.text = "0.0";
         billGenerationDirectController.Debitamt.text = "0.0";
