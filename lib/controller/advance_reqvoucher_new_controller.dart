@@ -442,10 +442,10 @@ class AdvanceReqVoucherController_new extends GetxController {
         editListApiDatas.value = value;
         saveButton.value =RequestConstant.RESUBMIT;
         for (var element in editListApiDatas.value) {
-          if (element.accTypeName == "SUPPLIER") {
+          if (element.payFor == "A") {
             await EditAdvTable_SaveTable();
             await getTableListDatas();
-          } else {
+          } else if (element.payFor == "AD") {
             await EditTable_SaveTable();
             await getItemlistTablesDatas();
           }

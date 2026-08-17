@@ -57,7 +57,7 @@ class SiteLocationController extends GetxController {
 
   /// Set Site Location .....
 
-  Future<void> setSiteLocation(String pId, String latitude, String longitude) async {
+  Future<void> setSiteLocation(String pId) async {
     SetProjectLocation setProjectLocation = await SiteLocationProvider().setSiteLocationProvider(SetSiteLocationPayload(
       entryMode: "ADD",
       projectid: pId.toString(),
@@ -65,7 +65,7 @@ class SiteLocationController extends GetxController {
       deviceName: BaseUtitiles.deviceName,
       latitude: latitude,
       longitude: longitude,
-      radius: "0",
+      radius: radius.text,
       userId: loginController.user.value.userId.toString(),
     ));
     Fluttertoast.showToast(msg: setProjectLocation.retString.toString());

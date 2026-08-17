@@ -413,7 +413,10 @@ class BillGenerationDirectController extends GetxController {
         deviceName: BaseUtitiles.deviceName,
         billDet: getNmrBillDet(),
         billAddless: getNmrBillDetAddLess()));
+    final decoded = jsonDecode(body);
 
+    const encoder = JsonEncoder.withIndent('  ');
+    debugPrint(encoder.convert(decoded));
     final list = await DirectBillGenerateProvider.SaveBillDirectAPI(
         body, saveButton.value, context,"D");
 
