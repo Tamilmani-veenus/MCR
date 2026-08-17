@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -86,6 +87,7 @@ class _SubAttendanceSiteEntryState extends State<SubattendanceSiteEntry> {
         dailyEntriesController.editcheck = 0;
         dailyEntriesController.entrycheck = 0;
         dailyEntriesController.screenCheck = "";
+        dailyEntriesController.gettingNetworkImages.value = [];
         dailyEntriesController.deleteSubcontDetTableDatas();
         dailyEntriesController.readListdata.value.clear();
         siteController.selectedsiteId.value = 0;
@@ -376,7 +378,10 @@ class _SubAttendanceSiteEntryState extends State<SubattendanceSiteEntry> {
                             ),
                             onTap: () async {
                               if (dailyEntriesController.screenCheck ==
-                                  "PendingScreen") {
+                                  "PendingScreen" ||
+                                  dailyEntriesController
+                                      .readListdata.value.isNotEmpty ||
+                                  dailyEntriesController.editcheck == 1) {
                               } else {
                                 setState(() {
                                   bottomsheetControllers.SiteName(context,
@@ -426,7 +431,10 @@ class _SubAttendanceSiteEntryState extends State<SubattendanceSiteEntry> {
                             ),
                             onTap: () {
                               if (dailyEntriesController.screenCheck ==
-                                  "PendingScreen") {
+                                  "PendingScreen" ||
+                                  dailyEntriesController
+                                      .readListdata.value.isNotEmpty ||
+                                  dailyEntriesController.editcheck == 1) {
                               } else {
                                 bottomsheetControllers.SubcontractorName(
                                     context,
@@ -482,15 +490,11 @@ class _SubAttendanceSiteEntryState extends State<SubattendanceSiteEntry> {
                               return null;
                             },
                             onTap: () {
-                              if (dailyEntriesController.screenCheck ==
-                                  "PendingScreen") {
-                              } else {
                                 showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
                                       return const WorkTypeAlert();
                                     });
-                              }
                             },
                           ),
                         ),
@@ -877,7 +881,47 @@ class _SubAttendanceSiteEntryState extends State<SubattendanceSiteEntry> {
                           ),
                         )),
                     onTap: () {
-                      dailyEntriesController.checkColor = 0;
+                      // 1. Labour details validation
+                      if (dailyEntriesController.readListdata.isEmpty &&
+                          dailyEntriesController.WorkTypeTextController.text != "NO WORK") {
+                        Fluttertoast.showToast(
+                          msg: "Please add labour details",
+                        );
+                        return;
+                      }
+
+                      // 2. Nos validation
+                      bool hasInvalid = false;
+
+                      for (int i = 0;
+                      i < dailyEntriesController.readListdata.length;
+                      i++) {
+                        final nosText = dailyEntriesController
+                            .EntrySCreenNosControllers[i]
+                            .text
+                            .trim();
+
+                        final double nosValue = double.tryParse(nosText) ?? 0;
+
+                        if (nosValue <= 0) {
+                          hasInvalid = true;
+                          break;
+                        }
+                      }
+
+                      if (hasInvalid) {
+                        BaseUtitiles.showToast("Please enter Nos.");
+                        return;
+                      }
+
+                      // 3. Image validation
+                      if (dailyEntriesController.imageFiles.isEmpty &&
+                          dailyEntriesController.gettingNetworkImages.isEmpty) {
+                        BaseUtitiles.showToast("Please Add Image");
+                        return;
+                      }
+
+                      // 4. Everything valid
                       SubmitAlert(context);
                     },
                   ),
@@ -1094,10 +1138,22 @@ class _SubAttendanceSiteEntryState extends State<SubattendanceSiteEntry> {
                                           });
                                         }
                                       },
+                                      keyboardType: Platform.isAndroid
+                                          ? TextInputType.numberWithOptions(
+                                          decimal: true)
+                                          : TextInputType.text,
+                                      inputFormatters: [
+                                        TextInputFormatter.withFunction(
+                                                (oldValue, newValue) {
+                                              return RegExp(r'^\d*\.?\d{0,2}$')
+                                                  .hasMatch(newValue.text)
+                                                  ? newValue
+                                                  : oldValue;
+                                            }),
+                                      ],
                                       style: const TextStyle(color: Colors.black),
                                       controller: dailyEntriesController.EntrySCreenNosControllers[index],
                                       cursorColor: Colors.black,
-                                      keyboardType: TextInputType.number,
                                       textAlign: TextAlign.center,
                                       decoration: InputDecoration(
                                         contentPadding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
@@ -1160,10 +1216,22 @@ class _SubAttendanceSiteEntryState extends State<SubattendanceSiteEntry> {
                                           });
                                         }
                                       },
+                                      keyboardType: Platform.isAndroid
+                                          ? TextInputType.numberWithOptions(
+                                          decimal: true)
+                                          : TextInputType.text,
+                                      inputFormatters: [
+                                        TextInputFormatter.withFunction(
+                                                (oldValue, newValue) {
+                                              return RegExp(r'^\d*\.?\d{0,2}$')
+                                                  .hasMatch(newValue.text)
+                                                  ? newValue
+                                                  : oldValue;
+                                            }),
+                                      ],
                                       style: const TextStyle(color: Colors.black),
                                       controller: dailyEntriesController.MrngOtHrsControllers[index],
                                       cursorColor: Colors.black,
-                                      keyboardType: TextInputType.number,
                                       textAlign: TextAlign.center,
                                       decoration: InputDecoration(
                                         contentPadding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
@@ -1296,10 +1364,22 @@ class _SubAttendanceSiteEntryState extends State<SubattendanceSiteEntry> {
                                           });
                                         }
                                       },
+                                      keyboardType: Platform.isAndroid
+                                          ? TextInputType.numberWithOptions(
+                                          decimal: true)
+                                          : TextInputType.text,
+                                      inputFormatters: [
+                                        TextInputFormatter.withFunction(
+                                                (oldValue, newValue) {
+                                              return RegExp(r'^\d*\.?\d{0,2}$')
+                                                  .hasMatch(newValue.text)
+                                                  ? newValue
+                                                  : oldValue;
+                                            }),
+                                      ],
                                       controller: dailyEntriesController.EvgOtHrsControllers[index],
                                       style: const TextStyle(color: Colors.black),
                                       cursorColor: Colors.black,
-                                      keyboardType: TextInputType.number,
                                       textAlign: TextAlign.center,
                                       decoration: InputDecoration(
                                         contentPadding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
@@ -1353,11 +1433,23 @@ class _SubAttendanceSiteEntryState extends State<SubattendanceSiteEntry> {
                                   height: BaseUtitiles.getheightofPercentage(
                                       context, 4),
                                   child: TextField(
+                                      keyboardType: Platform.isAndroid
+                                          ? TextInputType.numberWithOptions(
+                                          decimal: true)
+                                          : TextInputType.text,
+                                      inputFormatters: [
+                                        TextInputFormatter.withFunction(
+                                                (oldValue, newValue) {
+                                              return RegExp(r'^\d*\.?\d{0,2}$')
+                                                  .hasMatch(newValue.text)
+                                                  ? newValue
+                                                  : oldValue;
+                                            }),
+                                      ],
                                       readOnly: true,
                                       style: const TextStyle(color: Colors.black),
                                       controller: dailyEntriesController.MrngOtAmtControllers[index],
                                       cursorColor: Colors.black,
-                                      keyboardType: TextInputType.number,
                                       textAlign: TextAlign.center,
                                       decoration: InputDecoration(
                                         contentPadding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
@@ -1420,8 +1512,20 @@ class _SubAttendanceSiteEntryState extends State<SubattendanceSiteEntry> {
                                     controller: dailyEntriesController.EvgOtAmtControllers[index],
                                     style: const TextStyle(color: Colors.black),
                                     cursorColor: Colors.black,
-                                    keyboardType: TextInputType.number,
                                     textAlign: TextAlign.center,
+                                    keyboardType: Platform.isAndroid
+                                        ? TextInputType.numberWithOptions(
+                                        decimal: true)
+                                        : TextInputType.text,
+                                    inputFormatters: [
+                                      TextInputFormatter.withFunction(
+                                              (oldValue, newValue) {
+                                            return RegExp(r'^\d*\.?\d{0,2}$')
+                                                .hasMatch(newValue.text)
+                                                ? newValue
+                                                : oldValue;
+                                          }),
+                                    ],
                                     decoration: InputDecoration(
                                       contentPadding: const EdgeInsets.fromLTRB(
                                           8.0, 0.0, 8.0, 0.0),
@@ -1479,7 +1583,19 @@ class _SubAttendanceSiteEntryState extends State<SubattendanceSiteEntry> {
                                     controller: dailyEntriesController.NetAmtController[index],
                                     style: const TextStyle(color: Colors.black),
                                     cursorColor: Colors.black,
-                                    keyboardType: TextInputType.number,
+                                    keyboardType: Platform.isAndroid
+                                        ? TextInputType.numberWithOptions(
+                                        decimal: true)
+                                        : TextInputType.text,
+                                    inputFormatters: [
+                                      TextInputFormatter.withFunction(
+                                              (oldValue, newValue) {
+                                            return RegExp(r'^\d*\.?\d{0,2}$')
+                                                .hasMatch(newValue.text)
+                                                ? newValue
+                                                : oldValue;
+                                          }),
+                                    ],
                                     textAlign: TextAlign.center,
                                     decoration: InputDecoration(
                                       contentPadding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
@@ -1749,11 +1865,7 @@ class _SubAttendanceSiteEntryState extends State<SubattendanceSiteEntry> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Alert!'),
-        content: Text(dailyEntriesController.screenCheck == "PendingScreen"
-            ? 'Are you sure to Approval?'
-            : dailyEntriesController.editcheck == 1
-            ? 'Are you sure to Re-Submit?'
-            : 'Are you sure to Submit?'),
+        content: Text('Are you sure to ${dailyEntriesController.saveButton.value}?'),
         actions: [
           Container(
             margin: const EdgeInsets.only(left: 20, right: 20),
@@ -1789,29 +1901,18 @@ class _SubAttendanceSiteEntryState extends State<SubattendanceSiteEntry> {
                       builder: (BuildContext context, StateSetter setState) {
                         return TextButton(
                           onPressed: () async {
-                            if (dailyEntriesController.readListdata.value.isEmpty) {
-                              BaseUtitiles.showToast("Please Add Labour Details");
-                            }
-                            else if(dailyEntriesController.imageFiles.isEmpty && dailyEntriesController.gettingNetworkImages.isEmpty){
-                              BaseUtitiles.showToast("Please Add Image");
-                            }
-                            else {
-                              await dailyEntriesController.getDetTablesDatas();
+
                               if (await BaseUtitiles.checkNetworkAndShowLoader(context)) {
+                                await dailyEntriesController.getDetTablesDatas();
                                 await dailyEntriesController.Save_EntryScreen(
                                   context, dailyEntriesController.attendId != 0
                                     ? dailyEntriesController.attendId
                                     : 0, dailyEntriesController.aprovedButton,);
                               }
-                              }
 
                           },
                           child: Text(
-                            dailyEntriesController.screenCheck == "PendingScreen"
-                                ? RequestConstant.APPROVAL
-                                : dailyEntriesController.editcheck == 1
-                                ? RequestConstant.RESUBMIT
-                                : RequestConstant.SUBMIT,
+                            dailyEntriesController.saveButton.value,
                             style: TextStyle(
                               color:  Theme.of(context).primaryColor,
                               fontWeight: FontWeight.bold,

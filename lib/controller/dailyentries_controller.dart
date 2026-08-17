@@ -305,84 +305,37 @@ class DailyEntriesController extends GetxController {
       DeviceName: BaseUtitiles.deviceName,
       attendanceDet: getAttendanceDetails(),);
     final list = await SubContAttendanceProvider.SaveSubContScreenEntryAPI(formdata, id, aprovedButton,context,imageFiles);
-    if(checklist == 0){
-      subcontractorController.checkScreen = 0;
       if (list != null) {
-        if (id != 0) {
-          if (aprovedButton != 0) {
-            deleteSubcontDetTableDatas();
-            readListdata.value.clear();
-            BaseUtitiles.showToast(list);
-            await pendingListController.getPendingList();
-            // if (editcheck == 1) {
-            //   if (imageFile != null) {
-            //     await subContractorUpdateImageSend();
-            //   }
-            // } else {
-            //   if (imageFile != null) {
-            //     await subContractorImageSend();
-            //   }
-            // }
-            entrycheck = 2;
-            Navigator.pop(context);
-            Navigator.pop(context);
-            Navigator.pop(context);
-            return;
-          } else {
-            deleteSubcontDetTableDatas();
-            readListdata.value.clear();
-            BaseUtitiles.showToast(list);
+        if(id!=0){
+          deleteSubcontDetTableDatas();
+          readListdata.value.clear();
+          BaseUtitiles.showToast(list);
+          clearDatas();
+          if(saveButton.value == RequestConstant.RESUBMIT){
             await getAttenEntryList();
-            // if (editcheck == 1) {
-            //   if (imageFile != null) {
-            //     await subContractorUpdateImageSend();
-            //   }
-            // } else {
-            //   if (imageFile != null) {
-            //     await subContractorImageSend();
-            //   }
-            // }
-            entrycheck = 2;
-            clearDatas();
-            Navigator.pop(context);
-            Navigator.pop(context);
-            Navigator.pop(context);
-            return;
+          }else{
+            await pendingListController.getPendingList();
           }
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.pop(context);
+          return;
+        }else if(list == "Record Saved Successfully..."){
+          deleteSubcontDetTableDatas();
+          readListdata.value.clear();
+          BaseUtitiles.showToast(list);
+          await getAttenEntryList();
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.pop(context);
+          return;
         }
         else {
-          if (list == RequestConstant.DUPLICATE_OCCURED) {
-            buttonControl = 0;
             Navigator.pop(context);
             Navigator.pop(context);
             return BaseUtitiles.showToast(list);
-          }
-          else {
-            deleteSubcontDetTableDatas();
-            readListdata.value.clear();
-            BaseUtitiles.showToast(list);
-            await getAttenEntryList();
-            // if (editcheck == 1) {
-            //   if (imageFile != null) {
-            //     await subContractorUpdateImageSend();
-            //   }
-            // } else {
-            //   if (imageFile != null) {
-            //     await subContractorImageSend();
-            //   }
-            // }
-            entrycheck = 2;
-            Navigator.pop(context);
-            Navigator.pop(context);
-            Navigator.pop(context);
-            return;
-          }
         }
       }
-    } else {
-      Get.back();
-      Fluttertoast.showToast(msg: "Attendance Request Not Saved With Empty List....");
-    }
   }
 
   List<AttendanceDet>? getAttendanceDetails() {

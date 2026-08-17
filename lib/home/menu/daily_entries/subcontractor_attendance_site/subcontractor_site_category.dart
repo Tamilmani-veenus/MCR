@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../../../../app_theme/app_colors.dart';
 import '../../../../controller/dailyentries_controller.dart';
@@ -208,6 +211,19 @@ class _Subcontractor_Site_CategoryState extends State<Subcontractor_Site_Categor
                                                   }
                                                 });
                                               },
+                                              keyboardType: Platform.isAndroid
+                                                  ? TextInputType.numberWithOptions(
+                                                  decimal: true)
+                                                  : TextInputType.text,
+                                              inputFormatters: [
+                                                TextInputFormatter.withFunction(
+                                                        (oldValue, newValue) {
+                                                      return RegExp(r'^\d*\.?\d{0,2}$')
+                                                          .hasMatch(newValue.text)
+                                                          ? newValue
+                                                          : oldValue;
+                                                    }),
+                                              ],
                                               controller: dailyEntriesController.NosControllers[index],
                                               cursorColor: Colors.black,
                                               style: const TextStyle(color: Colors.black),
@@ -264,6 +280,19 @@ class _Subcontractor_Site_CategoryState extends State<Subcontractor_Site_Categor
                                                   }
                                                 });
                                               },
+                                              keyboardType: Platform.isAndroid
+                                                  ? TextInputType.numberWithOptions(
+                                                  decimal: true)
+                                                  : TextInputType.text,
+                                              inputFormatters: [
+                                                TextInputFormatter.withFunction(
+                                                        (oldValue, newValue) {
+                                                      return RegExp(r'^\d*\.?\d{0,2}$')
+                                                          .hasMatch(newValue.text)
+                                                          ? newValue
+                                                          : oldValue;
+                                                    }),
+                                              ],
                                               controller: dailyEntriesController.OtHrsController[index],
                                               cursorColor: Colors.black,
                                               style: const TextStyle(color: Colors.black),
@@ -492,188 +521,4 @@ class _Subcontractor_Site_CategoryState extends State<Subcontractor_Site_Categor
           )),
     );
   }
-// Widget ListDetails() {
-//   return SizedBox(
-//     height: BaseUtitiles.getheightofPercentage(context, 85),
-//     child: Obx(
-//       () => ListView.builder(
-//         padding: EdgeInsets.zero,
-//         physics: const BouncingScrollPhysics(),
-//         itemCount: dailyEntriesController.store_ShowList.value.length,
-//         itemBuilder: (BuildContext context, int index) {
-//           dailyEntriesController.textControllersInitiate();
-//           return Container(
-//               color: const Color.fromRGBO(240, 240, 240, 1),
-//               child: Column(
-//                 children: [
-//                   const SizedBox(height: 5),
-//                   Row(
-//                     children: [
-//                       const SizedBox(width: 10),
-//                       Expanded(
-//                         flex: 1,
-//                         child: RichText(
-//                           text: TextSpan(
-//                               text: dailyEntriesController.store_ShowList.value[index].categoryName.toString(),
-//                               style: TextStyle(
-//                                   color: Theme.of(context).primaryColor,
-//                                   fontWeight: FontWeight.bold,
-//                               ),
-//                               children: <TextSpan>[
-//                                 TextSpan(text:  "   ( ${RequestConstant.CURRENCY_SYMBOL}${dailyEntriesController.store_ShowList.value[index].wages} )",
-//                                     style: const TextStyle(
-//                                         color: Colors.black,
-//                                         fontWeight: FontWeight.bold,
-//                                     ),
-//                                 )
-//                               ]
-//                           ),
-//                         ),
-//                       ),
-//                       //   Text(
-//                       //     dailyEntriesController
-//                       //         .store_ShowList.value[index].categoryName
-//                       //         .toString(),
-//                       //     style: TextStyle(
-//                       //         color: Theme.of(context).primaryColor,
-//                       //         fontWeight: FontWeight.bold),
-//                       //   ),
-//                       // ),
-//                       // Expanded(
-//                       //   flex: 5,
-//                       //   child: Text(
-//                       //     "( " +
-//                       //         RequestConstant.CURRENCY_SYMBOL +
-//                       //         dailyEntriesController
-//                       //             .store_ShowList.value[index].wages
-//                       //             .toString() +
-//                       //         " )",
-//                       //     style: TextStyle(fontWeight: FontWeight.bold),
-//                       //   ),
-//                       // ),
-//                     ],
-//                   ),
-//                   Row(
-//                     children: [
-//                       Expanded(
-//                         flex: 1,
-//                         child: Container(
-//                           margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
-//                           child: Card(
-//                             shape: RoundedRectangleBorder(
-//                               side: const BorderSide(color: Colors.white70, width: 1),
-//                               borderRadius: BorderRadius.circular(15),
-//                             ),
-//                             elevation: 3,
-//                             child: Padding(
-//                               padding:
-//                               const EdgeInsets.only(top: 3, left: 10, bottom: 5),
-//                               child: TextFormField(
-//                                 onTap: (){
-//                                   setState(() {
-//                                     if(dailyEntriesController.NosControllers[index].text != "" && dailyEntriesController.NosControllers[index].text != "0" && dailyEntriesController.NosControllers[index].text != "0.0"){
-//                                       return;
-//                                     } else {
-//                                       dailyEntriesController.NosControllers[index].text = "";
-//                                     }
-//                                   });
-//                                 },
-//                                 controller: dailyEntriesController.NosControllers[index],
-//                                 cursorColor: Colors.black,
-//                                 style: const TextStyle(color: Colors.black),
-//                                 decoration: InputDecoration(
-//                                   contentPadding: EdgeInsets.zero,
-//                                   border: InputBorder.none,
-//                                   labelText: RequestConstant.HEAD_NOS,
-//                                   labelStyle: const TextStyle(
-//                                       color: Colors.grey,
-//                                       fontSize: RequestConstant.Lable_Font_SIZE,
-//                                   ),
-//                                   prefixIconConstraints:
-//                                   const BoxConstraints(minWidth: 0, minHeight: 0),
-//                                   prefixIcon: Padding(
-//                                       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-//                                       child: Icon(
-//                                           Icons.supervisor_account,
-//                                           color: Theme.of(context).primaryColor,
-//                                       ),
-//                                   ),
-//                                 ),
-//                                 validator: (value) {
-//                                   if (value!.isEmpty) {
-//                                     return '\u26A0 Enter user name';
-//                                   }
-//                                   return null;
-//                                 },
-//                               ),
-//                             ),
-//                           ),
-//                         ),
-//                       ),
-//
-//                       Expanded(
-//                         flex: 1,
-//                         child: Container(
-//                           margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
-//                           child: Card(
-//                             shape: RoundedRectangleBorder(
-//                               side: const BorderSide(color: Colors.white70, width: 1),
-//                               borderRadius: BorderRadius.circular(15),
-//                             ),
-//                             elevation: 3,
-//                             child: Padding(
-//                               padding:
-//                               const EdgeInsets.only(top: 3, left: 10, bottom: 5),
-//                               child: TextFormField(
-//                                 onTap: (){
-//                                   setState(() {
-//                                     if(dailyEntriesController.OtHrsController[index].text != "" && dailyEntriesController.OtHrsController[index].text != "0" && dailyEntriesController.OtHrsController[index].text != "0.0"){
-//                                       return;
-//                                     } else {
-//                                       dailyEntriesController.OtHrsController[index].text = "";
-//                                     }
-//                                   });
-//                                 },
-//                                 controller: dailyEntriesController.OtHrsController[index],
-//                                 cursorColor: Colors.black,
-//                                 style: const TextStyle(color: Colors.black),
-//                                 decoration: InputDecoration(
-//                                   contentPadding: EdgeInsets.zero,
-//                                   border: InputBorder.none,
-//                                   labelText: "OT Hrs",
-//                                   labelStyle: const TextStyle(
-//                                       color: Colors.grey,
-//                                       fontSize: RequestConstant.Lable_Font_SIZE),
-//                                   prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
-//                                   prefixIcon: Padding(
-//                                       padding: const EdgeInsets.symmetric(
-//                                           vertical: 8, horizontal: 8),
-//                                       child: Icon(
-//                                         Icons.timelapse,
-//                                           color: Theme.of(context).primaryColor)),
-//                                 ),
-//                                 validator: (value) {
-//                                   if (value!.isEmpty) {
-//                                     return '\u26A0 Enter user name';
-//                                   }
-//                                   return null;
-//                                 },
-//                               ),
-//                             ),
-//                           ),
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                   const Divider(
-//                     color: Colors.white,
-//                     thickness: 2,
-//                   )
-//                 ],
-//               ));
-//         },
-//       ),
-//     ),
-//   );
-// }
 }
