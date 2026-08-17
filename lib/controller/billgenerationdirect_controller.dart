@@ -34,8 +34,10 @@ class BillGenerationDirectController extends GetxController {
   final itemUnitController = TextEditingController();
   final itemQuantityController = TextEditingController();
   final itemRateController = TextEditingController();
+  final itemWOBalQtyController = TextEditingController();
   List<TextEditingController> itemlist_ListDescController = [];
   List<TextEditingController> itemlist_ListUnitsController = [];
+  List<TextEditingController> itemlist_ListWOBalQtyController = [];
   List<TextEditingController> itemlist_ListQtyController = [];
   List<TextEditingController> itemlist_ListRateController = [];
   List<TextEditingController> itemlist_ListAmtController = [];
@@ -154,7 +156,8 @@ class BillGenerationDirectController extends GetxController {
         await preloadEditAddLessData(
             bill_editListApiDatas[0].billEditAddless);
       }
-    } else {
+    }
+    else{
       BaseUtitiles.showToast(RequestConstant.NORECORD_FOUND);
     }
   }
@@ -183,7 +186,7 @@ class BillGenerationDirectController extends GetxController {
     await DirectBillGenerateProvider.billadv_balance(
             projectController.selectedProjectId.value,
             siteController.selectedsiteId.value,
-            subcontractorController.selectedSubcontId.value)
+            subcontractorController.selectedSubcontId.value,"D",subcontractorController.selectedWorkOrderId.value)
         .then((value) async {
       if (value != null) {
         to_be_dection_advance = value;
@@ -239,6 +242,7 @@ class BillGenerationDirectController extends GetxController {
     ItemListTableModel.workDetId = 0;
     ItemListTableModel.Name = itemDescController.text;
     ItemListTableModel.unit = itemUnitController.text;
+    ItemListTableModel.WOBalQty = double.tryParse(itemWOBalQtyController.text);
     ItemListTableModel.qty = double.parse(itemQuantityController.text);
     ItemListTableModel.rate = double.parse(itemRateController.text);
     ItemListTableModel.isApi = 0;
@@ -262,6 +266,7 @@ class BillGenerationDirectController extends GetxController {
       ItemListTextInitiate();
       ItemListTableModel.Id = value['id'];
       ItemListTableModel.workDetId = value['workDetId'];
+      ItemListTableModel.WOBalQty = value['WOBalQty'];
       ItemListTableModel.Name = value['Name'];
       ItemListTableModel.unit = value['unit'];
       ItemListTableModel.qty = value['qty'];
@@ -277,6 +282,7 @@ class BillGenerationDirectController extends GetxController {
   ItemListTextInitiate() {
     itemlist_ListDescController.add(new TextEditingController());
     itemlist_ListUnitsController.add(new TextEditingController());
+    itemlist_ListWOBalQtyController.add(new TextEditingController());
     itemlist_ListQtyController.add(new TextEditingController());
     itemlist_ListRateController.add(new TextEditingController());
     itemlist_ListAmtController.add(new TextEditingController());
@@ -288,6 +294,7 @@ class BillGenerationDirectController extends GetxController {
       ItemListTextInitiate();
       itemlist_ListDescController[i].text = datas.Name.toString();
       itemlist_ListUnitsController[i].text = datas.unit.toString();
+      itemlist_ListWOBalQtyController[i].text = datas.WOBalQty.toString();
       itemlist_ListQtyController[i].text = datas.qty.toString();
       itemlist_ListRateController[i].text = datas.rate.toString();
       itemlist_ListAmtController[i].text = datas.amount.toString();
@@ -295,21 +302,37 @@ class BillGenerationDirectController extends GetxController {
     });
   }
 
-  itemListclickChanged() {
-    int i = 0;
-    ItemGetTableListdata.value.forEach((element) {
-      ItemListTextInitiate();
-      itemlist_ListAmtController[i].text = (double.parse(
-                  itemlist_ListQtyController[i].text != ""
-                      ? itemlist_ListQtyController[i].text
-                      : "0") *
-              double.parse(itemlist_ListRateController[i].text != ""
-                  ? itemlist_ListRateController[i].text
-                  : "0"))
-          .toString();
-      i++;
-    });
+  void itemListclickChanged() {
+    ItemListTextInitiate();
+
+    for (int i = 0; i < ItemGetTableListdata.length; i++) {
+      final qty =
+          double.tryParse(itemlist_ListQtyController[i].text) ?? 0.0;
+
+      final woBalQty =
+          double.tryParse(itemlist_ListWOBalQtyController[i].text) ?? 0.0;
+
+      if (qty > woBalQty) {
+        BaseUtitiles.showToast(
+          "Cannot Allow more than Work Order Qty",
+        );
+
+        itemlist_ListQtyController[i].text = "0.0";
+
+        continue;
+      }
+
+      final rate =
+          double.tryParse(itemlist_ListRateController[i].text) ?? 0.0;
+
+      final amount = qty * rate;
+
+      itemlist_ListAmtController[i].text =
+          amount.toStringAsFixed(2);
+    }
+
     updateItemlistTable();
+    update();
   }
 
   updateItemlistTable() async {
@@ -320,6 +343,7 @@ class BillGenerationDirectController extends GetxController {
       ItemListTableModel.Id = element.Id;
       ItemListTableModel.workDetId = element.workDetId;
       ItemListTableModel.Name = element.Name;
+      ItemListTableModel.WOBalQty = element.WOBalQty;
       ItemListTableModel.unit = itemlist_ListUnitsController[i].text;
       ItemListTableModel.isApi = element.isApi;
       ItemListTableModel.qty = double.parse(
@@ -502,7 +526,7 @@ class BillGenerationDirectController extends GetxController {
   Future<bool> deductionPaymentCalculation() async {
     double advLimit = double.tryParse(tobededadv.text) ?? 0;
     double advDed = double.tryParse(Advded.text) ?? 0;
-
+    await getItemlistTablesDatas();
     if (advLimit < advDed) {
       BaseUtitiles.showToast("Please change the adv deduction amount");
       return false;
@@ -903,11 +927,12 @@ class BillGenerationDirectController extends GetxController {
       if (name == "ItemListDet") {
       ItemListTableModel = DirectBillGenItemListTableModel();
       ItemListTableModel.workDetId = element.dworkDet_id;
+      ItemListTableModel.WOBalQty = element.WOBalQty;
       ItemListTableModel.Name = element.itemdesc.toString();
       ItemListTableModel.unit = element.unit.toString();
-      ItemListTableModel.qty = element.qty;
+      ItemListTableModel.qty = 0;
       ItemListTableModel.rate = element.rate;
-      ItemListTableModel.amount = element.amount;
+      ItemListTableModel.amount = 0;
       ItemListTableModel.isApi = 1;
       ItemListTableModelList.add(ItemListTableModel);
       }
@@ -915,6 +940,7 @@ class BillGenerationDirectController extends GetxController {
         element.billEditDet!.forEach((value) {
           ItemListTableModel = DirectBillGenItemListTableModel();
           ItemListTableModel.workDetId = value.workorderDetId;
+          ItemListTableModel.WOBalQty = value.WOBalQty;
           ItemListTableModel.Name = value.itemDesc.toString();
           ItemListTableModel.unit = value.unit.toString();
           ItemListTableModel.qty = value.qty;

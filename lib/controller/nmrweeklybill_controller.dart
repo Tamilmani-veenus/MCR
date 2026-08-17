@@ -343,8 +343,7 @@ class NMRWklyController extends GetxController {
     double advDed = double.tryParse(Advded.text) ?? 0;
 
     if (advLimit < advDed) {
-      BaseUtitiles.showToast(
-          "Please change the adv deduction amount");
+      BaseUtitiles.showToast("Please change the adv deduction amount");
       return false;
     }
 
@@ -474,63 +473,19 @@ class NMRWklyController extends GetxController {
     required double round,
   }) {
     // ============================================================
-    // BILL AMOUNT IS THE BASE FOR ALL PERCENTAGES
+    // STEP 1 : CALCULATION BASE
+    // Base Amount + Credit - Debit
     // ============================================================
 
-    final double baseAmount = bill;
+    final double calculationBase = bill + credit - debit;
 
     // ============================================================
-    // STEP 1
-    // CALCULATE EVERY PERCENTAGE ROW
-    // ============================================================
-
-    for (var item in directBillGen_ItemReadList) {
-      final name =
-      (item.addLessName ?? "").trim().toUpperCase();
-
-      final percent =
-          item.percentValue ?? 0.0;
-
-      // Only percentage based rows
-      if (name == "S-GST" ||
-          name == "C-GST" ||
-          name == "I-GST" ||
-          name == "RETENTION" ||
-          name == "TDS" ||
-          name == "HOLD") {
-
-        final double amount =
-            baseAmount * percent / 100;
-
-        if (item.addLessType == "-") {
-          item.amount = -amount;
-        } else {
-          item.amount = amount;
-        }
-      }
-    }
-
-    // ============================================================
-    // STEP 2
-    // FINAL AMOUNT STARTS FROM BILL
-    // ============================================================
-
-    double finalAmount = baseAmount;
-
-    // Credit
-    finalAmount += credit;
-
-    // Debit
-    finalAmount -= debit;
-
-    // ============================================================
-    // STEP 3
-    // ADD / LESS AMOUNTS
+    // STEP 2 : ADD/LESS PERCENTAGES
     // ============================================================
 
     for (var item in directBillGen_ItemReadList) {
-      final name =
-      (item.addLessName ?? "").trim().toUpperCase();
+      final name = (item.addLessName ?? "").trim().toUpperCase();
+      final percent = item.percentValue ?? 0.0;
 
       if (name == "S-GST" ||
           name == "C-GST" ||
@@ -538,39 +493,33 @@ class NMRWklyController extends GetxController {
           name == "RETENTION" ||
           name == "TDS" ||
           name == "HOLD") {
+        final amount = calculationBase * percent / 100;
 
-        finalAmount += item.amount ?? 0.0;
+        item.amount = item.addLessType == "-" ? -amount : amount;
       }
     }
 
     // ============================================================
-    // STEP 4
-    // ROUNDOFF
+    // STEP 3 : NET BILL
     // ============================================================
 
-    finalAmount += round;
+    double netBill = calculationBase;
+
+    for (var item in directBillGen_ItemReadList) {
+      netBill += item.amount ?? 0.0;
+    }
+
+    // Round Off
+    netBill += round;
 
     // ============================================================
-    // STEP 5
-    // ADVANCE
+    // STEP 4 : NET PAY
     // ============================================================
 
-    finalAmount -= adv;
+    final double netPay = netBill - adv;
 
-    // ============================================================
-    // STEP 6
-    // NET BILL = NET PAY
-    // ============================================================
-
-    netBillAmt.text =
-        finalAmount.toStringAsFixed(2);
-
-    netpayamt.text =
-        finalAmount.toStringAsFixed(2);
-
-    // ============================================================
-    // REFRESH
-    // ============================================================
+    netBillAmt.text = netBill.toStringAsFixed(2);
+    netpayamt.text = netPay.toStringAsFixed(2);
 
     directBillGen_ItemReadList.refresh();
     update();
@@ -649,11 +598,8 @@ class NMRWklyController extends GetxController {
       await directBillCalculationSave();
       await getDirectBillCalDatas();
       if(saveButton.value == RequestConstant.RESUBMIT || saveButton.value == RequestConstant.VERIFY || saveButton.value == RequestConstant.APPROVAL) {
-        await preloadEditAddLessData(EditListSaveDatas[0].NMRAddLess);
+        await preloadEditAddLessData(EditListSaveDatas);
       }
-    }
-    else {
-      BaseUtitiles.showToast(RequestConstant.NORECORD_FOUND);
     }
   }
 

@@ -389,7 +389,7 @@ class _Bill_Generation_Boq_EntryScreenState_Site
                             {}
                             else{
                               await subcontractorController.getSubcontList(context, projectController.selectedProjectId.value, siteController.selectedsiteId.value,"billdirect");
-                              bottomsheetControllers.SubcontractorName(context, subcontractorController.getdropDownvalue.value);
+                              bottomsheetControllers.SubcontractorName(context, subcontractorController.getdropDownvalue.value,type: "BOQ");
                             }
                           },
                           validator: (value) {

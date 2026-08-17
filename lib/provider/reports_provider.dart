@@ -91,9 +91,9 @@ class ReportsProvider{
     return responseData;
   }
 
-  static Future<MrnReqTrackerListModel?> getMrnReqTrackerRptList(int projectId,int siteId,int materialId,String frdate,String todate) async {
+  static Future<MrnReqTrackerListModel?> getMrnReqTrackerRptList(userId,userType,int projectId,int siteId,int materialId,String frdate,String todate) async {
     try {
-      final response = await ApiManager.getAPICall(ApiConstant.GETREQTRACKERLISTAPI + "?projectId=$projectId&siteId=$siteId&materialId=$materialId&fromDate=$frdate&toDate=$todate");
+      final response = await ApiManager.getAPICall(ApiConstant.GETREQTRACKERLISTAPI + "?UID=$userId&Utype=$userType&projectId=$projectId&siteId=$siteId&materialId=$materialId&fromDate=$frdate&toDate=$todate");
       print("response...${response}");
       return mrnReqTrackerListModelFromJson(response);
     } catch (error,e) {

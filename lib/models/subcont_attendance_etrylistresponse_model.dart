@@ -23,6 +23,8 @@ class SubContAttendanceEntrylistRes {
     this.siteId,
     this.siteName,
     this.preparedByName,
+    this.status,
+    this.appStatus,
   });
 
   int? subcontLabrAttnId;
@@ -38,6 +40,8 @@ class SubContAttendanceEntrylistRes {
   String? siteName;
   String? subconName;
   String? preparedByName;
+  String? status;
+  String? appStatus;
 
   factory SubContAttendanceEntrylistRes.fromJson(Map<String, dynamic> json) => SubContAttendanceEntrylistRes(
     subcontLabrAttnId: json["Subcont_LabrAttn_Id"],
@@ -53,6 +57,8 @@ class SubContAttendanceEntrylistRes {
     siteId: json["Siteid"],
     siteName: json["SiteName"],
     preparedByName: json["PreparedByName"],
+    status: json["status"],
+    appStatus: json["App_Status"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -69,6 +75,8 @@ class SubContAttendanceEntrylistRes {
     "Siteid": siteId,
     "SiteName": siteName,
     "PreparedByName": preparedByName,
+    "status": status,
+    "App_Status": appStatus,
   };
 }
 

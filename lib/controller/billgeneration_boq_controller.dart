@@ -245,7 +245,7 @@ class BillGenerationBoqController extends GetxController{
     await DirectBillGenerateProvider.billadv_balance(
         projectController.selectedProjectId.value,
         siteController.selectedsiteId.value,
-        subcontractorController.selectedSubcontId.value)
+        subcontractorController.selectedSubcontId.value,"B",0)
         .then((value) async {
       if (value != null) {
         to_be_dection_advance = value;

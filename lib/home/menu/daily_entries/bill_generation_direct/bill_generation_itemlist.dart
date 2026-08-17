@@ -68,291 +68,292 @@ class _Bill_Generation_ItemlistState extends State<Bill_Generation_Itemlist> {
                   ),
                 ),
 
-                Container(
-                  margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      side: const BorderSide(color: Colors.white70, width: 1),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    elevation: 3,
-                    child: Padding(
-                      padding:
-                      const EdgeInsets.only(top: 3, left: 10, bottom: 5),
-                      child: TextFormField(
-                        controller: billGenerationDirectController.itemDescController,
-                        cursorColor: Colors.black,
-                        // enabled: billGenerationDirectController
-                        //     .ItemGetTableListdata.value.isEmpty,
-                        style: const TextStyle(color: Colors.black),
-                        decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.zero,
-                          border: InputBorder.none,
-                          labelText: "Description",
-                          labelStyle: TextStyle(
-                              color: Colors.grey,
-                              fontSize: RequestConstant.Lable_Font_SIZE),
-                          prefixIconConstraints:
-                          BoxConstraints(minWidth: 0, minHeight: 0),
-                          prefixIcon: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 8, horizontal: 8),
-                              child: ConstIcons.Description),
-                        ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return '\u26A0 Enter user name';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                  ),
-                ),
+                // Container(
+                //   margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                //   child: Card(
+                //     shape: RoundedRectangleBorder(
+                //       side: const BorderSide(color: Colors.white70, width: 1),
+                //       borderRadius: BorderRadius.circular(15),
+                //     ),
+                //     elevation: 3,
+                //     child: Padding(
+                //       padding:
+                //       const EdgeInsets.only(top: 3, left: 10, bottom: 5),
+                //       child: TextFormField(
+                //         controller: billGenerationDirectController.itemDescController,
+                //         cursorColor: Colors.black,
+                //         // enabled: billGenerationDirectController
+                //         //     .ItemGetTableListdata.value.isEmpty,
+                //         style: const TextStyle(color: Colors.black),
+                //         decoration: const InputDecoration(
+                //           contentPadding: EdgeInsets.zero,
+                //           border: InputBorder.none,
+                //           labelText: "Description",
+                //           labelStyle: TextStyle(
+                //               color: Colors.grey,
+                //               fontSize: RequestConstant.Lable_Font_SIZE),
+                //           prefixIconConstraints:
+                //           BoxConstraints(minWidth: 0, minHeight: 0),
+                //           prefixIcon: Padding(
+                //               padding: EdgeInsets.symmetric(
+                //                   vertical: 8, horizontal: 8),
+                //               child: ConstIcons.Description),
+                //         ),
+                //         validator: (value) {
+                //           if (value!.isEmpty) {
+                //             return '\u26A0 Enter user name';
+                //           }
+                //           return null;
+                //         },
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                //
+                // Container(
+                //   margin: const EdgeInsets.only(top: 5),
+                //   child: Row(
+                //     children: [
+                //       Expanded(
+                //         flex: 1,
+                //         child: Container(
+                //           margin: const EdgeInsets.only(left: 10, right: 10),
+                //           child: Card(
+                //             shape: RoundedRectangleBorder(
+                //               side: const BorderSide(color: Colors.white70, width: 1),
+                //               borderRadius: BorderRadius.circular(15),
+                //             ),
+                //             elevation: 3,
+                //             child: Padding(
+                //               padding: const EdgeInsets.only(
+                //                   top: 3, left: 10, bottom: 5),
+                //               child: TextFormField(
+                //                 textCapitalization: TextCapitalization.characters,
+                //                 controller: billGenerationDirectController
+                //                     .itemUnitController,
+                //                 cursorColor: Colors.black,
+                //                 // enabled: billGenerationDirectController
+                //                 //     .ItemGetTableListdata.value.isEmpty,
+                //                 style: const TextStyle(color: Colors.black),
+                //                 decoration: const InputDecoration(
+                //                   contentPadding: EdgeInsets.zero,
+                //                   border: InputBorder.none,
+                //                   labelText: "Unit",
+                //                   labelStyle: TextStyle(
+                //                       color: Colors.grey,
+                //                       fontSize:
+                //                       RequestConstant.Lable_Font_SIZE),
+                //                   prefixIconConstraints:
+                //                   BoxConstraints(minWidth: 0, minHeight: 0),
+                //                   prefixIcon: Padding(
+                //                       padding: EdgeInsets.symmetric(
+                //                           vertical: 8, horizontal: 8),
+                //                       child: ConstIcons.unit),
+                //                 ),
+                //                 validator: (value) {
+                //                   if (value!.isEmpty) {
+                //                     return '\u26A0 Enter user name';
+                //                   }
+                //                   return null;
+                //                 },
+                //                 onChanged: (value) {
+                //                   billGenerationDirectController.itemUnitController.value =
+                //                       TextEditingValue(
+                //                         text: value.toUpperCase(),
+                //                         selection: TextSelection.collapsed(
+                //                           offset: value.length,
+                //                         ),
+                //                       );
+                //                 },
+                //               ),
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //       Expanded(
+                //         flex: 1,
+                //         child: Container(
+                //           margin: const EdgeInsets.only(left: 10, right: 10),
+                //           child: Card(
+                //             shape: RoundedRectangleBorder(
+                //               side: const BorderSide(color: Colors.white70, width: 1),
+                //               borderRadius: BorderRadius.circular(15),
+                //             ),
+                //             elevation: 3,
+                //             child: Padding(
+                //               padding: const EdgeInsets.only(
+                //                   top: 3, left: 10, bottom: 5),
+                //               child: TextFormField(
+                //                 keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
+                //
+                //                 inputFormatters: [
+                //                   TextInputFormatter.withFunction((oldValue, newValue) {
+                //                     return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
+                //                         ? newValue
+                //                         : oldValue;
+                //                   }),
+                //                 ],
+                //                 controller: billGenerationDirectController
+                //                     .itemQuantityController,
+                //                 cursorColor: Colors.black,
+                //                 // enabled: billGenerationDirectController
+                //                 //     .ItemGetTableListdata.value.isEmpty,
+                //                 style: const TextStyle(color: Colors.black),
+                //                 decoration: const InputDecoration(
+                //                   contentPadding: EdgeInsets.zero,
+                //                   border: InputBorder.none,
+                //                   labelText: "Quantity",
+                //                   labelStyle: TextStyle(
+                //                       color: Colors.grey,
+                //                       fontSize:
+                //                       RequestConstant.Lable_Font_SIZE),
+                //                   prefixIconConstraints:
+                //                   BoxConstraints(minWidth: 0, minHeight: 0),
+                //                   prefixIcon: Padding(
+                //                       padding: EdgeInsets.symmetric(
+                //                           vertical: 8, horizontal: 8),
+                //                       child: ConstIcons.quantity),
+                //                 ),
+                //                 validator: (value) {
+                //                   if (value!.isEmpty) {
+                //                     return '\u26A0 Enter user name';
+                //                   }
+                //                   return null;
+                //                 },
+                //               ),
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //       Expanded(
+                //         flex: 1,
+                //         child: Container(
+                //           margin: const EdgeInsets.only(left: 10, right: 10),
+                //           child: Card(
+                //             shape: RoundedRectangleBorder(
+                //               side: const BorderSide(color: Colors.white70, width: 1),
+                //               borderRadius: BorderRadius.circular(15),
+                //             ),
+                //             elevation: 3,
+                //             child: Padding(
+                //               padding: const EdgeInsets.only(
+                //                   top: 3, left: 10, bottom: 5),
+                //               child: TextFormField(
+                //                 keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
+                //
+                //                 inputFormatters: [
+                //                   TextInputFormatter.withFunction((oldValue, newValue) {
+                //                     return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
+                //                         ? newValue
+                //                         : oldValue;
+                //                   }),
+                //                 ],
+                //                 controller: billGenerationDirectController
+                //                     .itemRateController,
+                //                 // enabled: billGenerationDirectController
+                //                 //     .ItemGetTableListdata.value.isEmpty,
+                //                 cursorColor: Colors.black,
+                //                 style: const TextStyle(color: Colors.black),
+                //                 decoration: const InputDecoration(
+                //                   contentPadding: EdgeInsets.zero,
+                //                   border: InputBorder.none,
+                //                   labelText: "Rate",
+                //                   labelStyle: TextStyle(
+                //                       color: Colors.grey,
+                //                       fontSize:
+                //                       RequestConstant.Lable_Font_SIZE),
+                //                   prefixIconConstraints:
+                //                   BoxConstraints(minWidth: 0, minHeight: 0),
+                //                   prefixIcon: Padding(
+                //                       padding: EdgeInsets.symmetric(
+                //                           vertical: 8, horizontal: 8),
+                //                       child: ConstIcons.rate),
+                //                 ),
+                //                 validator: (value) {
+                //                   if (value!.isEmpty) {
+                //                     return '\u26A0 Enter user name';
+                //                   }
+                //                   return null;
+                //                 },
+                //               ),
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                //
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     InkWell(
+                //       child: Container(
+                //         margin: const EdgeInsets.only(top: 10, left: 20, right: 20),
+                //         height: BaseUtitiles.getheightofPercentage(context, 4),
+                //         width: BaseUtitiles.getWidthtofPercentage(context, 15),
+                //         decoration: BoxDecoration(
+                //             borderRadius: const BorderRadius.all(Radius.circular(10)),
+                //             color:  Theme.of(context).primaryColor
+                //         ),
+                //         alignment: Alignment.center,
+                //         child: Text(
+                //           "ADD",
+                //           style: TextStyle(
+                //               fontWeight: FontWeight.bold,
+                //               fontSize: RequestConstant.Lable_Font_SIZE,
+                //               color: Colors.white
+                //           ),
+                //         ),
+                //       ),
+                //       onTap: () {
+                //         setState(() {
+                //           if (billGenerationDirectController.itemDescController.text == "" ||
+                //               billGenerationDirectController.itemUnitController.text ==
+                //                   "" ||
+                //               billGenerationDirectController.itemUnitController.text ==
+                //                   "0.0" ||
+                //               billGenerationDirectController.itemUnitController.text ==
+                //                   "0" ||
+                //               billGenerationDirectController
+                //                   .itemQuantityController.text ==
+                //                   "" ||
+                //               billGenerationDirectController
+                //                   .itemQuantityController.text ==
+                //                   "0.0" ||
+                //               billGenerationDirectController
+                //                   .itemQuantityController.text ==
+                //                   "0" ||
+                //               billGenerationDirectController
+                //                   .itemRateController.text ==
+                //                   "" ||
+                //               billGenerationDirectController
+                //                   .itemRateController.text ==
+                //                   "0.0" ||
+                //               billGenerationDirectController
+                //                   .itemRateController.text ==
+                //                   "0") {
+                //           } else {
+                //             billGenerationDirectController
+                //                 .billgen_itemlist_SaveTable();
+                //             billGenerationDirectController
+                //                 .getItemlistTablesDatas();
+                //             billGenerationDirectController
+                //                 .itemDescController.text = "";
+                //             billGenerationDirectController
+                //                 .itemUnitController.text = "";
+                //             billGenerationDirectController
+                //                 .itemQuantityController.text = "";
+                //             billGenerationDirectController
+                //                 .itemRateController.text = "";
+                //           }
+                //         });
+                //       },
+                //     ),
+                //   ],
+                // ),
 
-                Container(
-                  margin: const EdgeInsets.only(top: 5),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          margin: const EdgeInsets.only(left: 10, right: 10),
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              side: const BorderSide(color: Colors.white70, width: 1),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            elevation: 3,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 3, left: 10, bottom: 5),
-                              child: TextFormField(
-                                textCapitalization: TextCapitalization.characters,
-                                controller: billGenerationDirectController
-                                    .itemUnitController,
-                                cursorColor: Colors.black,
-                                // enabled: billGenerationDirectController
-                                //     .ItemGetTableListdata.value.isEmpty,
-                                style: const TextStyle(color: Colors.black),
-                                decoration: const InputDecoration(
-                                  contentPadding: EdgeInsets.zero,
-                                  border: InputBorder.none,
-                                  labelText: "Unit",
-                                  labelStyle: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize:
-                                      RequestConstant.Lable_Font_SIZE),
-                                  prefixIconConstraints:
-                                  BoxConstraints(minWidth: 0, minHeight: 0),
-                                  prefixIcon: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 8, horizontal: 8),
-                                      child: ConstIcons.unit),
-                                ),
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return '\u26A0 Enter user name';
-                                  }
-                                  return null;
-                                },
-                                onChanged: (value) {
-                                  billGenerationDirectController.itemUnitController.value =
-                                      TextEditingValue(
-                                        text: value.toUpperCase(),
-                                        selection: TextSelection.collapsed(
-                                          offset: value.length,
-                                        ),
-                                      );
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          margin: const EdgeInsets.only(left: 10, right: 10),
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              side: const BorderSide(color: Colors.white70, width: 1),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            elevation: 3,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 3, left: 10, bottom: 5),
-                              child: TextFormField(
-                                keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
-
-                                inputFormatters: [
-                                  TextInputFormatter.withFunction((oldValue, newValue) {
-                                    return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
-                                        ? newValue
-                                        : oldValue;
-                                  }),
-                                ],
-                                controller: billGenerationDirectController
-                                    .itemQuantityController,
-                                cursorColor: Colors.black,
-                                // enabled: billGenerationDirectController
-                                //     .ItemGetTableListdata.value.isEmpty,
-                                style: const TextStyle(color: Colors.black),
-                                decoration: const InputDecoration(
-                                  contentPadding: EdgeInsets.zero,
-                                  border: InputBorder.none,
-                                  labelText: "Quantity",
-                                  labelStyle: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize:
-                                      RequestConstant.Lable_Font_SIZE),
-                                  prefixIconConstraints:
-                                  BoxConstraints(minWidth: 0, minHeight: 0),
-                                  prefixIcon: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 8, horizontal: 8),
-                                      child: ConstIcons.quantity),
-                                ),
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return '\u26A0 Enter user name';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          margin: const EdgeInsets.only(left: 10, right: 10),
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              side: const BorderSide(color: Colors.white70, width: 1),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            elevation: 3,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 3, left: 10, bottom: 5),
-                              child: TextFormField(
-                                keyboardType: Platform.isAndroid ? TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
-
-                                inputFormatters: [
-                                  TextInputFormatter.withFunction((oldValue, newValue) {
-                                    return RegExp(r'^\d*\.?\d{0,2}$').hasMatch(newValue.text)
-                                        ? newValue
-                                        : oldValue;
-                                  }),
-                                ],
-                                controller: billGenerationDirectController
-                                    .itemRateController,
-                                // enabled: billGenerationDirectController
-                                //     .ItemGetTableListdata.value.isEmpty,
-                                cursorColor: Colors.black,
-                                style: const TextStyle(color: Colors.black),
-                                decoration: const InputDecoration(
-                                  contentPadding: EdgeInsets.zero,
-                                  border: InputBorder.none,
-                                  labelText: "Rate",
-                                  labelStyle: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize:
-                                      RequestConstant.Lable_Font_SIZE),
-                                  prefixIconConstraints:
-                                  BoxConstraints(minWidth: 0, minHeight: 0),
-                                  prefixIcon: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 8, horizontal: 8),
-                                      child: ConstIcons.rate),
-                                ),
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return '\u26A0 Enter user name';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      child: Container(
-                        margin: const EdgeInsets.only(top: 10, left: 20, right: 20),
-                        height: BaseUtitiles.getheightofPercentage(context, 4),
-                        width: BaseUtitiles.getWidthtofPercentage(context, 15),
-                        decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.all(Radius.circular(10)),
-                            color:  Theme.of(context).primaryColor
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          "ADD",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: RequestConstant.Lable_Font_SIZE,
-                              color: Colors.white
-                          ),
-                        ),
-                      ),
-                      onTap: () {
-                        setState(() {
-                          if (billGenerationDirectController.itemDescController.text == "" ||
-                              billGenerationDirectController.itemUnitController.text ==
-                                  "" ||
-                              billGenerationDirectController.itemUnitController.text ==
-                                  "0.0" ||
-                              billGenerationDirectController.itemUnitController.text ==
-                                  "0" ||
-                              billGenerationDirectController
-                                  .itemQuantityController.text ==
-                                  "" ||
-                              billGenerationDirectController
-                                  .itemQuantityController.text ==
-                                  "0.0" ||
-                              billGenerationDirectController
-                                  .itemQuantityController.text ==
-                                  "0" ||
-                              billGenerationDirectController
-                                  .itemRateController.text ==
-                                  "" ||
-                              billGenerationDirectController
-                                  .itemRateController.text ==
-                                  "0.0" ||
-                              billGenerationDirectController
-                                  .itemRateController.text ==
-                                  "0") {
-                          } else {
-                            billGenerationDirectController
-                                .billgen_itemlist_SaveTable();
-                            billGenerationDirectController
-                                .getItemlistTablesDatas();
-                            billGenerationDirectController
-                                .itemDescController.text = "";
-                            billGenerationDirectController
-                                .itemUnitController.text = "";
-                            billGenerationDirectController
-                                .itemQuantityController.text = "";
-                            billGenerationDirectController
-                                .itemRateController.text = "";
-                          }
-                        });
-                      },
-                    ),
-                  ],
-                ),
-
+                SizedBox(height: 10,),
                 Obx(() => Visibility(
                     visible: billGenerationDirectController.ItemGetTableListdata.value.isEmpty
                         ? false
@@ -434,11 +435,11 @@ class _Bill_Generation_ItemlistState extends State<Bill_Generation_Itemlist> {
                     children: <Widget>[
                       Expanded(
                         flex: 10,
-                        child: Text(
-                          billGenerationDirectController.ItemGetTableListdata.value[index].Name.toString(),
+                        child: Text("${billGenerationDirectController.ItemGetTableListdata.value[index].Name} (${billGenerationDirectController.itemlist_ListUnitsController[index].text})",
                           style: TextStyle(
                             color: Theme.of(context).primaryColor,
                             fontWeight: FontWeight.bold,
+                            fontSize: 15
                           ),
                         ),
                       ),
@@ -525,14 +526,15 @@ class _Bill_Generation_ItemlistState extends State<Bill_Generation_Itemlist> {
                     ],
                   ),
                 ),
+                SizedBox(height: 5,),
                 Container(
                   margin: const EdgeInsets.only(top: 10, left: 5, right: 5, bottom: 12),
                   child: Row(
                     children: <Widget>[
                       const Expanded(
-                        flex: 4,
+                        flex: 5,
                         child: Text(
-                          "Unit",
+                          "WO Bal Qty",
                           style: TextStyle(color: Colors.black),
                         ),
                       ),
@@ -541,7 +543,8 @@ class _Bill_Generation_ItemlistState extends State<Bill_Generation_Itemlist> {
                           child: SizedBox(
                             height: BaseUtitiles.getheightofPercentage(context, 4),
                             child: TextFormField(
-                                controller: billGenerationDirectController.itemlist_ListUnitsController[index],
+                              readOnly: true,
+                                controller: billGenerationDirectController.itemlist_ListWOBalQtyController[index],
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(color: Colors.black),
                                 cursorColor: Colors.black,
@@ -602,7 +605,7 @@ class _Bill_Generation_ItemlistState extends State<Bill_Generation_Itemlist> {
                                       borderRadius: const BorderRadius.all(Radius.circular(10))),
                                 ),
                                 onChanged: (value) async {
-                                  await billGenerationDirectController.itemListclickChanged();
+                                   billGenerationDirectController.itemListclickChanged();
                                 }),
                           )),
                     ],
@@ -613,7 +616,7 @@ class _Bill_Generation_ItemlistState extends State<Bill_Generation_Itemlist> {
                   child: Row(
                     children: <Widget>[
                       const Expanded(
-                        flex: 4,
+                        flex: 5,
                         child: Text(
                           "Rate",
                           style: TextStyle(color: Colors.black),
@@ -624,13 +627,7 @@ class _Bill_Generation_ItemlistState extends State<Bill_Generation_Itemlist> {
                           child: SizedBox(
                             height: BaseUtitiles.getheightofPercentage(context, 4),
                             child: TextFormField(
-                                onTap: (){
-                                  if(billGenerationDirectController.itemlist_ListRateController[index].text != "" && billGenerationDirectController.itemlist_ListRateController[index].text != "0" && billGenerationDirectController.itemlist_ListRateController[index].text != "0.0"){
-                                    return;
-                                  } else {
-                                    billGenerationDirectController.itemlist_ListRateController[index].text = "";
-                                  }
-                                },
+                              readOnly: true,
                                 controller: billGenerationDirectController.itemlist_ListRateController[index],
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(color: Colors.black),
@@ -653,9 +650,7 @@ class _Bill_Generation_ItemlistState extends State<Bill_Generation_Itemlist> {
                                       borderSide: BorderSide(color: Theme.of(context).primaryColor),
                                       borderRadius: const BorderRadius.all(Radius.circular(10))),
                                 ),
-                                onChanged: (value) async {
-                                  await billGenerationDirectController.itemListclickChanged();
-                                }),
+                            ),
                           )),
                       const Expanded(
                         flex: 6,

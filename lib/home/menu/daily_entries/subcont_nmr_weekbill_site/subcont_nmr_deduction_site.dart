@@ -63,18 +63,6 @@ class _Subcont_NMR_DeductionState_Site
 
       if (nmrWklyController.saveButton.value == RequestConstant.SUBMIT) {
         nmrWklyController.workid = 0;
-        nmrWklyController.billamount.text = "0.0";
-        // nmrWklyController.foodDeduction.text = "0.0";
-        nmrWklyController.Creditamt.text = "0.0";
-        nmrWklyController.Debitamt.text = "0.0";
-        nmrWklyController.Advded.text = "0.0";
-        nmrWklyController.Roundoff.text = "0.0";
-        nmrWklyController.netBillAmt.text = "0.0";
-        nmrWklyController.netpayamt.text = "0.0";
-        nmrWklyController.tobededadv.text =
-            nmrWklyController.to_be_dection_advance;
-        nmrWklyController.CreditRemarksController.text = "-";
-        nmrWklyController.DebitRemarksController.text = "-";
         await nmrWklyController.deduction_paymentCalculation();
       }
     });
