@@ -81,6 +81,7 @@ class _WorkOrderDirectEntryScreenState extends State<WorkOrderDirectEntryScreen>
         workOrderDirectController.workOrdamount.text = "0.0";
         workOrderDirectController.Roundoff.text = "0";
         workOrderDirectController.netpayamt.text = "0.0";
+        workOrderDirectController.rebateAmount.text = "0.0";
         workOrderDirectController.termsConditionController.text = "";
 
       }

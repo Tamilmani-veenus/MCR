@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../apimanager/apimanager.dart';
 import '../models/billDirectDetCalculation_model.dart';
@@ -99,6 +100,11 @@ class WorkOrderDirectProvider{
       final res = json.decode(value);
       if (res != null) {
         data = res;
+        if(data=="Deleted"){
+          Fluttertoast.showToast(msg: "Deleted Successfully");
+        }else{
+          Fluttertoast.showToast(msg: "$data");
+        }
         return data;
       }
       print(res);

@@ -14,7 +14,7 @@ class ReportType_Alert extends StatefulWidget {
 class _ReportType_AlertState extends State<ReportType_Alert> {
   DailyWrkDone_DPR_Controller dailyWrkDone_DPR_Controller =
       Get.put(DailyWrkDone_DPR_Controller());
-  final list = ["Detailed Report", "Abstract Report"];
+  final list = ["Project Report", "Abstract Report"];
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class _ReportType_AlertState extends State<ReportType_Alert> {
                     return InkWell(
                       onTap: () {
                         if (index == 0) {
-                          dailyWrkDone_DPR_Controller.reportTypeController.text = "Detailed Report";
+                          dailyWrkDone_DPR_Controller.reportTypeController.text = "Project Report";
                           dailyWrkDone_DPR_Controller.reportType.value = 1;
                         } else {
                           dailyWrkDone_DPR_Controller

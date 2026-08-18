@@ -191,6 +191,8 @@ class DailyWrkDone_DPR_Controller extends GetxController {
         dpr_EditListApiValue.value = value;
         dpr_entrylist_editSaveDetTable();
         getDprTablesDatas();
+        await gettingImage(workid,"DPR");
+
         Navigator.push(
           context,
           MaterialPageRoute(

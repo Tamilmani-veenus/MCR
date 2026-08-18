@@ -47,9 +47,6 @@ class _WorkOrderDirectDeductionState extends State<WorkOrderDirectDeduction> {
 
       if (workOrderDirectController.saveButton.value == RequestConstant.SUBMIT) {
         workOrderDirectController.workid = 0;
-        workOrderDirectController.workOrdamount.text = "0.0";
-        workOrderDirectController.rebateAmount.text = "0.0";
-        workOrderDirectController.Roundoff.text = "0.0";
         workOrderDirectController.deductionPaymentCalculation();
       }
     });
@@ -363,7 +360,6 @@ class _WorkOrderDirectDeductionState extends State<WorkOrderDirectDeduction> {
                                           vertical: 8, horizontal: 8),
                                       child: ConstIcons.netAmt),
                                 ),
-
                               ),
                             ),
                           ),
@@ -371,59 +367,114 @@ class _WorkOrderDirectDeductionState extends State<WorkOrderDirectDeduction> {
                       ),
                     ],
                   ),
+
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColor,
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(8),
-                              topRight: Radius.circular(8),
-                            ),
-                          ),
-                          child: const Text(
-                            "Terms and Condition",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: Colors.grey.shade300,
                         ),
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(color: Colors.grey.shade300),
-                            borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(8),
-                              bottomRight: Radius.circular(8),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.04),
+                            blurRadius: 5,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Header
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 12,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).primaryColor.withOpacity(0.08),
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.zero,
+                                bottomRight: Radius.zero,
+                                // topLeft: Radius.circular(10),
+                                // topRight: Radius.circular(10),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.description_outlined,
+                                  size: 20,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  "Terms and Conditions",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          child: TextFormField(
-                            controller: workOrderDirectController.termsConditionController,
-                            cursorColor: Colors.black87,
-                            cursorWidth: 1,
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
-                              decoration: TextDecoration.none, // Removes text underline
-                            ),
-                            minLines: 5,
-                            maxLines: 8,
-                            decoration: const InputDecoration(
-                              hintText: "Enter terms and conditions...",
-                              border: InputBorder.none,
+
+                          // Input
+                          Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: TextFormField(
+                              controller:
+                              workOrderDirectController.termsConditionController,
+                              cursorColor: Theme.of(context).primaryColor,
+                              minLines: 5,
+                              maxLines: 8,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.black87,
+                              ),
+                              decoration: InputDecoration(
+                                hintText: "Enter terms and conditions...",
+                                hintStyle: TextStyle(
+                                  color: Colors.grey.shade500,
+                                  fontSize: 14,
+                                ),
+                                filled: true,
+                                fillColor: Colors.grey.shade50,
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 12,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+
+                                  borderSide: BorderSide(
+                                    color: Colors.grey.shade300,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    color: Theme.of(context).primaryColor,
+                                    width: 1.2,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   Container(
@@ -920,31 +971,84 @@ class _WorkOrderDirectDeductionState extends State<WorkOrderDirectDeduction> {
                   Expanded(
                     child: TextButton(
                         onPressed: () async {
-                          workOrderDirectController.saveButton.value = RequestConstant.SUBMIT;
+                          // Generate new Direct Bill number
+                          await autoYearWiseNoController.workOrderdirect_AutoYearWise();
+
+                          workOrderDirectController.autoYearWiseNoController.text =
+                              autoYearWiseNoController.WorkOrdDirect_autoYrWise.value;
+
+                          final currentDate =
+                          BaseUtitiles.initiateCurrentDateFormat();
+
+                          workOrderDirectController.workOrdentryDateController.text =
+                              currentDate;
+
                           workOrderDirectController.workid = 0;
+
                           projectController.projectname.text = "--SELECT--";
                           projectController.selectedProjectId.value = 0;
+
+                          siteController.Sitename.text = "--SELECT--";
+                          siteController.selectedsiteId.value = 0;
+
                           subcontractorController.Subcontractorname.text = "--SELECT--";
                           subcontractorController.selectedSubcontId.value = 0;
-                          workOrderDirectController.workOrdentryDateController.text = BaseUtitiles.initiateCurrentDateFormat();
 
-                          workOrderDirectController
-                              .autoYearWiseNoController.text =
-                              autoYearWiseNoController
-                                  .DirectBillautoYrsWise.value;
-                          siteController.selectedsiteId = 0.obs;
-                          siteController.selectedsitedropdownName = "--SELECT--".obs;
-                          siteController.getSiteDropdownvalue.value.clear();
-                          siteController.Sitename.text = RequestConstant.SELECT;
-                          siteController.siteDropdownName.clear();
+                          subcontractorController.WorkOrderNo.text = "--SELECT--";
+                          subcontractorController.selectedWorkOrderId.value = 0;
+                          workOrderDirectController.WorkOrdActiveTypeText.text = "--SELECT--";
+                          workOrderDirectController.workOrdActTypeID.value = "0";
+                          workOrderDirectController.WorkStatusTypeText.text = "--SELECT--";
+                          workOrderDirectController.workOrdStsTypeId.value = "0";
+                          workOrderDirectController.termsConditionController.text = "";
 
-                          workOrderDirectController.workOrder_itemlistTable_Delete();
-                          workOrderDirectController.ItemGetTableListdata.value.clear();
+                          workOrderDirectController.RemarksController.clear();
 
+                          await workOrderDirectController.workOrder_itemlistTable_Delete();
+
+                          workOrderDirectController.ItemGetTableListdata.clear();
+
+                          // -----------------------------
+                          // Reset Amounts
+                          // -----------------------------
                           workOrderDirectController.workOrdamount.text = "0.0";
-                          workOrderDirectController.Roundoff.text = "0";
+                          workOrderDirectController.rebateAmount.text = "0.0";
                           workOrderDirectController.netpayamt.text = "0.0";
-                          Navigator.pop(context);
+                          workOrderDirectController.Roundoff.text = "0.0";
+
+
+                          // -----------------------------
+                          // Clear Percentage Controllers
+                          // -----------------------------
+                          for (final controller
+                          in workOrderDirectController.percentControllers) {
+                            controller.clear();
+                          }
+
+                          // -----------------------------
+                          // Reset Item Percentage & Amount
+                          // -----------------------------
+                          for (final item
+                          in workOrderDirectController.workOrder_ItemReadList) {
+                            item.percentValue = 0.0;
+                            item.amount = 0.0;
+                          }
+
+                          // IMPORTANT:
+                          // Notify GetX because properties inside list objects changed
+                          workOrderDirectController.workOrder_ItemReadList.refresh();
+
+                          // -----------------------------
+                          // Recalculate
+                          // -----------------------------
+                          await workOrderDirectController
+                              .deductionPaymentCalculation();
+
+                          // Refresh again if calculation changes item values
+                          workOrderDirectController.workOrder_ItemReadList.refresh();
+                          if (context.mounted) {
+                            Navigator.pop(context);
+                          }
                         },
                         child: Text("Reset",
                             style: TextStyle(
