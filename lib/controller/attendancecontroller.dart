@@ -10,7 +10,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'logincontroller.dart';
+
 class AttendanceController extends GetxController {
+  LoginController loginController = Get.put(LoginController());
   final ProjectController projectController = Get.put(ProjectController());
   SubcontractorController subcontcontroller = Get.put(SubcontractorController());
   ReportsController reportsController = Get.put(ReportsController());
@@ -28,7 +31,7 @@ class AttendanceController extends GetxController {
 
   Future getAttendance_rptList() async {
     attendanceDatas.value.clear();
-    await ReportsProvider.getAttendancereportList( reportsController.selectedProjectId.value,reportsController.selectedSubcontId.value, FromdateController.text,TodateController.text,wrktype.value).then((value)async{
+    await ReportsProvider.getAttendancereportList(int.parse(loginController.UserId().toString()),loginController.UserType().toString(),reportsController.selectedProjectId.value,reportsController.selectedSubcontId.value, FromdateController.text,TodateController.text,wrktype.value).then((value)async{
       if(value!=null&& value.length>0){
         attendanceDatas.value=value;
         return attendanceDatas.value;

@@ -497,12 +497,10 @@ class _DPRReportState extends State<DPRReport> {
                           }
                           return null;
                         },
-
                       ),
                     ),
                   ),
                 ),
-
                 Container(
                   margin: EdgeInsets.only(top: 10,),
                   child: IntrinsicHeight(

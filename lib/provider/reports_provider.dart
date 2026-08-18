@@ -140,9 +140,9 @@ class ReportsProvider{
     return data;
   }
 
-  static Future<List<AttendanceReportListResponse>> getAttendancereportList(int projectId,int subId,String frdate,String todate,String type) async {
+  static Future<List<AttendanceReportListResponse>> getAttendancereportList(int userId, String userType,int projectId,int subId,String frdate,String todate,String type) async {
     var data = null;
-    await ApiManager.getAPICall(ApiConstant.GETATTENDANCEREPORTLIST+"?PrjId=$projectId&SubId=$subId&FrDate=$frdate&ToDate=$todate&type=$type").then((value) {
+    await ApiManager.getAPICall(ApiConstant.GETATTENDANCEREPORTLIST+"?Userid=$userId&Usertype=$userType&PrjId=$projectId&SubId=$subId&FrDate=$frdate&ToDate=$todate&type=$type").then((value) {
       print("AttendanceReportList:"+value);
       data = attendanceReportListResponseFromJson(value);
       if (data!=null&& data.length>0) {
