@@ -41,12 +41,12 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
     Future.delayed(duration,() async {
       if(nmrWklyController.saveButton.value == RequestConstant.SUBMIT){
         await autoYearWiseNoController.NMR_AutoYearWise();
+        projectController.selectedProjectId.value=0;
         await projectController.getProjectList(context, 0);
         await siteController.subcontEntry_siteDropdowntList(context,0);
         await subcontractorController.getSubcontList(context, projectController.selectedProjectId.value,siteController.selectedsiteId.value, 1);
         nmrWklyController.NmritemList.value=[];
         projectController.projectname.text="--SELECT--";
-        projectController.selectedProjectId.value=0;
         siteController.Sitename.text="--SELECT--";
         siteController.selectedsiteId.value=0;
         subcontractorController.Subcontractorname.text="--SELECT--";
@@ -58,6 +58,16 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
         nmrWklyController.FromdateController.text=BaseUtitiles.initiateCurrentDateFormat();
         nmrWklyController.TodateController.text=BaseUtitiles.initiateCurrentDateFormat();
         nmrWklyController.autoYearWiseNoController.text=autoYearWiseNoController.NMR_autoYrsWise.value;
+        nmrWklyController.to_be_dection_advance = "0.0";
+        nmrWklyController.billamount.text = "0.0";
+        nmrWklyController.Creditamt.text = "0.0";
+        nmrWklyController.Debitamt.text = "0.0";
+        nmrWklyController.CreditRemarksController.text = "-";
+        nmrWklyController.DebitRemarksController.text = "-";
+        nmrWklyController.tobededadv.text = "0.0";
+        nmrWklyController.Advded.text ="0.0";
+        nmrWklyController.Roundoff.text = "0.0";
+        nmrWklyController.netpayamt.text = "0.0";
       }
 
       await nmrWklyController.DirectBill_CalculationList();
@@ -370,7 +380,7 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
                                 }
                                 else{
                                   await subcontractorController.getSubcontList(context, projectController.selectedProjectId.value,siteController.selectedsiteId.value, 1);
-                                  bottomsheetControllers.SubcontractorName(context, subcontractorController.getdropDownvalue.value);
+                                  bottomsheetControllers.SubcontractorName(context, subcontractorController.getdropDownvalue.value,type: "NMR");
                                 }
                               },
                               validator: (value) {
@@ -645,7 +655,7 @@ class _Subcont_Nmr_EntryScreenState_Site extends State<Subcont_Nmr_EntryScreen_S
                             if(_formkey.currentState!.validate())
                             {
                               _formkey.currentState!.save();
-                              if(nmrWklyController.saveButton.value == RequestConstant.RESUBMIT){
+                              if(nmrWklyController.saveButton.value != RequestConstant.SUBMIT){
                               }
                               else{
                                 if(projectController.selectedProjectId.value!=0 && siteController.selectedsiteId.value !=0 &&  subcontractorController.selectedSubcontId.value!=0){

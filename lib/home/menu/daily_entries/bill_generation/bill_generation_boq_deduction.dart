@@ -61,6 +61,8 @@ class _Bill_Generation_Boq_deductionState
 
       if (billGenerationBoqController.saveButton.value == RequestConstant.SUBMIT) {
         billGenerationBoqController.workid = 0;
+        billGenerationBoqController.tobededadv.text =
+            billGenerationBoqController.to_be_dection_advance;
         await billGenerationBoqController.deductionPaymentCalculation();
       }
     });

@@ -72,7 +72,7 @@ class _SiteVoucher_EntryScreenState extends State<SiteVoucher_EntryScreen> {
     siteVoucher_Controller.SaveButton.value = "";
     var duration = Duration(seconds: 0);
     Future.delayed(duration, () async {
-      await commonVoucherController.getAccountTypeList(context, 0);
+      await commonVoucherController.getAccountTypeList(context, 0,type:"SIT");
       await commonVoucherController.getPayforList(context);
       await autoYearWiseNoController.SiteVoucherAutoYear();
       await projectController.getProjectList(context, 0);
@@ -117,7 +117,7 @@ class _SiteVoucher_EntryScreenState extends State<SiteVoucher_EntryScreen> {
         siteVoucher_Controller.SaveButton.value = RequestConstant.SUBMIT;
         siteVoucher_Controller.Button.value = RequestConstant.SUBMIT;
         siteController.selectedsiteId = 0.obs;
-        siteVoucher_Controller.type.value = "Direct Payment/Office";
+        siteVoucher_Controller.type.value = 'Direct Payment/Office';
         siteVoucher_Controller.delete_Sitevoucher_itemlist_Table();
         siteVoucher_Controller.Sitevoucher_itemview_GetDbList.clear();
         // siteVoucher_Controller.Amount.text = "0.00";
@@ -126,7 +126,7 @@ class _SiteVoucher_EntryScreenState extends State<SiteVoucher_EntryScreen> {
         siteController.Sitename.text = RequestConstant.SELECT;
         siteController.siteDropdownName.clear();
         commonVoucherController.VoucherTypeController.text = "Payment";
-        commonVoucherController.voucherPaidForm.text = "PEETY CHASH";
+        commonVoucherController.voucherPaidForm.text = "PETTY CASH";
         commonVoucherController.vocPaidformId = 1;
         projectController.projectname.text = "--Select--";
         projectController.selectedProjectId.value = 0;
@@ -470,13 +470,13 @@ class _SiteVoucher_EntryScreenState extends State<SiteVoucher_EntryScreen> {
                                     vertical: 8, horizontal: 8),
                                 child: ConstIcons.accounttype),
                           ),
-                          onTap: () {
-                            setState(() {
+                          onTap: () async {
+                            await commonVoucherController
+                                .getAccountName(context);
                               bottomsheetControllers.AccountName(
                                   context,
                                   commonVoucherController
                                       .getaccdropDownvalue.value);
-                            });
                           },
                           validator: (value) {
                             if (value!.isEmpty) {
@@ -986,38 +986,40 @@ class _SiteVoucher_EntryScreenState extends State<SiteVoucher_EntryScreen> {
                     ),
                   ),
                   const SizedBox(height: 5),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Radio<String>(
-                        value: 'Direct Payment/Office',
-                        groupValue: siteVoucher_Controller.type.value,
-                        fillColor: MaterialStateColor.resolveWith(
-                                (states) => Theme.of(context).primaryColor),
-                        onChanged: (value) {
-                          setState(() {
-                            siteVoucher_Controller.type.value = value!;
-                            siteVoucher_Controller.Button =
-                                RequestConstant.SUBMIT.obs;
-                          });
-                        },
-                      ),
-                      Container(child: const Text('Direct Payment/Office')),
-                      Radio<String>(
-                        value: 'SiteWise Payment',
-                        groupValue: siteVoucher_Controller.type.value,
-                        fillColor: MaterialStateColor.resolveWith(
-                                (states) => Theme.of(context).primaryColor),
-                        onChanged: (value) {
-                          setState(() {
-                            siteVoucher_Controller.type.value = value!;
-                            siteVoucher_Controller.Button =
-                                RequestConstant.LIST.obs;
-                          });
-                        },
-                      ),
-                      Container(child: const Text('SiteWise Payment')),
-                    ],
+                  Obx(()=>
+                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Radio<String>(
+                          value: 'Direct Payment/Office',
+                          groupValue: siteVoucher_Controller.type.value,
+                          fillColor: MaterialStateColor.resolveWith(
+                                  (states) => Theme.of(context).primaryColor),
+                          onChanged: (value) {
+                            setState(() {
+                              siteVoucher_Controller.type.value = value!;
+                              siteVoucher_Controller.Button =
+                                  RequestConstant.SUBMIT.obs;
+                            });
+                          },
+                        ),
+                        Container(child: const Text('Direct Payment/Office')),
+                        Radio<String>(
+                          value: 'SiteWise Payment',
+                          groupValue: siteVoucher_Controller.type.value,
+                          fillColor: MaterialStateColor.resolveWith(
+                                  (states) => Theme.of(context).primaryColor),
+                          onChanged: (value) {
+                            setState(() {
+                              siteVoucher_Controller.type.value = value!;
+                              siteVoucher_Controller.Button =
+                                  RequestConstant.LIST.obs;
+                            });
+                          },
+                        ),
+                        Container(child: const Text('SiteWise Payment')),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 5),
                   Row(

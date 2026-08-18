@@ -67,8 +67,8 @@ class SubcontractorController extends GetxController {
   }
 
 
-  Future getSubcontList(BuildContext context,int pid,int sid,checkScreen) async {
-    getdropDownvalue.value = await CommonProvider.getSubcontrator(pid,sid, checkScreen);
+  Future getSubcontList(BuildContext context,int pid,int sid,checkScreen,{type}) async {
+    getdropDownvalue.value = await CommonProvider.getSubcontrator(pid,sid, checkScreen,type);
     getdropDownvalue.value.forEach((element) {
       return SubcontDropdownName.value.add(element.subContName);
     });

@@ -29,6 +29,7 @@ class CashBookSiteController extends GetxController{
         return cashsiteDatas.value;
       }
       else{
+        cashsiteDatas.value=[];
         calculations();
       }
     });

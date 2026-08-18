@@ -62,21 +62,12 @@ class CommonVoucherController extends GetxController{
   RxInt selectedPaymodeId = 0.obs;
   RxString selectedPaymodeName = "".obs;
 
-  Future getAccountTypeList(BuildContext context, int check) async {
-    getdropDownvalue.value= await CommonProvider.getAcoountType(check);
+  Future getAccountTypeList(BuildContext context, int check,{type}) async {
+    getdropDownvalue.value= await CommonProvider.getAcoountType(check,type);
 
     getdropDownvalue.value.forEach((element) {
       return AccounttypeDropdownName.value.add(element.accType);
     });
-
-    // return  bottomsheetControllers.AccountType(context, getdropDownvalue.value );
-    // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomsheetControllers(list [])));
-
-    // showDialog(
-    //     context: context,
-    //     builder: (BuildContext context) {
-    //       return AccountTypeShowPopup(list:getdropDownvalue.value);
-    //     });
   }
 
 

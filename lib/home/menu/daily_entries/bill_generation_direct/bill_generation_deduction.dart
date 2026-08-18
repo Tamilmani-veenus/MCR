@@ -60,6 +60,8 @@ class _Bill_Generation_direct_deductionState
 
       if (billGenerationDirectController.saveButton.value == RequestConstant.SUBMIT) {
         billGenerationDirectController.workid = 0;
+        billGenerationDirectController.tobededadv.text =
+            billGenerationDirectController.to_be_dection_advance;
         await billGenerationDirectController.deductionPaymentCalculation();
       }
     });

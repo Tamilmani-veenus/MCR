@@ -157,9 +157,6 @@ class BillGenerationDirectController extends GetxController {
             bill_editListApiDatas[0].billEditAddless);
       }
     }
-    else{
-      BaseUtitiles.showToast(RequestConstant.NORECORD_FOUND);
-    }
   }
 
   void setBaseNetPay() {
@@ -567,6 +564,7 @@ class BillGenerationDirectController extends GetxController {
 
     // Optional validation
     if ((double.tryParse(netpayamt.text) ?? 0) < 0) {
+      BaseUtitiles.showToast("Should not exceed the net pay amt.");
       return false;
     }
 
