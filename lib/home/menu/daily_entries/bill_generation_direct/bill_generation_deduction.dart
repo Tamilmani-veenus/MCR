@@ -60,18 +60,6 @@ class _Bill_Generation_direct_deductionState
 
       if (billGenerationDirectController.saveButton.value == RequestConstant.SUBMIT) {
         billGenerationDirectController.workid = 0;
-        billGenerationDirectController.materialDebitamt.text = "0.0";
-        billGenerationDirectController.Creditamt.text = "0.0";
-        billGenerationDirectController.Debitamt.text = "0.0";
-        billGenerationDirectController.Advded.text = "0.0";
-        billGenerationDirectController.Roundoff.text = "0.0";
-        billGenerationDirectController.netBillAmt.text = "0.0";
-        billGenerationDirectController.balAmt.text = "0.0";
-        // billGenerationDirectController.finalBillAmt.text = "0.0";
-        billGenerationDirectController.tobededadv.text = billGenerationDirectController.to_be_dection_advance;
-        billGenerationDirectController.CreditRemarksController.text = "-";
-        billGenerationDirectController.DebitRemarksController.text = "-";
-        billGenerationDirectController.materialDebitRemarks.text = "-";
         await billGenerationDirectController.deductionPaymentCalculation();
       }
     });
@@ -1145,7 +1133,8 @@ class _Bill_Generation_direct_deductionState
                       ),
                     ],
                   ),
-                  Container(
+                  if (billGenerationDirectController
+                      .billDet_Calculation.value.isNotEmpty)Container(
                     margin: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: Colors.white,

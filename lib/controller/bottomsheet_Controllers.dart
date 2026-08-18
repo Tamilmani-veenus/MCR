@@ -442,6 +442,7 @@ class BottomsheetControllers {
                               await billGenerationBoqController.DirectBill_CalculationList(type: "WorkOrd");
                             }else {
                               await billGenerationDirectController.getWorkOrderList(type);
+                              await billGenerationDirectController.getNmrAdvance();
                               await billGenerationDirectController.DirectBill_CalculationList(type: "WorkOrd");
                             }
                             Navigator.pop(context);
@@ -1175,7 +1176,7 @@ class BottomsheetControllers {
     );
   }
 
-  SubcontractorName(context, list) {
+  SubcontractorName(context, list,{type}) {
     showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
@@ -1275,12 +1276,15 @@ class BottomsheetControllers {
                           subcontractorController.selectedSubcontId.value =
                               list[index].subContId;
                           searchcontroller.text = "";
-                          await nmrWklyController.getNmrAdvance();
-                          await billGenerationDirectController.getNmrAdvance();
-                          await billGenerationBoqController.getNmrAdvance();
+                          if(type=="NMR") {
+                            await nmrWklyController.getNmrAdvance();
+                            await nmrWklyController.DirectBill_CalculationList(type: "Subcont");
+                          }
+                          else if(type=="BOQ"){
+                            await billGenerationBoqController.getNmrAdvance();
+                          }
                           await dailyEntriesController.deleteSubcontDetTableDatas();
                           dailyEntriesController.readListdata.clear();
-                          await nmrWklyController.DirectBill_CalculationList(type: "Subcont");
                           Navigator.pop(context);
                         },
                       ),

@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../utilities/baseutitiles.dart';
+import 'logincontroller.dart';
 
 class SiteController extends GetxController{
   final Sitename=new TextEditingController();
@@ -23,6 +24,7 @@ class SiteController extends GetxController{
   RxString selectedsitedropdownName = "".obs;
   ProjectController projectController=Get.put(ProjectController());
   ReportsController reportsController = Get.put(ReportsController());
+  LoginController loginController = Get.put(LoginController());
   final FromdateController = TextEditingController();
   final TodateController = TextEditingController();
   RxList mrnListValue=[].obs;
@@ -34,6 +36,8 @@ class SiteController extends GetxController{
   Future getMrnReqTrackerList() async {
     mrnReqTrackerListValue.value=[];
     final value = await ReportsProvider.getMrnReqTrackerRptList(
+        loginController.UserId(),
+        loginController.UserType(),
         reportsController.selectedProjectId.value,
         reportsController.selectedsiteId.value,
         reportsController.materialDropdowntId.value,

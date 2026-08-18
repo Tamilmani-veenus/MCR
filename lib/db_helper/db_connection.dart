@@ -40,7 +40,7 @@ class DatabaseConnection {
     String dprLabourDetTable = "CREATE TABLE dprLabourDetTable (id INTEGER PRIMARY KEY UNIQUE,headItemId INTEGER,subItemId INTEGER,level3ItemId INTEGER,woDetId INTEGER,itemDesc TEXT,units TEXT,rate REAL,qty REAL,amt REAL,balQty REAL,boqCode Text)";
     await database.execute(dprLabourDetTable);
 
-    String directBillGenItemlistTable = "CREATE TABLE directBillGenItemlistTable (id INTEGER PRIMARY KEY UNIQUE,Name TEXT,unit TEXT,qty REAL,rate REAL,amount REAL,isApi INTEGER,workDetId INTEGER)";
+    String directBillGenItemlistTable = "CREATE TABLE directBillGenItemlistTable (id INTEGER PRIMARY KEY UNIQUE,Name TEXT,unit TEXT,qty REAL,rate REAL,amount REAL,isApi INTEGER,workDetId INTEGER,WOBalQty REAL)";
     await database.execute(directBillGenItemlistTable);
 
     String billGenBoqItemlistTable = "CREATE TABLE billGenBoqItemlistTable (id INTEGER PRIMARY KEY UNIQUE,Name TEXT,unit TEXT,qty REAL,rate REAL,amount REAL,reqDetId INTEGER, balbillqty REAL, CurBillQty REAL, appQty REAL,level3ItemId INTEGER, headItemid INTEGER, subItemid INTEGER,workDetId INTEGER)";

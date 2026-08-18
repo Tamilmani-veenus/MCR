@@ -67,7 +67,7 @@ class _Subcont_Nmr_EntryScreenState_Site
           billGenerationDirectController.RemarksController.text = element.remarks.toString();
         });
       }
-      await billGenerationDirectController.DirectBill_CalculationList();
+      // await billGenerationDirectController.DirectBill_CalculationList();
       if (billGenerationDirectController.saveButton.value == RequestConstant.SUBMIT) {
         await autoYearWiseNoController.directBill_AutoYearWise();
         billGenerationDirectController.autoYearWiseNoController.text =
@@ -661,12 +661,12 @@ class _Subcont_Nmr_EntryScreenState_Site
                           ),
                           onTap: ()  async {
                           },
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return '\u26A0 ${RequestConstant.VALIDATE}';
-                            }
-                            return null;
-                          },
+                          // validator: (value) {
+                          //   if (value!.isEmpty) {
+                          //     return '\u26A0 ${RequestConstant.VALIDATE}';
+                          //   }
+                          //   return null;
+                          // },
                         ),
                       ),
                     ),

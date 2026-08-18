@@ -2,6 +2,7 @@ class DirectBillGenItemListTableModel{
   int? Id;
   int? workDetId;
   String? Name;
+  double? WOBalQty;
   String? unit;
   double? qty;
   double? rate;
@@ -11,6 +12,7 @@ class DirectBillGenItemListTableModel{
   DirectBillGenItemListTableMap() {
     var mapping = Map<String, dynamic>();
     mapping['id'] = Id != null ? Id : null;
+    mapping['WOBalQty'] = WOBalQty != null ? WOBalQty : null;
     mapping['workDetId'] = workDetId != null ? workDetId : null;
     mapping['Name'] = Name != null ? Name : null;
     mapping['unit'] = unit != null ? unit : null;

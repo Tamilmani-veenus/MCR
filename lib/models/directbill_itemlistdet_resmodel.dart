@@ -26,6 +26,7 @@ class BillDirectWorkOrdDet {
   double? balbillqty;
   double? totalqty;
   double? amount;
+  double? WOBalQty;
 
   BillDirectWorkOrdDet({
     this.headItemId,
@@ -45,6 +46,7 @@ class BillDirectWorkOrdDet {
     this.balbillqty,
     this.totalqty,
     this.amount,
+    this.WOBalQty,
   });
 
   factory BillDirectWorkOrdDet.fromJson(Map<String, dynamic> json) => BillDirectWorkOrdDet(
@@ -65,6 +67,7 @@ class BillDirectWorkOrdDet {
     balbillqty: json["balbillqty"],
     totalqty: json["Totalqty"],
     amount: json["Amt"],
+    WOBalQty: json["WOBalQty"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -85,5 +88,6 @@ class BillDirectWorkOrdDet {
     "balbillqty": balbillqty,
     "Totalqty": totalqty,
     "Amt": amount,
+    "WOBalQty": WOBalQty,
   };
 }

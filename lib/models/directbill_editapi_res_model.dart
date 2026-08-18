@@ -208,6 +208,7 @@ class BillEditDet {
   double? balBillQty;
   double? totalQty;
   double? flat;
+  double? WOBalQty;
   int? qtyIsClosed;
   int? wHeadItemId;
   int? wSubItemId;
@@ -230,6 +231,7 @@ class BillEditDet {
    this.curBillQty,
    this.balBillQty,
    this.totalQty,
+   this.WOBalQty,
    this.flat,
    this.qtyIsClosed,
    this.wHeadItemId,
@@ -256,6 +258,7 @@ class BillEditDet {
     qtyIsClosed: json["QtyIsClosed"],
     wHeadItemId: json["WHeadItemId"],
     wSubItemId: json["WSubItemId"],
+    WOBalQty: json["WOBalQty"],
     status: json["Status"],
     workorderDetId: json["WorkorderDetId"],
   );
@@ -279,6 +282,7 @@ class BillEditDet {
     "QtyIsClosed": qtyIsClosed,
     "WHeadItemId": wHeadItemId,
     "WSubItemId": wSubItemId,
+    "WOBalQty": WOBalQty,
     "WorkorderDetId": workorderDetId,
   };
 }
