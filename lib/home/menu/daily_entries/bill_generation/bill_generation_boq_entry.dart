@@ -432,7 +432,7 @@ class _Bill_Generation_Boq_EntryScreenState_Site
                                 child: ConstIcons.date),
                           ),
                           onTap: () async {
-                            if (billGenerationBoqController.saveButton.value == RequestConstant.RESUBMIT) {
+    if(billGenerationBoqController.saveButton.value == RequestConstant.RESUBMIT || billGenerationBoqController.saveButton.value == RequestConstant.VERIFY || billGenerationBoqController.saveButton.value == RequestConstant.APPROVAL){
                             } else {
                               var Entrydate = await showDatePicker(
                                   context: context,
@@ -631,7 +631,7 @@ class _Bill_Generation_Boq_EntryScreenState_Site
                                       child: ConstIcons.date),
                                 ),
                                 onTap: () async {
-                                  if (billGenerationBoqController.saveButton.value == RequestConstant.RESUBMIT) {
+                                  if(billGenerationBoqController.saveButton.value == RequestConstant.RESUBMIT || billGenerationBoqController.saveButton.value == RequestConstant.VERIFY || billGenerationBoqController.saveButton.value == RequestConstant.APPROVAL){
                                   } else {
                                     var Frdate = await showDatePicker(
                                         fieldHintText: "From",
@@ -703,7 +703,7 @@ class _Bill_Generation_Boq_EntryScreenState_Site
                                       child: ConstIcons.date),
                                 ),
                                 onTap: () async {
-                                  if (billGenerationBoqController.saveButton.value == RequestConstant.RESUBMIT) {
+                                  if(billGenerationBoqController.saveButton.value == RequestConstant.RESUBMIT || billGenerationBoqController.saveButton.value == RequestConstant.VERIFY || billGenerationBoqController.saveButton.value == RequestConstant.APPROVAL){
                                   } else {
                                     var Todate = await showDatePicker(
                                         context: context,
@@ -775,9 +775,14 @@ class _Bill_Generation_Boq_EntryScreenState_Site
                                 child: ConstIcons.dcNo),
                           ),
                           onTap: ()  async {
-                            await subcontractorController.getWorkOrderNoList( projectController.selectedProjectId.value,siteController.selectedsiteId.value,subcontractorController.selectedSubcontId.value,"B");
-                            bottomsheetControllers.WorkOrderName(context,
-                                subcontractorController.getdpDnWrkOrderValue.value,"B");
+    if(billGenerationBoqController.saveButton.value == RequestConstant.RESUBMIT || billGenerationBoqController.saveButton.value == RequestConstant.VERIFY || billGenerationBoqController.saveButton.value == RequestConstant.APPROVAL) {}else {
+      await subcontractorController.getWorkOrderNoList(
+          projectController.selectedProjectId.value,
+          siteController.selectedsiteId.value,
+          subcontractorController.selectedSubcontId.value, "B");
+      bottomsheetControllers.WorkOrderName(context,
+          subcontractorController.getdpDnWrkOrderValue.value, "B");
+    }
                           },
                           validator: (value)
                           {

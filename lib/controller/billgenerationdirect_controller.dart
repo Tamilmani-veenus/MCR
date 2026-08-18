@@ -501,16 +501,18 @@ class BillGenerationDirectController extends GetxController {
   List<BillDet>? getNmrBillDet() {
     getDetList.value = [];
     ItemGetTableListdata.forEach((element) {
-      var list = BillDet(
-        unit: element.unit.toString(),
-        rate: element.rate,
-        amt: element.amount,
-        actualQty: element.qty,
-        workorderdetid: element.workDetId,
-        itemDes: element.Name,
-        wtype: "D",
-      );
-      getDetList.add(list);
+      if(element.qty>0) {
+        var list = BillDet(
+          unit: element.unit.toString(),
+          rate: element.rate,
+          amt: element.amount,
+          actualQty: element.qty,
+          workorderdetid: element.workDetId,
+          itemDes: element.Name,
+          wtype: "D",
+        );
+        getDetList.add(list);
+      }
     });
     return getDetList;
   }
