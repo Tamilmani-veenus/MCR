@@ -521,7 +521,7 @@ class _MainManusListState extends State<MainManusList> {
                                                     .center,
                                                 children: [
                                                   Icon(
-                                                    Icons.assignment,
+                                                    Icons.assignment_outlined,
                                                     color: Colors.white,
                                                     size: 25,
                                                   )

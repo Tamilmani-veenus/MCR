@@ -282,7 +282,6 @@ class _DPRReportState extends State<DPRReport> {
                               padding: EdgeInsets.symmetric(
                                   vertical: 8, horizontal: 8),
                               child: ConstIcons.projectName
-
                           ),
                         ),
                         onTap: () {
@@ -291,15 +290,13 @@ class _DPRReportState extends State<DPRReport> {
                             bottomsheetControllers.projectNameReport(context, reportsController.getProjectdropDownvalue.value);
                             textclear();
                           });
-
-                        },
+                          },
                         validator: (value) {
                           if (value!.isEmpty || value == "--Select--") {
-                            return '\u26A0 Please select project name.';
+                            return '\u26A0 Required.';
                           }
                           return null;
                         },
-
                       ),
                     ),
                   ),
@@ -339,12 +336,12 @@ class _DPRReportState extends State<DPRReport> {
                         ),
                         onTap: () {
                           setState(() {
-                            bottomsheetControllers.siteNameReport(context, reportsController.getSiteDropdownvalue.value );
+                            bottomsheetControllers.siteNameReport(context, reportsController.getSiteDropdownvalue.value);
                           });
                         },
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return '\u26A0 Please select site name.';
+                            return '\u26A0 Required.';
                           }
                           return null;
                         },
@@ -390,11 +387,10 @@ class _DPRReportState extends State<DPRReport> {
                           setState(() {
                             bottomsheetControllers.subcontractorNameReport(context, reportsController.getdropDownvalue.value);
                           });
-
-                        },
+                          },
                         validator: (value) {
                           if (value!.isEmpty || value == "--Select--") {
-                            return '\u26A0 Please select Subcontractor name.';
+                            return '\u26A0 Required.';
                           }
                           return null;
                         },
@@ -417,6 +413,7 @@ class _DPRReportState extends State<DPRReport> {
                       const EdgeInsets.only(top: 3, left: 10, bottom: 5),
                       child: TextFormField(
                         readOnly: true,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         controller: dailyWrkDone_DPR_Controller.workType_DPR_Controller,
                         cursorColor: Colors.black,
                         style: TextStyle(color: Colors.black),
@@ -433,7 +430,6 @@ class _DPRReportState extends State<DPRReport> {
                               padding: EdgeInsets.symmetric(
                                   vertical: 8, horizontal: 8),
                               child: ConstIcons.types
-
                           ),
                         ),
                         onTap: () {
@@ -445,8 +441,8 @@ class _DPRReportState extends State<DPRReport> {
                         },
 
                         validator: (value) {
-                          if (value!.isEmpty) {
-                            return '\u26A0 Please select work type';
+                          if (value!.isEmpty || value == "--SELECT--") {
+                            return '\u26A0 Required.';
                           }
                           return null;
                         },
@@ -469,6 +465,7 @@ class _DPRReportState extends State<DPRReport> {
                       const EdgeInsets.only(top: 3, left: 10, bottom: 5),
                       child: TextFormField(
                         readOnly: true,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         controller: dailyWrkDone_DPR_Controller.reportTypeController,
                         cursorColor: Colors.black,
                         style: TextStyle(color: Colors.black),
@@ -495,8 +492,8 @@ class _DPRReportState extends State<DPRReport> {
                               });
                         },
                         validator: (value) {
-                          if (value!.isEmpty) {
-                            return '\u26A0 Please select report type';
+                          if (value!.isEmpty || value == "--SELECT--") {
+                            return '\u26A0 Required.';
                           }
                           return null;
                         },

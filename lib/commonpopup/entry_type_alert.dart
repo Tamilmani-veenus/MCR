@@ -100,7 +100,7 @@ class EntryTypeAlert_DPR_New extends StatefulWidget {
 
 class _EntryTypeAlert_DPR_NewState extends State<EntryTypeAlert_DPR_New> {
   DailyWrkDone_DPR_Controller dailyWrkDone_DPR_Controller=Get.put(DailyWrkDone_DPR_Controller());
-  final list=["BOQ","NMR"];
+  final list=["NMR","RATE"];
 
   @override
   Widget build(BuildContext context) {
@@ -130,15 +130,13 @@ class _EntryTypeAlert_DPR_NewState extends State<EntryTypeAlert_DPR_New> {
                       return InkWell(
                         onTap: () async {
                           if(index==0){
-                            dailyWrkDone_DPR_Controller.entryTypeController.text="BOQ";
-                            dailyWrkDone_DPR_Controller.entryType="B";
-                            dailyWrkDone_DPR_Controller.setSelectedTypeSubcontListName(0);
-
-
-                          }
-                          else {
                             dailyWrkDone_DPR_Controller.entryTypeController.text="NMR";
                             dailyWrkDone_DPR_Controller.entryType="N";
+                            dailyWrkDone_DPR_Controller.setSelectedTypeSubcontListName(0);
+                          }
+                          else {
+                            dailyWrkDone_DPR_Controller.entryTypeController.text="RATE";
+                            dailyWrkDone_DPR_Controller.entryType="B";
                             dailyWrkDone_DPR_Controller.setSelectedTypeSubcontListName(0);
                           }
                           await dailyWrkDone_DPR_Controller.dpr_getSubcotType();

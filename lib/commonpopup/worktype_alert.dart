@@ -100,7 +100,7 @@ class wrkTypeAlertAll extends StatefulWidget {
 class _wrkTypeAlertAllState extends State<wrkTypeAlertAll> {
   DailyWrkDone_DPR_Controller dailyWrkDone_DPR_Controller = Get.put(DailyWrkDone_DPR_Controller());
 
-  final list=["NMR","RATE"];
+  final list=["ALL","NMR","RATE"];
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -128,6 +128,10 @@ class _wrkTypeAlertAllState extends State<wrkTypeAlertAll> {
                     return InkWell(
                       onTap: ()  {
                         if(index==0){
+                          dailyWrkDone_DPR_Controller.workType_DPR_Controller.text="ALL";
+                          dailyWrkDone_DPR_Controller.wrktype_DPR.value = "0";
+                        }
+                        else if(index==1){
                           dailyWrkDone_DPR_Controller.workType_DPR_Controller.text="NMR";
                           dailyWrkDone_DPR_Controller.wrktype_DPR.value = "NMR";
                         }

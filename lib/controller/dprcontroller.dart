@@ -27,7 +27,7 @@ class DprController extends GetxController {
   int checkColor = 0;
 
   Future getDprReportList() async {
-    dprList.value.clear();
+    dprList.value = [];
     await ReportsProvider.getDprReport_List(
         reportsController.selectedProjectId.value,
         reportsController.selectedsiteId.value,

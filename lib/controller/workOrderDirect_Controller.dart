@@ -375,7 +375,7 @@ class WorkOrderDirectController extends GetxController{
   }
 
   Future<bool> deductionPaymentCalculation() async {
-
+    await getItemlistTablesDatas();
     if (ItemGetTableListdata.value.isEmpty) return false;
 
     // Calculate Bill Amount
@@ -415,31 +415,16 @@ class WorkOrderDirectController extends GetxController{
     required double bill,
     required double round,
   }) {
-    // ============================================================
-    // BILL AMOUNT IS THE BASE FOR ALL PERCENTAGES
-    // ============================================================
-
     final double baseAmount = bill;
 
     double retentionAmount = 0.0;
 
-    // ============================================================
-    // STEP 1
-    // CALCULATE EVERY PERCENTAGE ROW
-    // ============================================================
-
     for (var item in workOrder_ItemReadList) {
       final name = (item.addLessName ?? "").trim().toUpperCase();
 
-      final percent = item.percentValue ?? 0.0;
+      if (name == "RETENTION") {
+        final percent = item.percentValue ?? 0.0;
 
-      // Only percentage based rows
-      if (name == "S-GST" ||
-          name == "C-GST" ||
-          name == "I-GST" ||
-          name == "RETENTION" ||
-          name == "TDS" ||
-          name == "HOLD") {
         final double amount = baseAmount * percent / 100;
 
         if (item.addLessType == "-") {
@@ -447,9 +432,7 @@ class WorkOrderDirectController extends GetxController{
         } else {
           item.amount = amount;
         }
-        if (name == "RETENTION") {
-          retentionAmount = amount;
-        }
+        retentionAmount = amount;
       }
     }
 
@@ -460,6 +443,32 @@ class WorkOrderDirectController extends GetxController{
     }
 
     rebateAmount.text = rebate.toStringAsFixed(2);
+
+    for (var item in workOrder_ItemReadList) {
+      final name = (item.addLessName ?? "").trim().toUpperCase();
+
+      final percent = item.percentValue ?? 0.0;
+
+      if (name == "S-GST" ||
+          name == "C-GST" ||
+          name == "I-GST" ||
+          name == "TDS" ||
+          name == "HOLD") {
+
+        // TDS uses REBATE amount
+        final double calculationBase =
+        name == "TDS" ? rebate : baseAmount;
+
+        final double amount =
+            calculationBase * percent / 100;
+
+        if (item.addLessType == "-") {
+          item.amount = -amount;
+        } else {
+          item.amount = amount;
+        }
+      }
+    }
 
     double finalAmount = baseAmount;
 
@@ -476,16 +485,81 @@ class WorkOrderDirectController extends GetxController{
       }
     }
 
-
     finalAmount += round;
 
-
     netpayamt.text = finalAmount.toStringAsFixed(2);
-
 
     workOrder_ItemReadList.refresh();
     update();
   }
+
+  // void recalculateAddLessAmounts({
+  //   required double bill,
+  //   required double round,
+  // }) {
+  //
+  //   final double baseAmount = bill;
+  //
+  //   double retentionAmount = 0.0;
+  //
+  //   for (var item in workOrder_ItemReadList) {
+  //     final name = (item.addLessName ?? "").trim().toUpperCase();
+  //
+  //     final percent = item.percentValue ?? 0.0;
+  //
+  //     // Only percentage based rows
+  //     if (name == "S-GST" ||
+  //         name == "C-GST" ||
+  //         name == "I-GST" ||
+  //         name == "RETENTION" ||
+  //         name == "TDS" ||
+  //         name == "HOLD") {
+  //       final double amount = baseAmount * percent / 100;
+  //
+  //       if (item.addLessType == "-") {
+  //         item.amount = -amount;
+  //       } else {
+  //         item.amount = amount;
+  //       }
+  //       if (name == "RETENTION") {
+  //         retentionAmount = amount;
+  //       }
+  //     }
+  //   }
+  //
+  //   double rebate = baseAmount;
+  //
+  //   if (retentionAmount > 0) {
+  //     rebate = baseAmount - retentionAmount;
+  //   }
+  //
+  //   rebateAmount.text = rebate.toStringAsFixed(2);
+  //
+  //   double finalAmount = baseAmount;
+  //
+  //   for (var item in workOrder_ItemReadList) {
+  //     final name = (item.addLessName ?? "").trim().toUpperCase();
+  //
+  //     if (name == "S-GST" ||
+  //         name == "C-GST" ||
+  //         name == "I-GST" ||
+  //         name == "RETENTION" ||
+  //         name == "TDS" ||
+  //         name == "HOLD") {
+  //       finalAmount += item.amount ?? 0.0;
+  //     }
+  //   }
+  //
+  //
+  //   finalAmount += round;
+  //
+  //
+  //   netpayamt.text = finalAmount.toStringAsFixed(2);
+  //
+  //
+  //   workOrder_ItemReadList.refresh();
+  //   update();
+  // }
 
   void setBaseNetPay() {
     double bill = double.tryParse(workOrdamount.text) ?? 0;
