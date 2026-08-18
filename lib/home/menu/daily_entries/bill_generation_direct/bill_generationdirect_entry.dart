@@ -218,7 +218,7 @@ class _Subcont_Nmr_EntryScreenState_Site
                                 child: ConstIcons.date),
                           ),
                           onTap: () async {
-                            if (billGenerationDirectController.saveButton.value == RequestConstant.RESUBMIT) {
+                            if (billGenerationDirectController.saveButton.value == RequestConstant.RESUBMIT || billGenerationDirectController.saveButton.value == RequestConstant.VERIFY || billGenerationDirectController.saveButton.value == RequestConstant.APPROVAL) {
                             } else {
                               var Entrydate = await showDatePicker(
                                   context: context,
@@ -484,10 +484,12 @@ class _Subcont_Nmr_EntryScreenState_Site
                                 child: ConstIcons.dcNo),
                           ),
                           onTap: ()  async {
+                            if(billGenerationDirectController.saveButton.value == RequestConstant.RESUBMIT || billGenerationDirectController.saveButton.value == RequestConstant.VERIFY || billGenerationDirectController.saveButton.value == RequestConstant.APPROVAL){}
+                            else{
                             await subcontractorController.getWorkOrderNoList( projectController.selectedProjectId.value,siteController.selectedsiteId.value,subcontractorController.selectedSubcontId.value,"D");
                             bottomsheetControllers.WorkOrderName(context,
                                 subcontractorController.getdpDnWrkOrderValue.value,"D");
-                          },
+                          }},
                           validator: (value) {
                             if (value!.isEmpty || value == "--Select--" || value == "--SELECT--") {
                               return '\u26A0 ${RequestConstant.VALIDATE}';
@@ -734,7 +736,7 @@ class _Subcont_Nmr_EntryScreenState_Site
                                       child: ConstIcons.date),
                                 ),
                                 onTap: () async {
-                                  if (billGenerationDirectController.saveButton.value == RequestConstant.RESUBMIT) {
+                                  if (billGenerationDirectController.saveButton.value == RequestConstant.RESUBMIT || billGenerationDirectController.saveButton.value == RequestConstant.VERIFY || billGenerationDirectController.saveButton.value == RequestConstant.APPROVAL) {
                                   } else {
                                     var Frdate = await showDatePicker(
                                         fieldHintText: "From",
@@ -806,7 +808,7 @@ class _Subcont_Nmr_EntryScreenState_Site
                                       child: ConstIcons.date),
                                 ),
                                 onTap: () async {
-                                  if (billGenerationDirectController.saveButton.value == RequestConstant.RESUBMIT) {
+                                  if (billGenerationDirectController.saveButton.value == RequestConstant.RESUBMIT || billGenerationDirectController.saveButton.value == RequestConstant.VERIFY || billGenerationDirectController.saveButton.value == RequestConstant.APPROVAL) {
                                   } else {
                                     var Todate = await showDatePicker(
                                         context: context,

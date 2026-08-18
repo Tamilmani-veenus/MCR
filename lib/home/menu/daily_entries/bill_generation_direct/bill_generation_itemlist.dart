@@ -369,8 +369,6 @@ class _Bill_Generation_ItemlistState extends State<Bill_Generation_Itemlist> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
 
-
-
                 InkWell(
                   child: Container(
                     margin: const EdgeInsets.only(left: 20, right: 20),

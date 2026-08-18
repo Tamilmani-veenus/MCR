@@ -338,8 +338,7 @@ class _Subcont_NMR_EntryListScreenState_Site
                                           .filterSearchResults_billGenerationDirect(
                                               value,
                                               billGenerationDirectController
-                                                  .main_entryList.value);
-                                  // dailyWrkDone_DPR_Controller.searchentryList.value= BaseUtitiles.filterSearchResults_dprlist(value,dailyWrkDone_DPR_Controller.dpr_entryList);
+                                                  .main_entryList);
                                 });
                               },
                             ),
