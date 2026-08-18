@@ -440,7 +440,7 @@ class _Subcont_Nmr_EntryScreenState_Site
                             {}
                             else{
                               await subcontractorController.getSubcontList(context, projectController.selectedProjectId.value, siteController.selectedsiteId.value,"billdirect",type: "D");
-                              bottomsheetControllers.SubcontractorName(context, subcontractorController.getdropDownvalue.value);
+                              bottomsheetControllers.SubcontractorName(context, subcontractorController.getdropDownvalue.value,type: "BillDirect");
                             }
                           },
                           validator: (value) {

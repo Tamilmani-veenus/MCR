@@ -1283,6 +1283,9 @@ class BottomsheetControllers {
                           else if(type=="BOQ"){
                             await billGenerationBoqController.getNmrAdvance();
                           }
+                          else if(type=="BillDirect"){
+                            await billGenerationDirectController.getMaterialDebitList();
+                          }
                           await dailyEntriesController.deleteSubcontDetTableDatas();
                           dailyEntriesController.readListdata.clear();
                           Navigator.pop(context);

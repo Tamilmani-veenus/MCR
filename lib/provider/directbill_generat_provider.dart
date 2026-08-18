@@ -54,6 +54,20 @@ class DirectBillGenerateProvider {
     }
   }
 
+  static Future getMaterialDebitList(int pId, int subId) async {
+    try {
+      final response = await ApiManager.getAPICall(
+        "${ApiConstant.GET_MATERIAL_DEBIT_LIST}?PID=$pId&SUBID=$subId",
+      );
+      return jsonDecode(response);
+    } catch (error,e) {
+      print(error);
+      print(e);
+      BaseUtitiles.showToast("${RequestConstant.SOMETHINGWENT_WRONG} $error");
+      return null;
+    }
+  }
+
 
   static Future billadv_balance(int pId,siteId,int subId,type,WorkorderId) async {
     var datasave;

@@ -539,24 +539,26 @@ class BillGenerationBoqController extends GetxController{
   List<BillDet>? getNmrBillDet() {
     getDetList.value = [];
     ItemGetTableListdata.forEach((element) {
-      var list = BillDet(
-        unit: element.unit.toString(),
-        rate: element.rate,
-        amt: element.amount,
-        actualQty: element.qty,
-        workorderdetid: element.workDetId,
-        itemDes: "-",
-        wtype: "B",
-        hdNmeId: element.headItemid,
-        sbNmeId: element.subItemid,
-        qty1: element.appQty,
-        level3ItemId: element.level3ItemId,
-        balQty: 0,
-        balBillQty: element.balbillqty,
-        totalQty: element.qty,
-        curBillQty: element.CurBillQty
-      );
-      getDetList.add(list);
+      if(element.appQty>0) {
+        var list = BillDet(
+            unit: element.unit.toString(),
+            rate: element.rate,
+            amt: element.amount,
+            actualQty: element.qty,
+            workorderdetid: element.workDetId,
+            itemDes: "-",
+            wtype: "B",
+            hdNmeId: element.headItemid,
+            sbNmeId: element.subItemid,
+            qty1: element.appQty,
+            level3ItemId: element.level3ItemId,
+            balQty: 0,
+            balBillQty: element.balbillqty,
+            totalQty: element.qty,
+            curBillQty: element.CurBillQty
+        );
+        getDetList.add(list);
+      }
     });
     return getDetList;
   }
@@ -585,6 +587,7 @@ class BillGenerationBoqController extends GetxController{
   Future<bool> deductionPaymentCalculation() async {
     double advLimit = double.tryParse(tobededadv.text) ?? 0;
     double advDed = double.tryParse(Advded.text) ?? 0;
+    await getItemlistTablesDatas();
 
     if (advLimit < advDed) {
       BaseUtitiles.showToast("Please change the adv deduction amount");
