@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../apimanager/apimanager.dart';
 import '../models/banknamelist_model.dart';
@@ -95,8 +96,14 @@ class StaffVoucher_provider{
       final res = json.decode(value);
       if (res != null) {
         data = res;
+        if(data=="Deleted"){
+          Fluttertoast.showToast(msg: "Deleted Successfully");
+        }else{
+          Fluttertoast.showToast(msg: "$data");
+        }
         return data;
       }
+      print(res);
     }, onError: (error) {
       print(error);
       BaseUtitiles.showToast(RequestConstant.SOMETHINGWENT_WRONG+error);
