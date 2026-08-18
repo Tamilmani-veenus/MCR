@@ -141,8 +141,9 @@ class SiteVoucher_Controller extends GetxController {
       netAmount = double.parse(NetAmount.text).round();
       sitevoucherItemListTableModel.NetAmt = netAmount.toDouble();
       Sitevoucher_itemview_GetDbList.value.forEach((element) {
-        if (element.siteid == sitevoucherItemListTableModel.siteid) {
+        if (element.siteid == sitevoucherItemListTableModel.siteid && element.paytype == sitevoucherItemListTableModel.paytype) {
           j = 1;
+          BaseUtitiles.showToast("Entry already exist");
         }
       });
       if (j == 0) {
