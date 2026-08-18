@@ -147,7 +147,7 @@ class _Bill_Generation_direct_deductionState
                           validator: (value) {
                             if (value!.isEmpty ||
                                 value == "0.0" ||
-                                value == "0.00") {
+                                value == "0.00"||value == "0") {
                               return '\u26A0 ${RequestConstant.VALIDATE}';
                             }
                             return null;
@@ -253,7 +253,8 @@ class _Bill_Generation_direct_deductionState
                                   }
                                 },
                                 onTap: (){
-                                  if(billGenerationDirectController.materialDebitamt.text=="0.0"||billGenerationDirectController.materialDebitamt.text=="0"){
+                                  if(billGenerationDirectController.materialDebitamt.text=="0.0"||billGenerationDirectController.materialDebitamt.text=="0"
+                                      ||billGenerationDirectController.materialDebitamt.text=="0.00"){
                                     billGenerationDirectController.materialDebitamt.text="";
                                   }
                                 },

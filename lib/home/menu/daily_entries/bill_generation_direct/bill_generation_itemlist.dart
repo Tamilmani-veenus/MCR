@@ -443,86 +443,86 @@ class _Bill_Generation_ItemlistState extends State<Bill_Generation_Itemlist> {
                           ),
                         ),
                       ),
-                      Expanded(
-                        flex: 2,
-                        child: SizedBox(
-                          height: BaseUtitiles.getheightofPercentage(context, 2),
-                          width: BaseUtitiles.getWidthtofPercentage(context, 8),
-                          child: InkWell(
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: const Text(RequestConstant.DO_YOU_WANT_DELETE),
-                                  actions: <Widget>[
-                                    Container(
-                                      margin: const EdgeInsets.only(left: 20, right: 20),
-                                      child: IntrinsicHeight(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Expanded(
-                                              child: TextButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: const Text("Cancel",
-                                                      style: TextStyle(
-                                                          color: Colors.grey,
-                                                          fontWeight:
-                                                          FontWeight.bold,
-                                                          fontSize: RequestConstant
-                                                              .Lable_Font_SIZE))),
-                                            ),
-                                            VerticalDivider(
-                                              color: Colors.grey.shade400,
-                                              //color of divider
-                                              width: 5,
-                                              //width space of divider
-                                              thickness: 2,
-                                              //thickness of divier line
-                                              indent: 15,
-                                              //Spacing at the top of divider.
-                                              endIndent:
-                                              15, //Spacing at the bottom of divider.
-                                            ),
-                                            Expanded(
-                                              child: TextButton(
-                                                  onPressed: () async {
-                                                    billGenerationDirectController
-                                                        .deleteByIditemlistTableable(
-                                                        billGenerationDirectController
-                                                            .ItemGetTableListdata
-                                                            .value[index]);
-                                                    billGenerationDirectController
-                                                        .ItemGetTableListdata
-                                                        .value
-                                                        .removeAt(index);
-                                                    await billGenerationDirectController
-                                                        .getItemlistTablesDatas();
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: const Text("Delete",
-                                                      style: TextStyle(
-                                                          color: Colors.red,
-                                                          fontWeight:
-                                                          FontWeight.bold,
-                                                          fontSize: RequestConstant
-                                                              .Lable_Font_SIZE))),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                            child: ConstIcons.cancle,
-                          ),
-                        ),
-                      ),
+                      // Expanded(
+                      //   flex: 2,
+                      //   child: SizedBox(
+                      //     height: BaseUtitiles.getheightofPercentage(context, 2),
+                      //     width: BaseUtitiles.getWidthtofPercentage(context, 8),
+                      //     child: InkWell(
+                      //       onTap: () {
+                      //         showDialog(
+                      //           context: context,
+                      //           builder: (context) => AlertDialog(
+                      //             title: const Text(RequestConstant.DO_YOU_WANT_DELETE),
+                      //             actions: <Widget>[
+                      //               Container(
+                      //                 margin: const EdgeInsets.only(left: 20, right: 20),
+                      //                 child: IntrinsicHeight(
+                      //                   child: Row(
+                      //                     mainAxisAlignment:
+                      //                     MainAxisAlignment.spaceBetween,
+                      //                     children: [
+                      //                       Expanded(
+                      //                         child: TextButton(
+                      //                             onPressed: () {
+                      //                               Navigator.pop(context);
+                      //                             },
+                      //                             child: const Text("Cancel",
+                      //                                 style: TextStyle(
+                      //                                     color: Colors.grey,
+                      //                                     fontWeight:
+                      //                                     FontWeight.bold,
+                      //                                     fontSize: RequestConstant
+                      //                                         .Lable_Font_SIZE))),
+                      //                       ),
+                      //                       VerticalDivider(
+                      //                         color: Colors.grey.shade400,
+                      //                         //color of divider
+                      //                         width: 5,
+                      //                         //width space of divider
+                      //                         thickness: 2,
+                      //                         //thickness of divier line
+                      //                         indent: 15,
+                      //                         //Spacing at the top of divider.
+                      //                         endIndent:
+                      //                         15, //Spacing at the bottom of divider.
+                      //                       ),
+                      //                       Expanded(
+                      //                         child: TextButton(
+                      //                             onPressed: () async {
+                      //                               billGenerationDirectController
+                      //                                   .deleteByIditemlistTableable(
+                      //                                   billGenerationDirectController
+                      //                                       .ItemGetTableListdata
+                      //                                       .value[index]);
+                      //                               billGenerationDirectController
+                      //                                   .ItemGetTableListdata
+                      //                                   .value
+                      //                                   .removeAt(index);
+                      //                               await billGenerationDirectController
+                      //                                   .getItemlistTablesDatas();
+                      //                               Navigator.pop(context);
+                      //                             },
+                      //                             child: const Text("Delete",
+                      //                                 style: TextStyle(
+                      //                                     color: Colors.red,
+                      //                                     fontWeight:
+                      //                                     FontWeight.bold,
+                      //                                     fontSize: RequestConstant
+                      //                                         .Lable_Font_SIZE))),
+                      //                       )
+                      //                     ],
+                      //                   ),
+                      //                 ),
+                      //               ),
+                      //             ],
+                      //           ),
+                      //         );
+                      //       },
+                      //       child: ConstIcons.cancle,
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

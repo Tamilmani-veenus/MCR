@@ -336,14 +336,23 @@ class NMRWklyController extends GetxController {
     return getNMRAddLessDetList;
   }
 
+  double roundWhole(double value) {
+    return value.roundToDouble();
+  }
 
   Future<bool> deduction_paymentCalculation() async {
+    double advLimit = roundWhole(
+      double.tryParse(tobededadv.text) ?? 0,
+    );
 
-    double advLimit = double.tryParse(tobededadv.text) ?? 0;
-    double advDed = double.tryParse(Advded.text) ?? 0;
+    double advDed = roundWhole(
+      double.tryParse(Advded.text) ?? 0,
+    );
 
     if (advLimit < advDed) {
-      BaseUtitiles.showToast("Please change the adv deduction amount");
+      BaseUtitiles.showToast(
+        "Please change the adv deduction amount",
+      );
       return false;
     }
 
@@ -360,20 +369,34 @@ class NMRWklyController extends GetxController {
           : (item.netAmt ?? 0);
     }
 
-    billamount.text = totalNetAmount.toStringAsFixed(2);
+    // Whole number rounding
+    totalNetAmount = roundWhole(totalNetAmount);
 
-    double bill = double.tryParse(billamount.text) ?? 0;
-    double food = double.tryParse(foodDeduction.text) ?? 0;
-    double credit = double.tryParse(Creditamt.text) ?? 0;
-    double debit = double.tryParse(Debitamt.text) ?? 0;
-    double adv = double.tryParse(Advded.text) ?? 0;
+    billamount.text = totalNetAmount.toStringAsFixed(0);
+
+    double bill = roundWhole(
+      double.tryParse(billamount.text) ?? 0,
+    );
+
+    double credit = roundWhole(
+      double.tryParse(Creditamt.text) ?? 0,
+    );
+
+    double debit = roundWhole(
+      double.tryParse(Debitamt.text) ?? 0,
+    );
+
+    double adv = roundWhole(
+      double.tryParse(Advded.text) ?? 0,
+    );
+
     String roundText = Roundoff.text.trim();
 
-    double round =
-    (roundText.isEmpty || roundText == "-")
+    double round = (roundText.isEmpty || roundText == "-")
         ? 0
-        : double.tryParse(roundText) ?? 0;
-    // Recalculate all Add/Less, NetBill and NetPay
+        : roundWhole(double.tryParse(roundText) ?? 0);
+
+    // Recalculate
     recalculateAddLessAmounts(
       bill: bill,
       credit: credit,
@@ -382,9 +405,11 @@ class NMRWklyController extends GetxController {
       round: round,
     );
 
-    // Optional validation
+    // Validation
     if ((double.tryParse(netpayamt.text) ?? 0) < 0) {
-      BaseUtitiles.showToast("Should not exceed the net pay amt.");
+      BaseUtitiles.showToast(
+        "Should not exceed the net pay amt.",
+      );
       return false;
     }
 
@@ -402,37 +427,33 @@ class NMRWklyController extends GetxController {
 
     if (item == null) return false;
 
-    // Save old percentage
     final oldPercent = item.percentValue ?? 0.0;
 
-    // Update current percentage
     item.percentValue = percent;
 
     final roundText = Roundoff.text.trim();
 
-    final double round =
-    (roundText.isEmpty || roundText == "-")
+    final double round = (roundText.isEmpty || roundText == "-")
         ? 0
-        : double.tryParse(roundText) ?? 0;
+        : roundWhole(double.tryParse(roundText) ?? 0);
 
-    // ============================================================
-    // ALWAYS USE BILL AMOUNT AS BASE
-    // ============================================================
-
-    final double bill =
-        double.tryParse(billamount.text) ?? 0;
+    final double bill = roundWhole(
+      double.tryParse(billamount.text) ?? 0,
+    );
 
     recalculateAddLessAmounts(
       bill: bill,
-      credit: double.tryParse(Creditamt.text) ?? 0,
-      debit: double.tryParse(Debitamt.text) ?? 0,
-      adv: double.tryParse(Advded.text) ?? 0,
+      credit: roundWhole(
+        double.tryParse(Creditamt.text) ?? 0,
+      ),
+      debit: roundWhole(
+        double.tryParse(Debitamt.text) ?? 0,
+      ),
+      adv: roundWhole(
+        double.tryParse(Advded.text) ?? 0,
+      ),
       round: round,
     );
-
-    // ============================================================
-    // VALIDATE NET PAY
-    // ============================================================
 
     final double netPay =
         double.tryParse(netpayamt.text) ?? 0;
@@ -442,15 +463,19 @@ class NMRWklyController extends GetxController {
         "Net Pay Amount cannot be negative.",
       );
 
-      // Restore only current percentage
       item.percentValue = oldPercent;
 
-      // Recalculate using restored value
       recalculateAddLessAmounts(
         bill: bill,
-        credit: double.tryParse(Creditamt.text) ?? 0,
-        debit: double.tryParse(Debitamt.text) ?? 0,
-        adv: double.tryParse(Advded.text) ?? 0,
+        credit: roundWhole(
+          double.tryParse(Creditamt.text) ?? 0,
+        ),
+        debit: roundWhole(
+          double.tryParse(Debitamt.text) ?? 0,
+        ),
+        adv: roundWhole(
+          double.tryParse(Advded.text) ?? 0,
+        ),
         round: round,
       );
 
@@ -475,18 +500,30 @@ class NMRWklyController extends GetxController {
   }) {
     // ============================================================
     // STEP 1 : CALCULATION BASE
-    // Base Amount + Credit - Debit
+    //
+    // Bill + Credit - Debit
     // ============================================================
 
-    final double calculationBase = bill + credit - debit;
+    final double calculationBase = roundWhole(
+      bill + credit - debit,
+    );
 
     // ============================================================
-    // STEP 2 : ADD/LESS PERCENTAGES
+    // STEP 2 : ADD / LESS PERCENTAGES
     // ============================================================
+
+    double totalAddLess = 0.0;
 
     for (var item in directBillGen_ItemReadList) {
-      final name = (item.addLessName ?? "").trim().toUpperCase();
-      final percent = item.percentValue ?? 0.0;
+      final name = (item.addLessName ?? "")
+          .trim()
+          .toUpperCase();
+
+      final double percent =
+          double.tryParse(
+            item.percentValue?.toString() ?? "0",
+          ) ??
+              0;
 
       if (name == "S-GST" ||
           name == "C-GST" ||
@@ -494,38 +531,54 @@ class NMRWklyController extends GetxController {
           name == "RETENTION" ||
           name == "TDS" ||
           name == "HOLD") {
-        final amount = calculationBase * percent / 100;
 
-        item.amount = item.addLessType == "-" ? -amount : amount;
+        // Calculate percentage and round to whole number
+        double amount = roundWhole(
+          calculationBase * percent / 100,
+        );
+
+        // Apply +/- type
+        if (item.addLessType == "-") {
+          amount = -amount;
+        }
+
+        item.amount = amount;
+
+        totalAddLess += amount;
       }
     }
+
+    // Round total Add/Less
+    totalAddLess = roundWhole(totalAddLess);
 
     // ============================================================
     // STEP 3 : NET BILL
     // ============================================================
 
-    double netBill = calculationBase;
-
-    for (var item in directBillGen_ItemReadList) {
-      netBill += item.amount ?? 0.0;
-    }
-
-    // Round Off
-    netBill += round;
+    double netBill = roundWhole(
+      calculationBase +
+          totalAddLess +
+          round,
+    );
 
     // ============================================================
     // STEP 4 : NET PAY
     // ============================================================
 
-    final double netPay = netBill - adv;
+    double netPay = roundWhole(
+      netBill - adv,
+    );
 
-    netBillAmt.text = netBill.toStringAsFixed(2);
-    netpayamt.text = netPay.toStringAsFixed(2);
+    // ============================================================
+    // STEP 5 : DISPLAY
+    // ============================================================
+
+    netBillAmt.text = netBill.toStringAsFixed(0);
+    netpayamt.text = netPay.toStringAsFixed(0);
 
     directBillGen_ItemReadList.refresh();
     update();
   }
-
   void updateAdvanceReadOnly() {
     final amt = double.tryParse(tobededadv.text) ?? 0.0;
     isAdvanceReadOnly.value = amt <= 0;

@@ -40,14 +40,13 @@ class _WorkOrderDirectDeductionState extends State<WorkOrderDirectDeduction> {
           workOrderDirectController.workOrdamount.text = element.workOrderAmt.toString();
           workOrderDirectController.Roundoff.text = element.roundOff.toString();
           workOrderDirectController.netpayamt.text = element.netAmount.toString();
-          workOrderDirectController.deductionPaymentCalculation();
         });
         await workOrderDirectController.deductionPaymentCalculation();
       }
 
       if (workOrderDirectController.saveButton.value == RequestConstant.SUBMIT) {
         workOrderDirectController.workid = 0;
-        workOrderDirectController.deductionPaymentCalculation();
+        await workOrderDirectController.deductionPaymentCalculation();
       }
     });
     super.initState();

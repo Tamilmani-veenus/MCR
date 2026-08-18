@@ -240,10 +240,10 @@ class WorkOrderDirectController extends GetxController{
       activeStatus: workOrdActTypeID.value,
       termsCondition: termsConditionController.text,
       remarks: RemarksController.text,
-      roundOff: (double.tryParse(Roundoff.text) ?? 0).toInt(),
-      workOrderAmt: (double.tryParse(workOrdamount.text) ?? 0).toInt(),
-      billWhaAmt: (double.tryParse(rebateAmount.text) ?? 0).toInt(),
-      netAmount: (double.tryParse(netpayamt.text) ?? 0).toInt(),
+      roundOff: double.tryParse(Roundoff.text) ?? 0.0,
+      workOrderAmt: double.tryParse(workOrdamount.text) ?? 0.0,
+      billWhaAmt: double.tryParse(rebateAmount.text) ?? 0.0,
+      netAmount: double.tryParse(netpayamt.text) ?? 0.0,
       preparedBy: int.tryParse(loginController.EmpId()) ?? 0,
       userId: loginController.UserId(),
       deviceName: BaseUtitiles.deviceName,
@@ -374,32 +374,56 @@ class WorkOrderDirectController extends GetxController{
         itemListUpdateModelList);
   }
 
+  double roundWhole(double value) {
+    return value.roundToDouble();
+  }
+
   Future<bool> deductionPaymentCalculation() async {
     await getItemlistTablesDatas();
+
     if (ItemGetTableListdata.value.isEmpty) return false;
 
-    // Calculate Bill Amount
+    // ============================================================
+    // BILL AMOUNT
+    // ============================================================
+
     double totalNetAmount = 0.0;
 
     for (var item in ItemGetTableListdata.value) {
       totalNetAmount += item.amount ?? 0;
     }
 
-    workOrdamount.text = totalNetAmount.toStringAsFixed(2);
+    totalNetAmount = roundWhole(totalNetAmount);
 
-    double bill = double.tryParse(workOrdamount.text) ?? 0;
+    workOrdamount.text = totalNetAmount.toStringAsFixed(0);
+
+    double bill = roundWhole(
+      double.tryParse(workOrdamount.text) ?? 0,
+    );
+
+    // ============================================================
+    // ROUND OFF
+    // ============================================================
+
     String roundText = Roundoff.text.trim();
 
     double round = (roundText.isEmpty || roundText == "-")
         ? 0
-        : double.tryParse(roundText) ?? 0;
-    // Recalculate all Add/Less, NetBill and NetPay
+        : roundWhole(double.tryParse(roundText) ?? 0);
+
+    // ============================================================
+    // RECALCULATE
+    // ============================================================
+
     recalculateAddLessAmounts(
       bill: bill,
       round: round,
     );
 
-    // Optional validation
+    // ============================================================
+    // VALIDATION
+    // ============================================================
+
     if ((double.tryParse(netpayamt.text) ?? 0) < 0) {
       return false;
     }
@@ -415,39 +439,73 @@ class WorkOrderDirectController extends GetxController{
     required double bill,
     required double round,
   }) {
-    final double baseAmount = bill;
+    // ============================================================
+    // STEP 1 : BASE AMOUNT
+    // ============================================================
+
+    final double baseAmount = roundWhole(bill);
+
+    // ============================================================
+    // STEP 2 : RETENTION
+    // ============================================================
 
     double retentionAmount = 0.0;
 
     for (var item in workOrder_ItemReadList) {
-      final name = (item.addLessName ?? "").trim().toUpperCase();
+      final name = (item.addLessName ?? "")
+          .trim()
+          .toUpperCase();
 
       if (name == "RETENTION") {
-        final percent = item.percentValue ?? 0.0;
+        final double percent =
+            double.tryParse(
+              item.percentValue?.toString() ?? "0",
+            ) ??
+                0;
 
-        final double amount = baseAmount * percent / 100;
+        // Round retention amount
+        double amount = roundWhole(
+          baseAmount * percent / 100,
+        );
 
         if (item.addLessType == "-") {
           item.amount = -amount;
         } else {
           item.amount = amount;
         }
+
         retentionAmount = amount;
       }
     }
 
+    // ============================================================
+    // STEP 3 : REBATE
+    // ============================================================
+
     double rebate = baseAmount;
 
     if (retentionAmount > 0) {
-      rebate = baseAmount - retentionAmount;
+      rebate = roundWhole(
+        baseAmount - retentionAmount,
+      );
     }
 
-    rebateAmount.text = rebate.toStringAsFixed(2);
+    rebateAmount.text = rebate.toStringAsFixed(0);
+
+    // ============================================================
+    // STEP 4 : OTHER ADD / LESS
+    // ============================================================
 
     for (var item in workOrder_ItemReadList) {
-      final name = (item.addLessName ?? "").trim().toUpperCase();
+      final name = (item.addLessName ?? "")
+          .trim()
+          .toUpperCase();
 
-      final percent = item.percentValue ?? 0.0;
+      final double percent =
+          double.tryParse(
+            item.percentValue?.toString() ?? "0",
+          ) ??
+              0;
 
       if (name == "S-GST" ||
           name == "C-GST" ||
@@ -457,10 +515,14 @@ class WorkOrderDirectController extends GetxController{
 
         // TDS uses REBATE amount
         final double calculationBase =
-        name == "TDS" ? rebate : baseAmount;
+        name == "TDS"
+            ? rebate
+            : baseAmount;
 
-        final double amount =
-            calculationBase * percent / 100;
+        // Round every percentage amount
+        double amount = roundWhole(
+          calculationBase * percent / 100,
+        );
 
         if (item.addLessType == "-") {
           item.amount = -amount;
@@ -470,10 +532,16 @@ class WorkOrderDirectController extends GetxController{
       }
     }
 
+    // ============================================================
+    // STEP 5 : FINAL AMOUNT
+    // ============================================================
+
     double finalAmount = baseAmount;
 
     for (var item in workOrder_ItemReadList) {
-      final name = (item.addLessName ?? "").trim().toUpperCase();
+      final name = (item.addLessName ?? "")
+          .trim()
+          .toUpperCase();
 
       if (name == "S-GST" ||
           name == "C-GST" ||
@@ -481,13 +549,26 @@ class WorkOrderDirectController extends GetxController{
           name == "RETENTION" ||
           name == "TDS" ||
           name == "HOLD") {
-        finalAmount += item.amount ?? 0.0;
+
+        finalAmount = roundWhole(
+          finalAmount + (item.amount ?? 0),
+        );
       }
     }
 
-    finalAmount += round;
+    // ============================================================
+    // STEP 6 : ROUND OFF
+    // ============================================================
 
-    netpayamt.text = finalAmount.toStringAsFixed(2);
+    finalAmount = roundWhole(
+      finalAmount + round,
+    );
+
+    // ============================================================
+    // STEP 7 : NET PAY
+    // ============================================================
+
+    netpayamt.text = finalAmount.toStringAsFixed(0);
 
     workOrder_ItemReadList.refresh();
     update();

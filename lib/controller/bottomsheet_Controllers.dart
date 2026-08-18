@@ -220,6 +220,10 @@ class BottomsheetControllers {
                                 .value
                                 .clear();
                             dailyWrkDone_DPR_Controller.getDprTablesDatas();
+                            subcontractorController.Subcontractorname.text = "--SELECT--";
+                            subcontractorController.selectedSubcontId.value=0;
+                            subcontractorController.WorkOrderNo.text = "--SELECT--";
+                            subcontractorController.selectedWorkOrderId.value = 0;
                           }
                           Navigator.pop(context);
                         },
@@ -1282,6 +1286,9 @@ class BottomsheetControllers {
                           }
                           else if(type=="BOQ"){
                             await billGenerationBoqController.getNmrAdvance();
+                          }
+                          else if(type=="BillDirect"){
+                            await billGenerationDirectController.getMaterialDebitList();
                           }
                           await dailyEntriesController.deleteSubcontDetTableDatas();
                           dailyEntriesController.readListdata.clear();
