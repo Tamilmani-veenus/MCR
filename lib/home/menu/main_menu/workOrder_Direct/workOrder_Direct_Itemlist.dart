@@ -448,12 +448,12 @@ class _WorkOrderDirectItemListState extends State<WorkOrderDirectItemList> {
                                             Expanded(
                                               child: TextButton(
                                                   onPressed: () async {
-                                                    workOrderDirectController
+                                                    await workOrderDirectController
                                                         .deleteByIditemlistTableable(
                                                         workOrderDirectController
                                                             .ItemGetTableListdata
                                                             .value[index]);
-                                                    workOrderDirectController
+                                                    await workOrderDirectController
                                                         .ItemGetTableListdata
                                                         .value
                                                         .removeAt(index);
