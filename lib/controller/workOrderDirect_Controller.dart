@@ -149,6 +149,7 @@ class WorkOrderDirectController extends GetxController{
     ItemListTableModelReadList = <WorkOrderItemListTableModel>[];
     ItemListTableModelReadList.clear();
     ItemGetTableListdata.value.clear();
+    ItemGetTableListdata.refresh();
     datas.forEach((value) {
       ItemListTableModel = new WorkOrderItemListTableModel();
       ItemListTextInitiate();
@@ -264,44 +265,32 @@ class WorkOrderDirectController extends GetxController{
     ));
     final list = await WorkOrderDirectProvider.SaveSubContScreenEntryAPI(
         body, id, context);
-    if (list != null && id != 0) {
-      if (saveButton.value == RequestConstant.VERIFY ||
-          saveButton.value == RequestConstant.APPROVAL) {
+    if (list != null) {
+      if (id != 0) {
         workOrder_itemlistTable_Delete();
         ItemGetTableListdata.value.clear();
-        BaseUtitiles.showToast(list);
-        clearDatas();
-        WorkOrdDirect_EntryList();
-        Navigator.pop(context);
-        Navigator.pop(context);
-        Navigator.pop(context);
-        Navigator.pop(context);
-        Navigator.pop(context);
-        return;
-      }
-      else {
-        BaseUtitiles.showToast(list);
-        print("EEEE....${list}");
-        await WorkOrdDirect_EntryList();
-        workOrder_itemlistTable_Delete();
-        ItemGetTableListdata.clear();
-        Navigator.pop(context);
-        Navigator.pop(context);
-        Navigator.pop(context);
-        Navigator.pop(context);
-        // Navigator.push(
-        //     context, MaterialPageRoute(
-        //     builder: (BuildContext context) =>
-        //     new WorkOrderDirectEntrylist()));
-        return Navigator.pop(context);
-      }
-    }else {
+        if (id != 0) {
+          if(saveButton.value==RequestConstant.RESUBMIT){
+            await WorkOrdDirect_EntryList();
+          }
+          else{
+            await pendingListController.getPendingList();
+          }
+          BaseUtitiles.showToast(list);
+          clearDatas();
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.pop(context);
+          return;
+        }
+      } else {
         if (list == RequestConstant.DUPLICATE_OCCURED) {
           Navigator.pop(context);
           Navigator.pop(context);
           return BaseUtitiles.showToast(list!);
-        }
-        else {
+        } else {
           workOrder_itemlistTable_Delete();
           ItemGetTableListdata.value.clear();
           BaseUtitiles.showToast(list!);
@@ -315,6 +304,59 @@ class WorkOrderDirectController extends GetxController{
           return;
         }
       }
+    }
+    // if (list != null && id != 0) {
+    //   if (saveButton.value == RequestConstant.VERIFY ||
+    //       saveButton.value == RequestConstant.APPROVAL) {
+    //     workOrder_itemlistTable_Delete();
+    //     ItemGetTableListdata.value.clear();
+    //     await pendingListController.getPendingList();
+    //     BaseUtitiles.showToast(list);
+    //     clearDatas();
+    //     WorkOrdDirect_EntryList();
+    //     Navigator.pop(context);
+    //     Navigator.pop(context);
+    //     Navigator.pop(context);
+    //     Navigator.pop(context);
+    //     Navigator.pop(context);
+    //     return;
+    //   }
+    //   else {
+    //     BaseUtitiles.showToast(list);
+    //     print("EEEE....${list}");
+    //     await WorkOrdDirect_EntryList();
+    //     workOrder_itemlistTable_Delete();
+    //     ItemGetTableListdata.clear();
+    //     Navigator.pop(context);
+    //     Navigator.pop(context);
+    //     Navigator.pop(context);
+    //     Navigator.pop(context);
+    //     // Navigator.push(
+    //     //     context, MaterialPageRoute(
+    //     //     builder: (BuildContext context) =>
+    //     //     new WorkOrderDirectEntrylist()));
+    //     return Navigator.pop(context);
+    //   }
+    // }else {
+    //     if (list == RequestConstant.DUPLICATE_OCCURED) {
+    //       Navigator.pop(context);
+    //       Navigator.pop(context);
+    //       return BaseUtitiles.showToast(list!);
+    //     }
+    //     else {
+    //       workOrder_itemlistTable_Delete();
+    //       ItemGetTableListdata.value.clear();
+    //       BaseUtitiles.showToast(list!);
+    //       clearDatas();
+    //       await WorkOrdDirect_EntryList();
+    //       Navigator.pop(context);
+    //       Navigator.pop(context);
+    //       Navigator.pop(context);
+    //       Navigator.pop(context);
+    //       Navigator.pop(context);
+    //       return;
+    //     }
+    //   }
   }
 
   List<Detail>? getNmrBillDet() {
@@ -439,15 +481,8 @@ class WorkOrderDirectController extends GetxController{
     required double bill,
     required double round,
   }) {
-    // ============================================================
-    // STEP 1 : BASE AMOUNT
-    // ============================================================
 
     final double baseAmount = roundWhole(bill);
-
-    // ============================================================
-    // STEP 2 : RETENTION
-    // ============================================================
 
     double retentionAmount = 0.0;
 
@@ -464,9 +499,7 @@ class WorkOrderDirectController extends GetxController{
                 0;
 
         // Round retention amount
-        double amount = roundWhole(
-          baseAmount * percent / 100,
-        );
+        double amount = (baseAmount * percent / 100).floorToDouble();
 
         if (item.addLessType == "-") {
           item.amount = -amount;
@@ -478,10 +511,6 @@ class WorkOrderDirectController extends GetxController{
       }
     }
 
-    // ============================================================
-    // STEP 3 : REBATE
-    // ============================================================
-
     double rebate = baseAmount;
 
     if (retentionAmount > 0) {
@@ -491,10 +520,6 @@ class WorkOrderDirectController extends GetxController{
     }
 
     rebateAmount.text = rebate.toStringAsFixed(0);
-
-    // ============================================================
-    // STEP 4 : OTHER ADD / LESS
-    // ============================================================
 
     for (var item in workOrder_ItemReadList) {
       final name = (item.addLessName ?? "")
@@ -520,9 +545,10 @@ class WorkOrderDirectController extends GetxController{
             : baseAmount;
 
         // Round every percentage amount
-        double amount = roundWhole(
-          calculationBase * percent / 100,
-        );
+        double amount = (calculationBase * percent / 100).floorToDouble();
+        // double amount = roundWhole(
+        //   calculationBase * percent / 100,
+        // );
 
         if (item.addLessType == "-") {
           item.amount = -amount;
@@ -531,10 +557,6 @@ class WorkOrderDirectController extends GetxController{
         }
       }
     }
-
-    // ============================================================
-    // STEP 5 : FINAL AMOUNT
-    // ============================================================
 
     double finalAmount = baseAmount;
 
@@ -556,17 +578,9 @@ class WorkOrderDirectController extends GetxController{
       }
     }
 
-    // ============================================================
-    // STEP 6 : ROUND OFF
-    // ============================================================
-
     finalAmount = roundWhole(
       finalAmount + round,
     );
-
-    // ============================================================
-    // STEP 7 : NET PAY
-    // ============================================================
 
     netpayamt.text = finalAmount.toStringAsFixed(0);
 
