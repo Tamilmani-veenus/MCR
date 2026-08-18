@@ -375,12 +375,12 @@ class _WorkOrderDirectDeductionState extends State<WorkOrderDirectDeduction> {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
-                          color: Colors.grey.shade300,
+                          color: Colors.grey.shade400,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.04),
-                            blurRadius: 5,
+                            color: Colors.grey.shade200,
+                            blurRadius: 4,
                             offset: const Offset(0, 2),
                           ),
                         ],
