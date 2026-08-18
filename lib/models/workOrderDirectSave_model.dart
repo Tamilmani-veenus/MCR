@@ -17,11 +17,11 @@ class WorkOrdDirectSaveModel {
   int? subContId;
   String? remarks;
   int? preparedBy;
-  int? workOrderAmt;
-  int? roundOff;
-  int? netAmount;
+  double? workOrderAmt;
+  double? roundOff;
+  double? netAmount;
   String? termsCondition;
-  int? billWhaAmt;
+  double? billWhaAmt;
   String? workStatus;
   String? activeStatus;
   String? userId;

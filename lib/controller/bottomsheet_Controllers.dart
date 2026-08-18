@@ -220,6 +220,10 @@ class BottomsheetControllers {
                                 .value
                                 .clear();
                             dailyWrkDone_DPR_Controller.getDprTablesDatas();
+                            subcontractorController.Subcontractorname.text = "--SELECT--";
+                            subcontractorController.selectedSubcontId.value=0;
+                            subcontractorController.WorkOrderNo.text = "--SELECT--";
+                            subcontractorController.selectedWorkOrderId.value = 0;
                           }
                           Navigator.pop(context);
                         },
