@@ -305,63 +305,13 @@ class WorkOrderDirectController extends GetxController{
         }
       }
     }
-    // if (list != null && id != 0) {
-    //   if (saveButton.value == RequestConstant.VERIFY ||
-    //       saveButton.value == RequestConstant.APPROVAL) {
-    //     workOrder_itemlistTable_Delete();
-    //     ItemGetTableListdata.value.clear();
-    //     await pendingListController.getPendingList();
-    //     BaseUtitiles.showToast(list);
-    //     clearDatas();
-    //     WorkOrdDirect_EntryList();
-    //     Navigator.pop(context);
-    //     Navigator.pop(context);
-    //     Navigator.pop(context);
-    //     Navigator.pop(context);
-    //     Navigator.pop(context);
-    //     return;
-    //   }
-    //   else {
-    //     BaseUtitiles.showToast(list);
-    //     print("EEEE....${list}");
-    //     await WorkOrdDirect_EntryList();
-    //     workOrder_itemlistTable_Delete();
-    //     ItemGetTableListdata.clear();
-    //     Navigator.pop(context);
-    //     Navigator.pop(context);
-    //     Navigator.pop(context);
-    //     Navigator.pop(context);
-    //     // Navigator.push(
-    //     //     context, MaterialPageRoute(
-    //     //     builder: (BuildContext context) =>
-    //     //     new WorkOrderDirectEntrylist()));
-    //     return Navigator.pop(context);
-    //   }
-    // }else {
-    //     if (list == RequestConstant.DUPLICATE_OCCURED) {
-    //       Navigator.pop(context);
-    //       Navigator.pop(context);
-    //       return BaseUtitiles.showToast(list!);
-    //     }
-    //     else {
-    //       workOrder_itemlistTable_Delete();
-    //       ItemGetTableListdata.value.clear();
-    //       BaseUtitiles.showToast(list!);
-    //       clearDatas();
-    //       await WorkOrdDirect_EntryList();
-    //       Navigator.pop(context);
-    //       Navigator.pop(context);
-    //       Navigator.pop(context);
-    //       Navigator.pop(context);
-    //       Navigator.pop(context);
-    //       return;
-    //     }
-    //   }
+
   }
 
   List<Detail>? getNmrBillDet() {
     getDetList.value.clear();
     ItemGetTableListdata.value.forEach((element) {
+      if(element.qty > 0){
       var list = Detail(
         itemDesc:element.Name.toString(),
         unit:element.unit.toString(),
@@ -370,6 +320,7 @@ class WorkOrderDirectController extends GetxController{
         amount:element.amount.abs().toString(),
       );
       getDetList.value.add(list);
+      }
     });
     return getDetList.value;
   }

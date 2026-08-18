@@ -519,7 +519,7 @@ class _WorkOrderDirectItemListState extends State<WorkOrderDirectItemList> {
                         flex: 6,
                         child: Center(
                           child: Text(
-                            "Qty",
+                            "Net Qty",
                             style: TextStyle(color: Colors.black),
                           ),
                         ),

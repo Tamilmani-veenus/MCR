@@ -200,6 +200,11 @@ class BaseUtitiles {
             item.fdate.toString().toUpperCase().contains(value) ||
             item.tdate.toString().toLowerCase().contains(value) ||
             item.tdate.toString().toUpperCase().contains(value) ||
+
+            item.netPayAmt.toString().toUpperCase().contains(value) ||
+            item.netPayAmt.toString().toLowerCase().contains(value) ||
+            item.status.toString().toUpperCase().contains(value) ||
+            item.status.toString().toLowerCase().contains(value) ||
             item.siteName.toString().toLowerCase().contains(value) ||
             item.siteName.toString().toUpperCase().contains(value)
         )

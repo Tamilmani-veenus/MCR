@@ -66,6 +66,8 @@ class WorkOrderDirectProvider{
         if (response.RetString != null) {
           ratingRes = response.RetString;
         }
+        print("Work Order Direct...${response}");
+        print("Work Order Direct...${value}");
       }
     } catch (error) {
       print('❌ Error in SaveSubContScreenEntryAPI: $error');
@@ -74,7 +76,6 @@ class WorkOrderDirectProvider{
       BaseUtitiles.showToast(RequestConstant.NETWORKERROR);
       return null;
     }
-
     return ratingRes;
   }
 
