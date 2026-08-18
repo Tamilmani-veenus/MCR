@@ -455,160 +455,179 @@ class _CashBook_SiteState extends State<CashBook_Site> {
   }
 
   Widget list() {
-    return Container(
-      height: BaseUtitiles.getheightofPercentage(context, 54),
-      child: Column(
-        children: [
-          Expanded(
-            child: Container(
-                margin: EdgeInsets.only(top: 5),
-                height: BaseUtitiles.getheightofPercentage(context, 52),
-                child: Obx(
-                      () => ListView.builder(
-                    physics: BouncingScrollPhysics(),
-                    itemCount: cashBookSiteController.cashsiteDatas.value.length,
-                    padding: EdgeInsets.zero,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        margin: EdgeInsets.only(left: 5, right: 5),
-                        child: Card(
-                          color: Colors.white,
-                          elevation: 5,
-                          child: Container(
-                            margin: EdgeInsets.only(left: 3, top: 5, bottom: 5),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                        flex: 3,
-                                        child: Text("Voc-Date",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold))),
-                                    Expanded(
-                                        flex: 4,
-                                        child: Text(
-                                          cashBookSiteController.cashsiteDatas.value[index].vocdate.toString(),
-                                        )),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 7,
-                                ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                        flex: 3,
-                                        child: Text("Descriptions",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold))),
-                                    Expanded(
-                                        flex: 4,
-                                        child: Text(
-                                          cashBookSiteController.cashsiteDatas
-                                              .value[index].descriptions
-                                              .toString(),
-                                          textAlign: TextAlign.left,
-                                        )),
-                                  ],
-                                ),
-                                Visibility(
-                                  visible: cashBookSiteController.cashsiteDatas
-                                      .value[index].descriptions ==
-                                      "OPENING BALANCE"
-                                      ? false
-                                      : true,
-                                  child: Container(
-                                    margin: EdgeInsets.only(top: 7),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                            flex: 3,
-                                            child: Text("Voucher Type",
+      return Container(
+        height: BaseUtitiles.getheightofPercentage(context, 54),
+        child: Column(
+          children: [
+            Expanded(
+              child: Container(
+                  margin: EdgeInsets.only(top: 5),
+                  height: BaseUtitiles.getheightofPercentage(context, 52),
+                  child: Obx(
+                        () =>cashBookSiteController.cashsiteDatas.isNotEmpty?
+                        ListView.builder(
+                          physics: BouncingScrollPhysics(),
+                          itemCount: cashBookSiteController.cashsiteDatas.value
+                              .length,
+                          padding: EdgeInsets.zero,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Container(
+                              margin: EdgeInsets.only(left: 5, right: 5),
+                              child: Card(
+                                color: Colors.white,
+                                elevation: 5,
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                      left: 3, top: 5, bottom: 5),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                              flex: 3,
+                                              child: Text("Voc-Date",
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight
+                                                          .bold))),
+                                          Expanded(
+                                              flex: 4,
+                                              child: Text(
+                                                cashBookSiteController
+                                                    .cashsiteDatas.value[index]
+                                                    .vocdate.toString(),
+                                              )),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 7,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                              flex: 3,
+                                              child: Text("Descriptions",
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight
+                                                          .bold))),
+                                          Expanded(
+                                              flex: 4,
+                                              child: Text(
+                                                cashBookSiteController
+                                                    .cashsiteDatas
+                                                    .value[index].descriptions
+                                                    .toString(),
+                                                textAlign: TextAlign.left,
+                                              )),
+                                        ],
+                                      ),
+                                      Visibility(
+                                        visible: cashBookSiteController
+                                            .cashsiteDatas
+                                            .value[index].descriptions ==
+                                            "OPENING BALANCE"
+                                            ? false
+                                            : true,
+                                        child: Container(
+                                          margin: EdgeInsets.only(top: 7),
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                  flex: 3,
+                                                  child: Text("Voucher Type",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                          FontWeight.bold))),
+                                              Expanded(
+                                                  flex: 4,
+                                                  child: Text(
+                                                    cashBookSiteController
+                                                        .cashsiteDatas
+                                                        .value[index]
+                                                        .vocType
+                                                        .toString(),
+                                                    textAlign: TextAlign.left,
+                                                  )),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 7,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                              flex: 3,
+                                              child: Text(
+                                                "Debit",
                                                 style: TextStyle(
-                                                    fontWeight:
-                                                    FontWeight.bold))),
-                                        Expanded(
-                                            flex: 4,
-                                            child: Text(
-                                              cashBookSiteController.cashsiteDatas
-                                                  .value[index]
-                                                  .vocType
-                                                  .toString(),
-                                              textAlign: TextAlign.left,
-                                            )),
-                                      ],
-                                    ),
+                                                    fontWeight: FontWeight
+                                                        .bold),
+                                              )),
+                                          Expanded(
+                                              flex: 4,
+                                              child: Text(
+                                                cashBookSiteController
+                                                    .cashsiteDatas.value[index]
+                                                    .debit.toString(),
+                                                textAlign: TextAlign.left,
+                                              )),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 7,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                              flex: 3,
+                                              child: Text("Credit",
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight
+                                                          .bold))),
+                                          Expanded(
+                                              flex: 4,
+                                              child: Text(
+                                                cashBookSiteController
+                                                    .cashsiteDatas.value[index]
+                                                    .credit.toString(),
+                                                textAlign: TextAlign.left,
+                                              )),
+                                        ],
+                                      ),
+                                      Divider(
+                                        thickness: 1,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                              flex: 3,
+                                              child: Text("Remarks",
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight
+                                                          .bold))),
+                                          Expanded(
+                                              flex: 4,
+                                              child: Text(
+                                                cashBookSiteController
+                                                    .cashsiteDatas.value[index]
+                                                    .remarks.toString(),
+                                                textAlign: TextAlign.left,
+                                              )),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                SizedBox(
-                                  height: 7,
-                                ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                        flex: 3,
-                                        child: Text(
-                                          "Debit",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        )),
-                                    Expanded(
-                                        flex: 4,
-                                        child: Text(
-                                          cashBookSiteController.cashsiteDatas.value[index].debit.toString(),
-                                          textAlign: TextAlign.left,
-                                        )),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 7,
-                                ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                        flex: 3,
-                                        child: Text("Credit",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold))),
-                                    Expanded(
-                                        flex: 4,
-                                        child: Text(
-                                          cashBookSiteController.cashsiteDatas.value[index].credit.toString(),
-                                          textAlign: TextAlign.left,
-                                        )),
-                                  ],
-                                ),
-                                Divider(
-                                  thickness: 1,
-                                ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                        flex: 3,
-                                        child: Text("Remarks",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold))),
-                                    Expanded(
-                                        flex: 4,
-                                        child: Text(
-                                          cashBookSiteController.cashsiteDatas.value[index].remarks.toString(),
-                                          textAlign: TextAlign.left,
-                                        )),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                )),
-          ),
-        ],
-      ),
-    );
+                              ),
+                            );
+                          },
+                        ):SizedBox(),
+                  )),
+            ),
+          ],
+        ),
+      );
   }
 }
 

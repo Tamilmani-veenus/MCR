@@ -101,11 +101,11 @@ class _Bill_Generation_Boq_EntryScreenState_Site
         billGenerationBoqController.materialDebitRemarks.text = "-";
         billGenerationBoqController.CreditRemarksController.text = "-";
         billGenerationBoqController.DebitRemarksController.text = "-";
-        billGenerationBoqController.Advded.text = billGenerationBoqController.tobededadv.text;
+        billGenerationBoqController.Advded.text = "0.0";
         billGenerationBoqController.Roundoff.text = "0.0";
         billGenerationBoqController.netpayamt.text = "0.0";
         billGenerationBoqController.createdById.value = 0;
-        billGenerationBoqController.tobededadv.text = billGenerationBoqController.to_be_dection_advance;
+        billGenerationBoqController.tobededadv.text = "0.0";
       }
     });
     super.initState();
@@ -388,7 +388,7 @@ class _Bill_Generation_Boq_EntryScreenState_Site
                             if(billGenerationBoqController.saveButton.value == RequestConstant.RESUBMIT || billGenerationBoqController.saveButton.value == RequestConstant.VERIFY || billGenerationBoqController.saveButton.value == RequestConstant.APPROVAL)
                             {}
                             else{
-                              await subcontractorController.getSubcontList(context, projectController.selectedProjectId.value, siteController.selectedsiteId.value,"billdirect");
+                              await subcontractorController.getSubcontList(context, projectController.selectedProjectId.value, siteController.selectedsiteId.value,"billdirect",type:"B");
                               bottomsheetControllers.SubcontractorName(context, subcontractorController.getdropDownvalue.value,type: "BOQ");
                             }
                           },

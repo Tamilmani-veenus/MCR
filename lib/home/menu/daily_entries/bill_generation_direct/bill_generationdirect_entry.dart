@@ -67,7 +67,7 @@ class _Subcont_Nmr_EntryScreenState_Site
           billGenerationDirectController.RemarksController.text = element.remarks.toString();
         });
       }
-      // await billGenerationDirectController.DirectBill_CalculationList();
+      await billGenerationDirectController.DirectBill_CalculationList();
       if (billGenerationDirectController.saveButton.value == RequestConstant.SUBMIT) {
         await autoYearWiseNoController.directBill_AutoYearWise();
         billGenerationDirectController.autoYearWiseNoController.text =
@@ -96,13 +96,13 @@ class _Subcont_Nmr_EntryScreenState_Site
         billGenerationDirectController.Creditamt.text = "0.0";
         billGenerationDirectController.Debitamt.text = "0.0";
         billGenerationDirectController.materialDebitamt.text = "0.0";
-        billGenerationDirectController.materialDebitRemarks.text = "";
-        billGenerationDirectController.CreditRemarksController.text = "";
-        billGenerationDirectController.DebitRemarksController.text = "";
-        billGenerationDirectController.Advded.text = billGenerationDirectController.tobededadv.text;
+        billGenerationDirectController.materialDebitRemarks.text = "-";
+        billGenerationDirectController.CreditRemarksController.text = "-";
+        billGenerationDirectController.DebitRemarksController.text = "-";
+        billGenerationDirectController.Advded.text = "0.0";
         billGenerationDirectController.Roundoff.text = "0";
         billGenerationDirectController.netpayamt.text = "0.0";
-        billGenerationDirectController.tobededadv.text = billGenerationDirectController.to_be_dection_advance;
+        billGenerationDirectController.tobededadv.text = "0.0";
         // billGenerationDirectController.createdById.value=0;
       }
     });
@@ -439,7 +439,7 @@ class _Subcont_Nmr_EntryScreenState_Site
                             if(billGenerationDirectController.saveButton.value == RequestConstant.RESUBMIT || billGenerationDirectController.saveButton.value == RequestConstant.VERIFY || billGenerationDirectController.saveButton.value == RequestConstant.APPROVAL)
                             {}
                             else{
-                              await subcontractorController.getSubcontList(context, projectController.selectedProjectId.value, siteController.selectedsiteId.value,"billdirect");
+                              await subcontractorController.getSubcontList(context, projectController.selectedProjectId.value, siteController.selectedsiteId.value,"billdirect",type: "D");
                               bottomsheetControllers.SubcontractorName(context, subcontractorController.getdropDownvalue.value);
                             }
                           },

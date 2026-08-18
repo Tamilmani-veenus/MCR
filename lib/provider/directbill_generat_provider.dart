@@ -55,9 +55,9 @@ class DirectBillGenerateProvider {
   }
 
 
-  static Future billadv_balance(int pId,int subId, siteId,type,WorkorderId) async {
+  static Future billadv_balance(int pId,siteId,int subId,type,WorkorderId) async {
     var datasave;
-    await ApiManager.getAPICall(ApiConstant.GET_DIRECTBILL_ADVANCE_BALANCE+"?PID=$pId&SubID=$subId&SID=$siteId&Type=$type&WorkorderId=$WorkorderId").then((value) {
+    await ApiManager.getAPICall(ApiConstant.GET_DIRECTBILL_ADVANCE_BALANCE+"?PID=$pId&SID=$siteId&SubId=$subId&Type=$type&WorkorderId=$WorkorderId").then((value) {
       var decodedJson = json.decode(value);
       datasave=decodedJson;
       if (datasave!=null) {

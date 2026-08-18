@@ -384,6 +384,7 @@ class NMRWklyController extends GetxController {
 
     // Optional validation
     if ((double.tryParse(netpayamt.text) ?? 0) < 0) {
+      BaseUtitiles.showToast("Should not exceed the net pay amt.");
       return false;
     }
 
@@ -598,7 +599,7 @@ class NMRWklyController extends GetxController {
       await directBillCalculationSave();
       await getDirectBillCalDatas();
       if(saveButton.value == RequestConstant.RESUBMIT || saveButton.value == RequestConstant.VERIFY || saveButton.value == RequestConstant.APPROVAL) {
-        await preloadEditAddLessData(EditListSaveDatas);
+        await preloadEditAddLessData(EditListSaveDatas[0].NMRAddLess);
       }
     }
   }

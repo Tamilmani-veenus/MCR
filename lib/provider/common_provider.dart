@@ -139,7 +139,7 @@ class CommonProvider{
 
 
 
-  static Future<List> getSubcontrator(int pid, int sid, checkScreen) async {
+  static Future<List> getSubcontrator(int pid, int sid, checkScreen,type) async {
     List responseData = [];
     if(checkScreen == 1){
       await ApiManager.getAPICall(ApiConstant.GETSUBCONTRACTLIST+"?pid=$pid").then((value) {
@@ -154,7 +154,7 @@ class CommonProvider{
       });
     }
     else if(checkScreen == "billdirect"){
-      await ApiManager.getAPICall(ApiConstant.GETSUBCONTRACTBILLDIRLIST+"?projectId=$pid&siteId=$sid&Type=D").then((value) {
+      await ApiManager.getAPICall(ApiConstant.GETSUBCONTRACTBILLDIRLIST+"?projectId=$pid&siteId=$sid&Type=$type").then((value) {
         responseData = subcontractorDropdownListFromJson(value);
         if (responseData!=null&& responseData.length>0) {
           return responseData;
@@ -704,7 +704,7 @@ class CommonProvider{
     return datasave;
   }
 
-  static Future<List> getAcoountType(int val) async {
+  static Future<List> getAcoountType(int val,type) async {
     List responseData = [];
     if(val==1){
       await ApiManager.getAPICall(ApiConstant.GETACCOUNTTYPEDROPDOWNLISTADVREQ).then((value) {
@@ -719,7 +719,7 @@ class CommonProvider{
       });
     }
     else{
-      await ApiManager.getAPICall(ApiConstant.GETACCOUNTTYPEDROPDOWNLIST).then((value) {
+      await ApiManager.getAPICall(ApiConstant.GETACCOUNTTYPEDROPDOWNLIST + "?Type=$type").then((value) {
         responseData = accounttypereponseFromJson(value);
         if (responseData!=null&& responseData.length>0) {
           return responseData;

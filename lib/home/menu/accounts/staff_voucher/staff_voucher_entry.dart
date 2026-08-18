@@ -737,7 +737,7 @@ class _Subcont_Nmr_EntryScreenState_Site
       await autoYearWiseNoController.StaffVocAutoYear();
       // await siteController.subcontEntry_siteDropdowntList(context,0);
       await staffController.get_staffDropdowntList(context);
-      await commonVoucherController.getAccountTypeList(context, 0);
+      await commonVoucherController.getAccountTypeList(context, 0,type:"STF");
       await commonVoucherController.getPayforList(context);
       await staffVoucher_Controller.getBankName_List(context);
       staffVoucher_Controller.AutoYearwisestaffVoc.text =

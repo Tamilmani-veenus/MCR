@@ -216,8 +216,6 @@ class BillGenerationBoqController extends GetxController{
         await preloadEditAddLessData(
             bill_editListApiDatas[0].billEditAddless);
       }
-    } else {
-      BaseUtitiles.showToast(RequestConstant.NORECORD_FOUND);
     }
   }
 
@@ -628,6 +626,7 @@ class BillGenerationBoqController extends GetxController{
 
     // Optional validation
     if ((double.tryParse(netpayamt.text) ?? 0) < 0) {
+      BaseUtitiles.showToast("Should not exceed the net pay amt.");
       return false;
     }
 

@@ -63,6 +63,8 @@ class _Subcont_NMR_DeductionState_Site
 
       if (nmrWklyController.saveButton.value == RequestConstant.SUBMIT) {
         nmrWklyController.workid = 0;
+        nmrWklyController.tobededadv.text =
+            nmrWklyController.to_be_dection_advance;
         await nmrWklyController.deduction_paymentCalculation();
       }
     });
